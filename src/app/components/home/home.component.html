@@ -1,0 +1,39 @@
+<!-- <nav class="navbar">
+  <div class="navbar-brand">
+    <nwb-dropdown [(ngModel)]="gaming" (ngModelChange)="modelChange($event)" class="navbar-item">
+      <nwb-option value="nes">NES</nwb-option>
+      <nwb-option value="n64">Nintendo64</nwb-option>
+      <nwb-option value="ps" [disabled]="true">Disabled value</nwb-option>
+      <nwb-option value="genesis">Sega Genesis</nwb-option>
+      <nwb-option value="saturn">Sega Saturn</nwb-option>
+      <nwb-option value="snes"><i class="fa fa-keyboard">keyboard</i> SNES</nwb-option>
+      <nwb-option [value]="null">null value</nwb-option>
+      <nwb-option [value]="true">true value</nwb-option>
+    </nwb-dropdown>
+  </div>
+</nav> -->
+
+<section>
+  <h2>User</h2>
+  <div *ngIf="user$ | async; let user; else loadingUser">
+    <div *ngIf="user.loading; then loadingUser"></div>
+    <pre *ngIf="!user.loading && user.info"><code>{{ user.info | json }}</code></pre>
+    <ng-template *ngIf="!user.loading && !user.info">No user signed in</ng-template>
+  </div>
+  <ng-template #loadingUser>Loading user...</ng-template>
+</section>
+
+<section class="section">
+  <h2>Projects</h2>
+  <div><pre>{{ projectsList$ | async | json }}</pre></div>
+</section>
+
+<section>
+  <h2>Workspaces</h2>
+  <div>Selected:
+    <pre>{{ workspace$ | async | json }}</pre>
+  </div>
+  <div>List:
+    <pre>{{ workspaceList$ | async | json }}</pre>
+  </div>
+</section>
