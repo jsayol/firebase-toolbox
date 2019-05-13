@@ -11,6 +11,7 @@ export function projectsReducer(state: Projects, action: Action): Projects {
       break;
 
     case ProjectsActions.GET_LIST_SUCCESS:
+    case ProjectsActions.SET_LIST_AND_GET:
       return {
         ...state,
         loading: false,

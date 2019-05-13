@@ -1,17 +1,66 @@
-.container {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@media screen and (max-width: 576px) {
+  .main-container .header .branding {
+    max-width: initial;
+    min-width: initial;
+    overflow: auto;
+  }
+}
 
-  background: url(../../../assets/background.jpg) no-repeat center fixed;
-  -webkit-background-size: cover; /* pour anciens Chrome et Safari */
-  background-size: cover; /* version standardisée */
+header {
+  background-color: #039be5;
+  -webkit-app-region: drag;
 
-  .title {
-    color: white;
-    margin:0;
-    padding:50px 20px;
+  .branding {
+    -webkit-app-region: no-drag;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .app-logo {
+      background-image: url(assets/Firebase_Logo.svg);
+    }
+
+    .logo-and-title {
+      padding-right: 25px;
+
+      .title {
+        line-height: initial;
+      }
+
+      .no-workspace-title {
+        // font-style: italic;
+      }
+    }
+
+    .workspace-selector-menu {
+      max-width: none;
+
+      clr-icon {
+        vertical-align: top;
+      }
+
+      .workspace-project-name {
+        margin-top: 0;
+        margin-left: 35px;
+      }
+    }
   }
 
+  .header-actions {
+    .user-profile-picture {
+      -webkit-app-region: no-drag;
+      opacity: 1;
+
+      .clr-icon {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+
+        &:hover {
+          box-shadow: 0 0 3pt 2pt #666;
+        }
+      }
+    }
+  }
 }

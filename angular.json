@@ -25,9 +25,13 @@
               "src/favicon.512x512.png"
             ],
             "styles": [
+              "node_modules/@clr/icons/clr-icons.css",
+              "node_modules/@clr/ui/clr-ui.min.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/@clr/icons/clr-icons.min.js"
+            ]
           },
           "configurations": {
             "dev": {

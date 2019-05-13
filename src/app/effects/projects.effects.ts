@@ -14,7 +14,7 @@ export class ProjectsEffects implements OnInitEffects {
 
   @Effect()
   getList$: Observable<Action> = this.actions$.pipe(
-    ofType(projectsActions.GET_LIST),
+    ofType(projectsActions.GET_LIST, projectsActions.SET_LIST_AND_GET),
     switchMap(() =>
       from(this.fb.getProjects()).pipe(
         map(list => new projectsActions.GetListSuccess(list)),

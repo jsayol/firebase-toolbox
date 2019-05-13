@@ -6,7 +6,6 @@ html, body {
   height: 100%;
 }
 
-@import '~bulma/bulma';
-@import '~bulma-extensions/bulma-switch/src/sass/index';
-@import '~bulma-extensions/bulma-tooltip/src/sass/index';
-@import '~@wizishop/ng-wizi-bulma/ng-wizi-bulma';
+body > .titlebar + .container-after-titlebar {
+  bottom: auto !important;
+}

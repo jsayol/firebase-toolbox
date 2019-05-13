@@ -7,9 +7,10 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NwbAllModule } from '@wizishop/ng-wizi-bulma';
+import { ClarityModule } from '@clr/angular';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { NgxLetModule } from '@ngx-utilities/ngx-let';
 
 import { AppRoutingModule } from './app-routing.module';
 import { ElectronService } from './providers/electron.service';
@@ -18,6 +19,8 @@ import { reducers, metaReducers } from './reducers';
 import { effects } from './effects';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
+
+import './titlebar';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -39,7 +42,9 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
     BrowserAnimationsModule,
-    NwbAllModule,
+    ClarityModule,
+    NgxLetModule,
+
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot(effects)
   ],

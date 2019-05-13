@@ -11,6 +11,7 @@ export function userReducer(state: User, action: Action): User {
       break;
 
     case UserActions.GET_USER_SUCCESS:
+    case UserActions.SET_USER_AND_GET:
       return {
         ...state,
         loading: false,
@@ -23,7 +24,6 @@ export function userReducer(state: User, action: Action): User {
       return {
         ...state,
         loading: false,
-        info: null,
         error: action.payload
       };
       break;
