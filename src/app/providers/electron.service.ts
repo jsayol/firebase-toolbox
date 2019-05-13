@@ -7,6 +7,8 @@ import { ipcRenderer, webFrame, remote } from 'electron';
 import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
+import { UserInfo } from '../models/user.model';
+import { FirebaseProject } from '../models/projects.model';
 
 @Injectable()
 export class ElectronService {
@@ -43,9 +45,37 @@ export class ElectronService {
 
   configGet<T = any>(key: string, defaultValue?: T | undefined): T | undefined {
     if (this.isElectron()) {
-      return this.config.get(key) as T;
+      return this.config.get(key, defaultValue) as T;
     } else {
       return defaultValue;
+    }
+  }
+
+  // TODO: this should go on a PersistenceService
+  getCachedUserInfo(email: string): UserInfo | null {
+    if (this.isElectron()) {
+      const config = this.configGet<{ [email: string]: UserInfo }>('userinfo');
+      if (!config) {
+        return null;
+      }
+      return config[email];
+    } else {
+      return null;
+    }
+  }
+
+  // TODO: this should go on a PersistenceService
+  getCachedUserProjects(email: string): FirebaseProject[] {
+    if (this.isElectron()) {
+      const config = this.configGet<{ [email: string]: FirebaseProject[] }>(
+        'userprojects'
+      );
+      if (!config) {
+        return [];
+      }
+      return config[email];
+    } else {
+      return [];
     }
   }
 }

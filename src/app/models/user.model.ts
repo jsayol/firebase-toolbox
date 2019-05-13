@@ -2,8 +2,8 @@ import { UserInfo } from '../providers/firebase-tools.service';
 
 export interface User {
   loading: boolean;
-  info: UserInfo;
-  error?: Error;
+  email: string | null;
+  info: UserInfo | null;
 }
 
-export { UserInfo as UserDetails };
+export { UserInfo };

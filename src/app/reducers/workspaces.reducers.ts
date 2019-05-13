@@ -1,11 +1,16 @@
 import * as WorkspacesActions from '../actions/workspaces.actions';
-
 import { Workspaces } from '../models/workspaces.model';
 
 export type Action = WorkspacesActions.All;
 
+export const initialState: Workspaces = {
+  list: [],
+  selected: null,
+  loading: true
+};
+
 export function workspacesReducer(
-  state: Workspaces,
+  state: Workspaces = initialState,
   action: Action
 ): Workspaces {
   switch (action.type) {

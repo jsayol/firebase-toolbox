@@ -1,32 +1,41 @@
 import * as UserActions from '../actions/user.actions';
-
 import { User } from '../models/user.model';
 
 export type Action = UserActions.All;
 
-export function userReducer(state: User, action: Action): User {
+export const initialState: User = {
+  email: null,
+  info: null,
+  loading: true
+};
+
+export function userReducer(state: User = initialState, action: Action): User {
   switch (action.type) {
-    case UserActions.GET_USER:
-      return { ...state, loading: true };
+    case UserActions.GET_USER_EMAIL:
+      return { ...state, email: null, loading: true };
       break;
 
-    case UserActions.GET_USER_SUCCESS:
-    case UserActions.SET_USER_AND_GET:
+    case UserActions.SET_USER_EMAIL:
       return {
         ...state,
-        loading: false,
-        info: action.payload,
-        error: undefined
+        email: action.payload,
+        loading: false
       };
       break;
 
-    case UserActions.GET_USER_FAILURE:
+    case UserActions.GET_USER_INFO_SUCCESS:
       return {
         ...state,
-        loading: false,
-        error: action.payload
+        info: action.payload
       };
       break;
+
+    // case UserActions.GET_USER_INFO_FAILURE:
+    //   return {
+    //     ...state,
+    //     error: action.payload
+    //   };
+    //   break;
 
     default:
       return state;

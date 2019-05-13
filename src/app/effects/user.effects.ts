@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Effect, Actions, ofType, OnInitEffects } from '@ngrx/effects';
 import { Observable, from, of } from 'rxjs';
-import { map, switchMap, catchError, tap } from 'rxjs/operators';
+import { map, switchMap, catchError, tap, startWith } from 'rxjs/operators';
 
 import * as userActions from '../actions/user.actions';
-import {
-  FirebaseToolsService,
-  UserInfo
-} from '../providers/firebase-tools.service';
+import { FirebaseToolsService } from '../providers/firebase-tools.service';
 import { ElectronService } from '../providers/electron.service';
 
 export type Action = userActions.All;
@@ -21,29 +18,44 @@ export class UserEffects implements OnInitEffects {
   ) {}
 
   @Effect()
-  getUser$: Observable<Action> = this.actions$.pipe(
-    ofType(userActions.GET_USER, userActions.SET_USER_AND_GET),
+  getUserEmail$: Observable<Action> = this.actions$.pipe(
+    ofType(userActions.GET_USER_EMAIL),
     switchMap(() =>
-      from(this.fb.getUser()).pipe(
-        map(userInfo => new userActions.GetUserSuccess(userInfo)),
-        catchError(error => of(new userActions.GetUserFailure(error)))
+      of(this.fb.getUserEmail()).pipe(
+        switchMap(email => [
+          new userActions.SetUserEmail(email),
+          new userActions.GetUserInfo(email)
+        ])
+      )
+    )
+  );
+
+  @Effect()
+  getUserInfo$: Observable<Action> = this.actions$.pipe(
+    ofType(userActions.GET_USER_INFO),
+    map((action: userActions.GetUserInfo) => action.payload),
+    switchMap(email =>
+      from(this.fb.getUserInfo()).pipe(
+        startWith(this.electron.getCachedUserInfo(email)),
+        map(userInfo => new userActions.GetUserInfoSuccess(userInfo)),
+        catchError(error => of(new userActions.GetUserInfoFailure(error)))
       )
     )
   );
 
   @Effect({ dispatch: false })
-  saveState = this.actions$.pipe(
-    ofType(userActions.GET_USER_SUCCESS, userActions.GET_USER_FAILURE),
-    tap((action: userActions.GetUserSuccess | userActions.GetUserFailure) => {
-      this.electron.configSet('user', action.payload);
-      console.log({ user: action.payload });
+  saveState$ = this.actions$.pipe(
+    ofType(userActions.GET_USER_INFO_SUCCESS),
+    tap((action: userActions.GetUserInfoSuccess) => {
+      if (action.payload) {
+        const configUserInfo = this.electron.configGet('userinfo', {});
+        configUserInfo[this.fb.getUserEmail()] = action.payload;
+        this.electron.configSet('userinfo', configUserInfo);
+      }
     })
   );
 
   ngrxOnInitEffects(): Action {
-    const userInfo = this.electron.configGet<UserInfo>('user');
-    return userInfo
-      ? new userActions.SetUserAndGet(userInfo)
-      : new userActions.GetUser();
+    return new userActions.GetUserEmail();
   }
 }

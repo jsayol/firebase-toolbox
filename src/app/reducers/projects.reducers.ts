@@ -1,17 +1,29 @@
 import * as ProjectsActions from '../actions/projects.actions';
-
 import { Projects } from '../models/projects.model';
 
 export type Action = ProjectsActions.All;
 
-export function projectsReducer(state: Projects, action: Action): Projects {
+export const initialState: Projects = {
+  list: [],
+  selected: null,
+  loading: true
+};
+
+export function projectsReducer(
+  state: Projects = initialState,
+  action: Action
+): Projects {
+  console.log({
+    type: action.type,
+    payload: (action as any).payload,
+    state
+  });
   switch (action.type) {
     case ProjectsActions.GET_LIST:
       return { ...state, loading: true, error: undefined };
       break;
 
     case ProjectsActions.GET_LIST_SUCCESS:
-    case ProjectsActions.SET_LIST_AND_GET:
       return {
         ...state,
         loading: false,

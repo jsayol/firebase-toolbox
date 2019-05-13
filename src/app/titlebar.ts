@@ -1,4 +1,9 @@
-import { Titlebar, TitlebarOptions, Color, Themebar } from 'custom-electron-titlebar';
+import {
+  Titlebar,
+  TitlebarOptions,
+  Color,
+  Themebar
+} from 'custom-electron-titlebar';
 
 const isElectron = window && window.process && window.process.type;
 
@@ -10,6 +15,9 @@ if (isElectron) {
   if (process.platform === 'darwin') {
     options.iconsTheme = Themebar.mac;
     options.order = 'first-buttons';
+    options.menu = null;
+  } else {
+    options.icon = 'assets/firebase_96dp.png';
   }
 
   new Titlebar(options);

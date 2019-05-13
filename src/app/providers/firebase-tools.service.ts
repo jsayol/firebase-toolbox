@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ElectronService } from './electron.service';
 import { HttpClient } from '@angular/common/http';
+// import { google } from 'googleapis';
 
-// Only used for types!
+// IMPORTANT: These imports should only be used for types!
 import * as path from 'path';
 import { promises as fs } from 'fs';
 import * as Configstore from 'configstore';
-import * as firebaseTools from 'firebase-tools';
-import { GoogleApis, plus_v1 } from 'googleapis';
+import * as cli from 'firebase-tools';
+import { GoogleApis } from 'googleapis';
 import { OAuth2Client } from 'googleapis/node_modules/google-auth-library';
 
 const CLI_CLIENT_ID =
@@ -18,22 +19,20 @@ const CLI_CLIENT_SECRET = 'j9iVZfS8kkCEFUPaAeJV0sAi';
   providedIn: 'root'
 })
 export class FirebaseToolsService {
-  private path: typeof path;
   private fs: typeof fs;
-  private fb: typeof firebaseTools;
+  private cli: typeof cli;
+  private path: typeof path;
   private configstore: Configstore;
-  private google: GoogleApis;
   private oauth2Client: OAuth2Client;
-  private googlePlus: plus_v1.Plus;
+  private google: GoogleApis;
 
   constructor(private electron: ElectronService, private http: HttpClient) {
     const Configstore = this.electron.remote.require('configstore');
-    this.path = this.electron.remote.require('path');
     this.fs = this.electron.remote.require('fs').promises;
-    this.fb = this.electron.remote.require('firebase-tools');
+    this.cli = this.electron.remote.require('firebase-tools');
+    this.path = this.electron.remote.require('path');
     this.google = this.electron.remote.require('googleapis').google;
 
-    this.googlePlus = this.google.plus({ version: 'v1' });
     this.configstore = new Configstore('firebase-tools');
     this.oauth2Client = new this.google.auth.OAuth2(
       CLI_CLIENT_ID,
@@ -41,36 +40,46 @@ export class FirebaseToolsService {
     ) as any;
   }
 
-  getUser(): Promise<UserInfo | null> {
+  getUserEmail(): string | null {
+    const user = this.configstore.get('user') as cli.AccountUser;
+    if (!user) {
+      return null;
+    }
+
+    const tokens = this.configstore.get('tokens') as cli.AccountTokens;
+    if (!tokens) {
+      return null;
+    }
+
+    try {
+      this.oauth2Client.setCredentials(tokens);
+    } catch (_) {
+      return null;
+    }
+
+    return user.email;
+  }
+
+  getUserInfo(): Promise<UserInfo | null> {
     return new Promise<UserInfo | null>((resolve, reject) => {
-      const user = this.configstore.get('user') as firebaseTools.AccountUser;
-      if (user) {
-        const tokens = this.configstore.get(
-          'tokens'
-        ) as firebaseTools.AccountTokens;
-        this.oauth2Client.setCredentials(tokens);
-        this.googlePlus.people.get(
-          {
-            auth: this.oauth2Client,
-            userId: 'me'
-          },
-          (error, response) => {
-            if (error) {
-              console.error(error);
-              reject(error);
-              return;
-            } else {
-              resolve({
-                email: user.email,
-                displayName: response.data.displayName,
-                imageUrl: response.data.image.url
-              });
-            }
+      this.google.plus({ version: 'v1' }).people.get(
+        {
+          auth: this.oauth2Client,
+          userId: 'me'
+        },
+        (error, response) => {
+          if (error) {
+            console.error(error);
+            reject(error);
+            return;
+          } else {
+            resolve({
+              name: response.data.displayName,
+              imageUrl: response.data.image.url
+            });
           }
-        );
-      } else {
-        resolve(null);
-      }
+        }
+      );
     });
   }
 
@@ -118,13 +127,12 @@ export class FirebaseToolsService {
   }
 
   getProjects(): Promise<FirebaseProject[]> {
-    return this.fb.list();
+    return this.cli.list();
   }
 }
 
 export interface UserInfo {
-  email: string;
-  displayName: string;
+  name: string;
   imageUrl: string;
 }
 
@@ -138,4 +146,4 @@ function contains(obj: { [k: string]: any }, key: string): boolean {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }
 
-export type FirebaseProject = firebaseTools.FirebaseProject;
+export type FirebaseProject = cli.FirebaseProject;

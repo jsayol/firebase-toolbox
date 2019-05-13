@@ -1,11 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
-
   height: 100%;
+  background-color: rgba(0, 0, 0, 0);
 }
 
-body > .titlebar + .container-after-titlebar {
-  bottom: auto !important;
+body > .titlebar {
+  &.mac {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  & + .container-after-titlebar {
+    bottom: auto !important;
+  }
 }

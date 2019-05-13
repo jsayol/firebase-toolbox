@@ -1,30 +1,41 @@
 import { Action } from '@ngrx/store';
 
-import { UserDetails } from '../models/user.model';
+import { UserInfo } from '../models/user.model';
 
-export const GET_USER = '[User] Get User';
-export const GET_USER_SUCCESS = '[User] Get User Success';
-export const GET_USER_FAILURE = '[User] Get User Failure';
+export const GET_USER_EMAIL = '[User] Get User Email';
+export const SET_USER_EMAIL = '[User] Set User Email';
 
-export const SET_USER_AND_GET = '[User] Set User From Config And Get';
+export const GET_USER_INFO = '[User] Get User Info';
+export const GET_USER_INFO_SUCCESS = '[User] Get User Info Success';
+export const GET_USER_INFO_FAILURE = '[User] Get User Info Failure';
 
-export class GetUser implements Action {
-  readonly type = GET_USER;
+export class GetUserEmail implements Action {
+  readonly type = GET_USER_EMAIL;
 }
 
-export class GetUserSuccess implements Action {
-  readonly type = GET_USER_SUCCESS;
-  constructor(public payload: UserDetails) {}
+export class SetUserEmail implements Action {
+  readonly type = SET_USER_EMAIL;
+  constructor(public payload: string) {}
 }
 
-export class GetUserFailure implements Action {
-  readonly type = GET_USER_FAILURE;
+export class GetUserInfo implements Action {
+  readonly type = GET_USER_INFO;
+  constructor(public payload: string) {}
+}
+
+export class GetUserInfoSuccess implements Action {
+  readonly type = GET_USER_INFO_SUCCESS;
+  constructor(public payload: UserInfo) {}
+}
+
+export class GetUserInfoFailure implements Action {
+  readonly type = GET_USER_INFO_FAILURE;
   constructor(public payload: Error) {}
 }
 
-export class SetUserAndGet implements Action {
-  readonly type = SET_USER_AND_GET;
-  constructor(public payload: UserDetails) {}
-}
-
-export type All = GetUser | GetUserSuccess | GetUserFailure | SetUserAndGet;
+export type All =
+  | GetUserEmail
+  | SetUserEmail
+  | GetUserInfo
+  | GetUserInfoSuccess
+  | GetUserInfoFailure;
