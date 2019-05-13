@@ -11,6 +11,8 @@ header {
   -webkit-app-region: drag;
 
   .branding {
+    min-width: 9rem;
+    max-width: none;
     -webkit-app-region: no-drag;
 
     &:hover {
@@ -24,22 +26,28 @@ header {
     .logo-and-title {
       padding-right: 25px;
 
-      .title {
-        line-height: initial;
+      .current-workspace-header {
+        position: absolute;
+        margin-top: 0;
+        top: 0;
       }
+
+      // .current-workspace-name {
+      //   line-height: initial;
+      // }
+    }
+  }
+
+  .workspace-selector-menu {
+    max-width: none;
+
+    clr-icon {
+      vertical-align: top;
     }
 
-    .workspace-selector-menu {
-      max-width: none;
-
-      clr-icon {
-        vertical-align: top;
-      }
-
-      .workspace-project-name {
-        margin-top: 0;
-        margin-left: 35px;
-      }
+    .workspace-project-name {
+      margin-top: 0;
+      margin-left: 35px;
     }
   }
 
@@ -52,6 +60,9 @@ header {
         border-radius: 50%;
         width: 40px;
         height: 40px;
+
+        box-shadow: none;
+        transition: box-shadow 100ms;
 
         &:hover {
           box-shadow: 0 0 3pt 2pt #666;
