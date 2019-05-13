@@ -13,11 +13,6 @@ export function projectsReducer(
   state: Projects = initialState,
   action: Action
 ): Projects {
-  console.log({
-    type: action.type,
-    payload: (action as any).payload,
-    state
-  });
   switch (action.type) {
     case ProjectsActions.GET_LIST:
       return { ...state, loading: true, error: undefined };

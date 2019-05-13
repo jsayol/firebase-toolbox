@@ -18,6 +18,8 @@ import { WebviewDirective } from './directives/webview.directive';
 import { reducers, metaReducers } from './reducers';
 import { effects } from './effects';
 import { AppComponent } from './app.component';
+import { InitializingComponent } from './components/initializing/initializing.component';
+import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 
 import './titlebar';
@@ -28,7 +30,13 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, WebviewDirective],
+  declarations: [
+    AppComponent,
+    WebviewDirective,
+    InitializingComponent,
+    LoginComponent,
+    HomeComponent
+  ],
   imports: [
     BrowserModule,
     FormsModule,

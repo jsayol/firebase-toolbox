@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Effect, Actions, ofType, OnInitEffects } from '@ngrx/effects';
 import { Observable, from, of } from 'rxjs';
 import { map, switchMap, catchError, tap, startWith } from 'rxjs/operators';
@@ -14,7 +15,8 @@ export class UserEffects implements OnInitEffects {
   constructor(
     private actions$: Actions,
     private fb: FirebaseToolsService,
-    private electron: ElectronService
+    private electron: ElectronService,
+    private router: Router
   ) {}
 
   @Effect()
@@ -51,6 +53,19 @@ export class UserEffects implements OnInitEffects {
         const configUserInfo = this.electron.configGet('userinfo', {});
         configUserInfo[this.fb.getUserEmail()] = action.payload;
         this.electron.configSet('userinfo', configUserInfo);
+      }
+    })
+  );
+
+  @Effect({ dispatch: false })
+  routeOnUser$ = this.actions$.pipe(
+    ofType(userActions.SET_USER_EMAIL),
+    map((action: userActions.SetUserEmail) => action.payload),
+    tap(email => {
+      if (email) {
+        this.router.navigate(['home']);
+      } else {
+        this.router.navigate(['login']);
       }
     })
   );
