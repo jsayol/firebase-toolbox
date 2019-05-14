@@ -1,5 +1,5 @@
 {
-  "productName": "Firebase Toolbox",
+  "productName": "firebase-toolbox",
   "appId": "com.jsayol.firebase-toolbox",
   "directories": {
     "output": "release/"
