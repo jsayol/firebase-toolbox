@@ -57,10 +57,7 @@
             </button>
             <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
               <div *ngIf="user?.email">
-                <a href="javascript://" clrDropdownItem>Sign out</a>
-              </div>
-              <div *ngIf="!user?.email">
-                <a href="javascript://" clrDropdownItem>Sign in</a>
+                <a href="javascript://" clrDropdownItem (click)="logout()">Sign out</a>
               </div>
             </clr-dropdown-menu>
           </clr-dropdown>

@@ -46,6 +46,24 @@ function createWindow() {
     win.webContents.openDevTools();
   }
 
+  process.stdout._write = (
+    chunk: any,
+    encoding: string,
+    done: Function
+  ): void => {
+    win.webContents.send('stdout', chunk.toString());
+    done();
+  };
+
+  process.stderr._write = (
+    chunk: any,
+    encoding: string,
+    done: Function
+  ): void => {
+    win.webContents.send('stderr', chunk.toString());
+    done();
+  };
+
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store window

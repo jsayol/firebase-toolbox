@@ -40,6 +40,14 @@ export class FirebaseToolsService {
     ) as any;
   }
 
+  async login(options?: cli.LoginOptions): Promise<void> {
+    await this.cli.login(options);
+  }
+
+  async logout(options?: cli.LoginOptions): Promise<void> {
+    await this.cli.logout(options);
+  }
+
   getUserEmail(): string | null {
     const user = this.configstore.get('user') as cli.AccountUser;
     if (!user) {

@@ -1,3 +1,21 @@
-<div>
-  login works!
+<div class="main-container">
+  <div class="content-wrapper">
+    <h1>Hello!</h1>
+    <h4 class="info">
+      Sign in with your Google Account to start using Firebase Toolbox.
+    </h4>
+    <div class="button-container">
+      <button class="btn btn-primary login-button" (click)="login()">Sign in</button>
+    </div>
+  </div>
+
+  <clr-modal [(clrModalOpen)]="showLoginModal" [clrModalClosable]="false">
+      <h3 class="modal-title">Waiting for sign in to complete</h3>
+      <div class="modal-body">
+          <div class="progress loop"><progress></progress></div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-outline" (click)="cancelLoginModal()">Cancel</button>
+      </div>
+  </clr-modal>
 </div>

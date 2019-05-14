@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ofType, OnInitEffects } from '@ngrx/effects';
 import { Observable, from, of } from 'rxjs';
@@ -16,7 +16,8 @@ export class UserEffects implements OnInitEffects {
     private actions$: Actions,
     private fb: FirebaseToolsService,
     private electron: ElectronService,
-    private router: Router
+    private router: Router,
+    private ngZone: NgZone
   ) {}
 
   @Effect()
@@ -24,10 +25,15 @@ export class UserEffects implements OnInitEffects {
     ofType(userActions.GET_USER_EMAIL),
     switchMap(() =>
       of(this.fb.getUserEmail()).pipe(
-        switchMap(email => [
-          new userActions.SetUserEmail(email),
-          new userActions.GetUserInfo(email)
-        ])
+        switchMap(email => {
+          const actions: userActions.All[] = [
+            new userActions.SetUserEmail(email)
+          ];
+          if (email) {
+            actions.push(new userActions.GetUserInfo(email));
+          }
+          return actions;
+        })
       )
     )
   );
@@ -62,11 +68,13 @@ export class UserEffects implements OnInitEffects {
     ofType(userActions.SET_USER_EMAIL),
     map((action: userActions.SetUserEmail) => action.payload),
     tap(email => {
-      if (email) {
-        this.router.navigate(['home']);
-      } else {
-        this.router.navigate(['login']);
-      }
+      this.ngZone.run(() => {
+        if (email) {
+          this.router.navigate(['home']);
+        } else {
+          this.router.navigate(['login']);
+        }
+      });
     })
   );
 

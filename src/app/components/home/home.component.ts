@@ -2,17 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
+import { AppState } from '../../models';
 import { User } from '../../models/user.model';
-import { Workspaces, Workspace } from '../../models/workspaces.model';
+import { Workspace } from '../../models/workspaces.model';
 import { FirebaseProject } from '../../models/projects.model';
 
 import * as workspacesActions from '../../actions/workspaces.actions';
+import * as userActions from '../../actions/user.actions';
 import { ElectronService } from '../../providers/electron.service';
-
-interface AppState {
-  user: User;
-  workspaces: Workspaces;
-}
+import { FirebaseToolsService } from '../../providers/firebase-tools.service';
 
 @Component({
   selector: 'app-home',
@@ -40,12 +38,16 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private electron: ElectronService
+    private electron: ElectronService,
+    private fb: FirebaseToolsService
   ) {}
 
-  ngOnInit() {
-    // this.store.dispatch(new userActions.GetUser());
-    // this.store.dispatch(new workspacesActions.GetList());
+  ngOnInit() {}
+
+  async logout() {
+    // TODO: this should dispatch a "Logout" ngrx action instead
+    await this.fb.logout();
+    this.store.dispatch(new userActions.GetUserEmail());
   }
 
   modelChange($event) {

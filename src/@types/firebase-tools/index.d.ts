@@ -105,8 +105,9 @@ declare module "firebase-tools" {
   }
 
   export interface LoginOptions extends Options {
-    noLocalhost?: boolean;
+    localhost?: boolean;
     reauth?: boolean;
+    collectUsage?: 'yes' | 'no';
   }
 
   export interface LoginCiOptions extends Options {

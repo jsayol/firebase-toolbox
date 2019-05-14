@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as ElectronStore from 'electron-store';
 
-// If you import a module but never use any of the imported values other than as TypeScript types,
-// the resulting javascript file will look as if you never imported the module at all.
-import { ipcRenderer, webFrame, remote } from 'electron';
+import { UserInfo } from '../models/user.model';
+import { FirebaseProject } from '../models/projects.model';
+
+// IMPORTANT: These imports should only be used for types!
+import { ipcRenderer, webFrame, remote, IpcRenderer } from 'electron';
 import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
-import { UserInfo } from '../models/user.model';
-import { FirebaseProject } from '../models/projects.model';
 
 @Injectable()
 export class ElectronService {
@@ -30,6 +30,8 @@ export class ElectronService {
       this.childProcess = window.require('child_process');
       this.path = window.require('path');
       this.fs = window.require('fs');
+
+      this.ipcEvents();
     }
   }
 
@@ -78,4 +80,21 @@ export class ElectronService {
       return [];
     }
   }
+
+  private ipcEvents(): void {
+    this.ipcRenderer.on('stdout', (event: IpcEvent, data: any) => {
+      console.log('STDOUT:');
+      console.log(data);
+    });
+
+    this.ipcRenderer.on('stderr', (event: IpcEvent, data: any) => {
+      console.error('STDERR:');
+      console.log(data);
+    });
+  }
+}
+
+interface IpcEvent {
+  sender: IpcRenderer;
+  senderId: number;
 }

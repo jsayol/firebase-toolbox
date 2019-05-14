@@ -1,4 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+// Clarity Dependency SCSS
+@import "../node_modules/@clr/ui/src/utils/dependencies.clarity"; // Includes light theme
+
+// Clarity Component SCSS
+@import "../node_modules/@clr/ui/src/utils/components.clarity";
+
 html,
 body {
   margin: 0;
@@ -15,5 +20,22 @@ body > .titlebar {
 
   & + .container-after-titlebar {
     bottom: auto !important;
+  }
+}
+
+.btn.btn-primary {
+  color: #2c384a;
+  border-color: #ffa000;
+  background-color: #ffa000;
+
+  &:active {
+    // box-shadow: 0 1px 0 0 #FFCA28 inset;
+    box-shadow: none;
+  }
+
+  &:hover {
+    color: #2c384a;
+    border-color: #f57c00;
+    background-color: #f57c00;
   }
 }
