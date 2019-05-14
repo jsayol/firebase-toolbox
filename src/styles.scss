@@ -13,20 +13,30 @@ body {
 }
 
 body > .titlebar {
-  &.mac {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+  &.linux,
+  &.windows {
+    & + .container-after-titlebar clr-main-container {
+      height: calc(100vh - 30px) !important;
+    }
   }
 
-  & + .container-after-titlebar {
-    bottom: auto !important;
+  &.mac {
+    & + .container-after-titlebar clr-main-container {
+      height: calc(100vh - 22px) !important;
+    }
   }
 }
 
+button:focus {
+  outline: none !important;
+}
+
 .btn.btn-primary {
-  color: #2c384a;
+  // color: #2c384a;
+  color: #fff;
   border-color: #ffa000;
   background-color: #ffa000;
+  transition: background-color 0.1s;
 
   &:active {
     // box-shadow: 0 1px 0 0 #FFCA28 inset;
@@ -34,8 +44,44 @@ body > .titlebar {
   }
 
   &:hover {
-    color: #2c384a;
+    // color: #2c384a;
+    color: #fff;
     border-color: #f57c00;
     background-color: #f57c00;
+  }
+}
+
+.btn.btn-navy {
+  color: #eceff1;
+  border-color: #2c384a;
+  background-color: #2c384a;
+  transition: background-color 0.1s;
+
+  // &:active {
+  //   // box-shadow: 0 1px 0 0 #FFCA28 inset;
+  //   box-shadow: none;
+  // }
+
+  &:hover {
+    color: #ffffff;
+    border-color: #039be5;
+    background-color: #039be5;
+  }
+}
+
+.nice-scrollbar,
+clr-vertical-nav .nav-content {
+  &::-webkit-scrollbar-track {
+    background-color: #fff;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    background-color: #fff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #555;
   }
 }

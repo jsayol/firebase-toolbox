@@ -1,0 +1,133 @@
+@media screen and (max-width: 576px) {
+  .main-container .header .branding {
+    max-width: initial;
+    min-width: initial;
+    overflow: auto;
+  }
+}
+
+clr-header {
+  background-color: #039be5;
+  -webkit-app-region: drag;
+
+  .branding {
+    -webkit-app-region: no-drag;
+    min-width: 9rem;
+    max-width: none;
+    padding: 0 0.5rem;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .app-logo {
+      background-image: url(assets/logo-firebase.svg);
+    }
+
+    .logo-and-title {
+      padding-right: 25px;
+
+      .current-workspace-header {
+        position: absolute;
+        color: #2c384a;
+        margin-top: 0;
+        top: 0;
+      }
+
+      // .current-workspace-name {
+      //   line-height: initial;
+      // }
+    }
+
+    clr-dropdown-menu {
+      box-shadow: 5px 5px 2rem rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .workspace-selector-menu {
+    max-width: none;
+
+    .workspace-list {
+      max-height: calc(100vh - 7rem);
+      overflow-y: auto;
+
+      .dropdown-item {
+        position: relative;
+        padding: 0.1rem 1.75rem 0.1rem 0.5rem;
+
+        .workspace-project-path {
+          color: #2c384a;
+        }
+
+        .workspace-project-name {
+          color: #2c384a;
+          margin-top: 0;
+          margin-left: 35px;
+        }
+
+        clr-icon.folder-icon {
+          color: #2c384a;
+          vertical-align: top;
+        }
+
+        button.remove-workspace {
+          opacity: 0;
+          position: absolute;
+          right: 0.2rem;
+          top: 0.35rem;
+          width: auto;
+          color: #fff;
+          padding: 0.2rem 0.25rem;
+          border: 1px solid #e12200;
+          background-color: #e12200;
+          transition: opacity 0.1s;
+
+          &:hover {
+            border-color: #ff2200;
+            background-color: #ff2200;
+          }
+
+          clr-icon {
+            height: 0.8rem;
+            width: 0.8rem;
+            margin-right: 0;
+          }
+        }
+
+        &:hover button.remove-workspace {
+          opacity: 1;
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin: 0.3rem 0.5rem 0.1rem 0.5rem;
+
+      button {
+        width: auto;
+      }
+    }
+  }
+
+  .header-actions {
+    .user-profile-picture {
+      -webkit-app-region: no-drag;
+      opacity: 1;
+
+      .clr-icon {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+
+        box-shadow: none;
+        transition: box-shadow 100ms;
+
+        &:hover {
+          box-shadow: 0 0 3pt 2pt #666;
+        }
+      }
+    }
+  }
+}

@@ -18,11 +18,15 @@ function createWindow() {
     minHeight: 500,
     frame: false,
     transparent: true,
+    titleBarStyle: 'hidden',
     backgroundColor: '#FFFFFFFF',
     webPreferences: {
       nodeIntegration: true
     },
-    icon: 'icon-512x512.png'
+    icon:
+      (serve ? 'src/' : '') +
+      'favicon.64x64.' +
+      (process.platform === 'win32' ? 'ico' : 'png')
   });
 
   if (serve) {
@@ -40,7 +44,7 @@ function createWindow() {
     );
   }
 
-  if (true || serve) {
+  if (serve) {
     win.webContents.openDevTools();
   }
 
@@ -63,15 +67,18 @@ function createWindow() {
   };
 
   ipcMain.on('winston-add-console-transport', () => {
-    // const { transports } = require('firebase-tools/node_modules/winston');
-    require('firebase-tools').logger.add(
-      require('firebase-tools/node_modules/winston').transports.Console,
-      {
-        level: process.env.DEBUG ? 'debug' : 'info',
-        showLevel: false,
-        colorize: true
-      }
-    );
+    try {
+      require('firebase-tools').logger.add(
+        require('firebase-tools/node_modules/winston').transports.Console,
+        {
+          level: process.env.DEBUG ? 'debug' : 'info',
+          showLevel: false,
+          colorize: true
+        }
+      );
+    } catch (e) {
+      // ignore
+    }
   });
 
   // Emitted when the window is closed.

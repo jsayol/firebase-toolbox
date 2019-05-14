@@ -82,12 +82,18 @@ export class ElectronService {
   }
 
   private ipcEvents(): void {
-    this.ipcRenderer.on('stdout', (event: IpcEvent, data: any) => {
+    this.ipcRenderer.on('stdout', (event: IpcEvent, data: string) => {
       console.log('STDOUT:');
       console.log(data);
     });
 
-    this.ipcRenderer.on('stderr', (event: IpcEvent, data: any) => {
+    this.ipcRenderer.on('stderr', (event: IpcEvent, data: string) => {
+      // if (/^Attempting to call a function/.test(data)) {
+      //   return;
+      // }
+      if (/ExperimentalWarning: The fs.promises API is experimental/.test(data)) {
+        return;
+      }
       console.error('STDERR:');
       console.log(data);
     });

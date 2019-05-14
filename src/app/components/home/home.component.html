@@ -1,107 +1,12 @@
-<ng-container *ngxLet="workspace$ | async; let workspace">
-  <ng-container *ngxLet="user$ | async; let user">
-    <div class="main-container">
-      <header class="header">
-        <clr-dropdown class="branding">
-          <a class="logo-and-title nav-icon" clrDropdownTrigger href="javascript://">
-            <span class="clr-icon app-logo"></span>
-            <ng-container *ngIf="workspace; else noWorkspaceSelected">
-              <div>
-                <span class="p4 current-workspace-header">Current Workspace:</span>
-                <div class="title current-workspace-name">{{ getWorkspaceName(workspace) }}</div>
-              </div>
-            </ng-container>
-            <ng-template #noWorkspaceSelected>
-              <div>
-                <span class="title">Select a workspace</span>
-              </div>
-            </ng-template>
-            <clr-icon shape="caret down"></clr-icon>
-          </a>
-          <clr-dropdown-menu *clrIfOpen class="workspace-selector-menu">
-            <ng-container *ngFor="let workspaceItem of (workspaceList$ | async)">
-              <div clrDropdownItem (click)="selectWorkspace(workspaceItem)">
-                <div>
-                  <clr-icon *ngIf="workspace && workspace.path === workspaceItem.path; else notSelectedWorkspace"
-                    shape="folder-open" size="24" class="is-solid">
-                  </clr-icon>
-                  <ng-template #notSelectedWorkspace>
-                    <clr-icon shape="folder" size="24"></clr-icon>
-                  </ng-template>
-                  <span>{{ workspaceItem.path }}</span>
-                </div>
-                <div class="workspace-project-name p2">
-                  Project: {{ workspaceItem.alias }}
-                  <ng-container *ngIf="workspaceItem.projectId !==workspaceItem.alias">
-                    ({{ workspaceItem.projectId }})
-                  </ng-container>
-                </div>
-              </div>
-              <div class="dropdown-divider"></div>
-            </ng-container>
-          </clr-dropdown-menu>
-        </clr-dropdown>
-        <!-- <div class="header-nav">
-          <a href="javascript://" class="active nav-link nav-text">Dashboard</a>
-          <a href="javascript://" class="nav-link nav-text">Interactive Analytics</a>
-        </div> -->
-        <div class="header-actions">
-          <clr-dropdown>
-            <button *ngIf="user?.info" class="nav-icon" class="user-profile-picture" clrDropdownTrigger
-              title="{{ user.info.name }} - {{ user.email }}">
-              <span class="clr-icon" [style.backgroundImage]="'url('+ user.info.imageUrl +')'"></span>
-            </button>
-            <button *ngIf="!user?.info" class="nav-icon" class="user-profile-picture" clrDropdownTrigger
-              [title]="user.email">
-              <clr-icon shape="user" size="32"></clr-icon>
-            </button>
-            <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-              <div *ngIf="user?.email">
-                <a href="javascript://" clrDropdownItem (click)="logout()">Sign out</a>
-              </div>
-            </clr-dropdown-menu>
-          </clr-dropdown>
-        </div>
-      </header>
+<clr-main-container>
+  <app-header></app-header>
 
-      <ng-container *ngIf="workspace">
-        <nav class="subnav">
-          ...
-        </nav>
-        <div class="content-container">
-          <div class="content-area">
-            ...
-          </div>
-          <nav class="sidenav">
-            ...
-          </nav>
-        </div>
-      </ng-container>
+  <ng-container *ngIf="workspace$ | async">
+    <div class="content-container">
+      <app-side-menu></app-side-menu>
+      <div class="content-area">
+        <!-- TODO: router outlet-->
+      </div>
     </div>
   </ng-container>
-</ng-container>
-
-<!-- <section>
-  <h2>User</h2>
-  <div *ngIf="user$ | async; let user; else loadingUser">
-    <div *ngIf="user.loading; then loadingUser"></div>
-    <pre *ngIf="!user.loading && user.info"><code>{{ user.info | json }}</code></pre>
-    <ng-template *ngIf="!user.loading && !user.info">No user signed in</ng-template>
-  </div>
-  <ng-template #loadingUser>Loading user...</ng-template>
-</section>
-
-<section class="section">
-  <h2>Projects</h2>
-  <div><pre>{{ projectsList$ | async | json }}</pre></div>
-</section>
-
-<section>
-  <h2>Workspaces</h2>
-  <div>Selected:
-    <pre>{{ workspace | async | json }}</pre>
-  </div>
-  <div>List:
-    <pre>{{ workspaceList$ | async | json }}</pre>
-  </div>
-</section> -->
+</clr-main-container>

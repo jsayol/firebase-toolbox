@@ -1,0 +1,15 @@
+clr-vertical-nav {
+  height: 100%;
+
+  clr-icon[size="18"] {
+    min-width: 18px;
+  }
+
+  clr-icon[size="20"] {
+    min-width: 20px;
+  }
+
+  .nav-divider {
+    border-bottom: 0;
+  }
+}

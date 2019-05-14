@@ -23,6 +23,8 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 
 import './titlebar';
+import { SideMenuComponent } from './components/side-menu/side-menu.component';
+import { HeaderComponent } from './components/header/header.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -35,7 +37,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     WebviewDirective,
     InitializingComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    SideMenuComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

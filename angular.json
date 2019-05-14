@@ -21,12 +21,13 @@
               "src/favicon.ico",
               "src/favicon.png",
               "src/favicon.icns",
+              "src/favicon.64x64.png",
+              "src/favicon.128x128.png",
               "src/favicon.256x256.png",
               "src/favicon.512x512.png"
             ],
             "styles": [
               "node_modules/@clr/icons/clr-icons.css",
-              // "node_modules/@clr/ui/clr-ui.min.css",
               "src/styles.scss"
             ],
             "scripts": [
