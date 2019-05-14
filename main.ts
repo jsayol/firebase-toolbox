@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -11,8 +11,7 @@ function createWindow() {
 
   // Create the browser window.
   win = new BrowserWindow({
-    // x: 0,
-    // y: 0,
+    center: true,
     width: Math.min(serve ? 1500 : 1000, size.width),
     height: Math.min(serve ? 850 : 700, size.height),
     minWidth: 450,
@@ -23,8 +22,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true
     },
-    icon: 'firebase_96dp.png',
-    center: true
+    icon: 'icon-512x512.png'
   });
 
   if (serve) {
@@ -42,7 +40,7 @@ function createWindow() {
     );
   }
 
-  if (serve) {
+  if (true || serve) {
     win.webContents.openDevTools();
   }
 
@@ -63,6 +61,18 @@ function createWindow() {
     win.webContents.send('stderr', chunk.toString());
     done();
   };
+
+  ipcMain.on('winston-add-console-transport', () => {
+    // const { transports } = require('firebase-tools/node_modules/winston');
+    require('firebase-tools').logger.add(
+      require('firebase-tools/node_modules/winston').transports.Console,
+      {
+        level: process.env.DEBUG ? 'debug' : 'info',
+        showLevel: false,
+        colorize: true
+      }
+    );
+  });
 
   // Emitted when the window is closed.
   win.on('closed', () => {

@@ -22,7 +22,7 @@ export class LoginComponent {
     try {
       // TODO: Ask the user if they want to allow usage collection
       this.showLoginModal = true;
-      await this.fb.login({ localhost: true, collectUsage: 'no' });
+      await this.fb.login({ localhost: true, interactive: true, collectUsage: 'no' });
       this.showLoginModal = false;
       this.store.dispatch(new userActions.GetUserEmail());
     } catch (err) {

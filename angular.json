@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-electron": {
+    "firebase-toolbox": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -73,21 +73,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "firebase-toolbox:build"
           },
           "configurations": {
             "dev": {
-              "browserTarget": "angular-electron:build:dev"
+              "browserTarget": "firebase-toolbox:build:dev"
             },
             "production": {
-              "browserTarget": "angular-electron:build:production"
+              "browserTarget": "firebase-toolbox:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "firebase-toolbox:build"
           }
         },
         "test": {
@@ -125,7 +125,7 @@
         }
       }
     },
-    "angular-electron-e2e": {
+    "firebase-toolbox-e2e": {
       "root": "e2e",
       "projectType": "application",
       "architect": {
@@ -143,7 +143,7 @@
       }
     }
   },
-  "defaultProject": "angular-electron",
+  "defaultProject": "firebase-toolbox",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

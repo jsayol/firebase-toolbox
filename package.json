@@ -1,16 +1,20 @@
 {
-  "name": "angular-electron",
-  "version": "5.1.0",
-  "description": "Angular 7 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "name": "firebase-toolbox",
+  "version": "0.0.1",
+  "description": "A Graphical Interface for the Firebase CLI",
+  "homepage": "https://github.com/jsayol/firebase-toolbox",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Josep Sayol",
+    "email": "josep.sayol@gmail.com"
   },
   "keywords": [
-    "angular",
-    "angular 7",
+    "firebase",
+    "firebase-tools",
+    "gui",
+    "ui",
+    "desktop",
     "electron",
+    "angular",
     "typescript",
     "sass"
   ],
@@ -52,9 +56,12 @@
     "@angular/platform-browser": "7.2.15",
     "@angular/platform-browser-dynamic": "7.2.15",
     "@angular/router": "7.2.15",
+    "@clr/angular": "^1.1.3",
     "@clr/icons": "^1.1.3",
+    "@clr/ui": "^1.1.3",
     "@ngrx/effects": "^7.4.0",
     "@ngrx/store": "^7.4.0",
+    "@ngx-utilities/ngx-let": "0.0.2",
     "@ngx-translate/core": "11.0.1",
     "@ngx-translate/http-loader": "4.0.0",
     "@types/configstore": "^4.0.0",
@@ -67,6 +74,7 @@
     "codelyzer": "4.5.0",
     "conventional-changelog-cli": "2.0.11",
     "core-js": "2.6.1",
+    "custom-electron-titlebar": "^3.0.8",
     "electron": "^4.2.0",
     "electron-builder": "^20.41.0",
     "electron-reload": "1.3.0",
@@ -89,12 +97,7 @@
     "zone.js": "0.8.29"
   },
   "dependencies": {
-    "@clr/angular": "^1.1.3",
-    "@clr/ui": "^1.1.3",
-    "@ngrx/store": "^7.0.0",
-    "@ngx-utilities/ngx-let": "0.0.2",
     "configstore": "^4.0.0",
-    "custom-electron-titlebar": "^3.0.8",
     "electron-store": "^3.2.0",
     "firebase-tools": "^6.9.2",
     "googleapis": "^39.2.0"

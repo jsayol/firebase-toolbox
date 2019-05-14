@@ -1,0 +1,10 @@
+[debug] [2019-05-14T10:51:17.809Z] ----------------------------------------------------------------------
+[debug] [2019-05-14T10:51:17.811Z] Command:       /home/josep/opt/bin/node /home/josep/.yarn/bin/firebase firestore:indexes -P firestore-sql-test
+[debug] [2019-05-14T10:51:17.811Z] CLI Version:   6.9.2
+[debug] [2019-05-14T10:51:17.811Z] Platform:      linux
+[debug] [2019-05-14T10:51:17.811Z] Node Version:  v10.15.3
+[debug] [2019-05-14T10:51:17.811Z] Time:          Tue May 14 2019 12:51:17 GMT+0200 (Central European Summer Time)
+[debug] [2019-05-14T10:51:17.811Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-05-14T10:51:17.815Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-05-14T10:51:17.815Z] > attempting to authenticate via app default credentials
