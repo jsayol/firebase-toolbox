@@ -18,8 +18,6 @@ import { FirebaseToolsService } from '../../providers/firebase-tools.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  gaming = [];
-
   user$: Observable<User> = this.store.select('user');
 
   workspace$: Observable<Workspace | null> = this.store.select(
@@ -48,10 +46,6 @@ export class HomeComponent implements OnInit {
     // TODO: this should dispatch a "Logout" ngrx action instead
     await this.fb.logout();
     this.store.dispatch(new userActions.GetUserEmail());
-  }
-
-  modelChange($event) {
-    console.log({ $event, gaming: this.gaming });
   }
 
   selectWorkspace(workspace: Workspace): void {
