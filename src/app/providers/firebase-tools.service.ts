@@ -9,7 +9,7 @@ import { promises as fs } from 'fs';
 import * as Configstore from 'configstore';
 import * as cli from 'firebase-tools';
 import { GoogleApis } from 'googleapis';
-import { OAuth2Client } from 'googleapis/node_modules/google-auth-library';
+import { OAuth2Client } from 'googleapis-common';
 
 const CLI_CLIENT_ID =
   '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com';
