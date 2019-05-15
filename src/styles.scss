@@ -1,8 +1,5 @@
-// Clarity Dependency SCSS
-@import "../node_modules/@clr/ui/src/utils/dependencies.clarity"; // Includes light theme
-
 // Clarity Component SCSS
-@import "../node_modules/@clr/ui/src/utils/components.clarity";
+@import "~@clr/ui/src/utils/components.clarity";
 
 html,
 body {

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from './providers/electron.service';
-import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../environments/environment';
 
 @Component({
@@ -9,11 +8,7 @@ import { environment } from '../environments/environment';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(
-    public electronService: ElectronService,
-    private translate: TranslateService
-  ) {
-    translate.setDefaultLang('en');
+  constructor(public electronService: ElectronService) {
     console.log('AppConfig', environment);
 
     if (!environment.production) {
