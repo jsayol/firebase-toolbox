@@ -1,12 +1,20 @@
 <clr-main-container>
   <app-header></app-header>
-
-  <ng-container *ngIf="workspace$ | async">
-    <div class="content-container">
+  <div class="content-container">
+    <ng-container *ngIf="workspace$ | async; else noWorkspaceSelected">
       <app-side-menu></app-side-menu>
       <div class="content-area">
         <!-- TODO: router outlet-->
+        <router-outlet></router-outlet>
       </div>
-    </div>
-  </ng-container>
+    </ng-container>
+    <ng-template #noWorkspaceSelected>
+      <div class="no-workspace-selected">
+        <div class="arrow">
+          <img src="assets/curved-arrow.svg">
+        </div>
+        <div class="message">Choose or add a workspace</div>
+      </div>
+    </ng-template>
+  </div>
 </clr-main-container>

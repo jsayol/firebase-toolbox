@@ -1,24 +1,24 @@
-<clr-vertical-nav [clrVerticalNavCollapsible]="true" [(clrVerticalNavCollapsed)]="collapsedNav">
+<clr-vertical-nav [clrVerticalNavCollapsible]="true" [(clrVerticalNavCollapsed)]="collapsed">
 
-  <a clrVerticalNavLink routerLink="./init" routerLinkActive="active">
-    <clr-icon size="20" clrVerticalNavIcon shape="library"></clr-icon>
-    Features
+  <a clrVerticalNavLink routerLink="./settings" routerLinkActive="active">
+    <clr-icon size="20" clrVerticalNavIcon shape="cog" title="Settings"></clr-icon>
+    Settings
   </a>
 
   <a clrVerticalNavLink routerLink="./serve" routerLinkActive="active">
-    <clr-icon size="20" clrVerticalNavIcon shape="network-globe"></clr-icon>
+    <clr-icon size="20" clrVerticalNavIcon shape="network-globe" title="Serve"></clr-icon>
     Serve
   </a>
 
   <a clrVerticalNavLink routerLink="./deploy" routerLinkActive="active">
-    <clr-icon size="20" clrVerticalNavIcon shape="cloud-traffic"></clr-icon>
+    <clr-icon size="20" clrVerticalNavIcon shape="cloud-traffic" title="Deploy"></clr-icon>
     Deploy
   </a>
 
   <div class="nav-divider"></div>
 
   <clr-vertical-nav-group [clrVerticalNavGroupExpanded]="false">
-    <clr-icon size="20" clrVerticalNavIcon shape="users"></clr-icon>
+    <clr-icon size="20" clrVerticalNavIcon shape="users" title="Auth"></clr-icon>
     Auth
     <clr-vertical-nav-group-children>
       <a clrVerticalNavLink routerLink="./auth.export" routerLinkActive="active">
@@ -33,7 +33,7 @@
   </clr-vertical-nav-group>
 
   <clr-vertical-nav-group [clrVerticalNavGroupExpanded]="false">
-    <clr-icon size="20" clrVerticalNavIcon shape="data-cluster"></clr-icon>
+    <clr-icon size="20" clrVerticalNavIcon shape="data-cluster" title="Database"></clr-icon>
     Database
     <clr-vertical-nav-group-children>
       <a clrVerticalNavLink routerLink="./database.get" routerLinkActive="active">
@@ -72,7 +72,7 @@
   </clr-vertical-nav-group>
 
   <clr-vertical-nav-group [clrVerticalNavGroupExpanded]="false">
-    <clr-icon size="20" clrVerticalNavIcon shape="cpu"></clr-icon>
+    <clr-icon size="20" clrVerticalNavIcon shape="cpu" title="Emulators"></clr-icon>
     Emulators
     <clr-vertical-nav-group-children>
       <a clrVerticalNavLink routerLink="./emulators.start" routerLinkActive="active">
@@ -83,11 +83,11 @@
         <clr-icon size="20" clrVerticalNavIcon shape="file-settings"></clr-icon>
         Execute
       </a>
-      <a clrVerticalNavLink routerLink="./setup.emulators.firestore" routerLinkActive="active">
+      <a clrVerticalNavLink routerLink="./emulators.setup.firestore" routerLinkActive="active">
         <clr-icon size="20" clrVerticalNavIcon shape="cluster"></clr-icon>
         Set up Firestore
       </a>
-      <a clrVerticalNavLink routerLink="./setup.emulators.database" routerLinkActive="active">
+      <a clrVerticalNavLink routerLink="./emulators.setup.database" routerLinkActive="active">
         <clr-icon size="20" clrVerticalNavIcon shape="storage"></clr-icon>
         Set up Database
       </a>
@@ -95,14 +95,14 @@
   </clr-vertical-nav-group>
 
   <clr-vertical-nav-group [clrVerticalNavGroupExpanded]="false">
-    <clr-icon size="20" clrVerticalNavIcon shape="file-group"></clr-icon>
+    <clr-icon size="20" clrVerticalNavIcon shape="file-group" title="Firestore"></clr-icon>
     Firestore
     <clr-vertical-nav-group-children>
-      <a clrVerticalNavLink routerLink="./firestore.start" routerLinkActive="active">
+      <a clrVerticalNavLink routerLink="./firestore.delete" routerLinkActive="active">
         <clr-icon size="20" clrVerticalNavIcon shape="trash"></clr-icon>
         Delete
       </a>
-      <a clrVerticalNavLink routerLink="./firestore.exec" routerLinkActive="active">
+      <a clrVerticalNavLink routerLink="./firestore.indexes" routerLinkActive="active">
         <clr-icon size="20" clrVerticalNavIcon shape="list"></clr-icon>
         Indexes
       </a>
@@ -110,7 +110,7 @@
   </clr-vertical-nav-group>
 
   <clr-vertical-nav-group [clrVerticalNavGroupExpanded]="false">
-    <clr-icon size="20" clrVerticalNavIcon shape="cluster"></clr-icon>
+    <clr-icon size="20" clrVerticalNavIcon shape="cluster" title="Functions"></clr-icon>
     Functions
     <clr-vertical-nav-group-children>
       <a clrVerticalNavLink routerLink="./functions.log" routerLinkActive="active">
@@ -142,7 +142,7 @@
   </clr-vertical-nav-group>
 
   <clr-vertical-nav-group [clrVerticalNavGroupExpanded]="false">
-    <clr-icon size="20" clrVerticalNavIcon shape="world"></clr-icon>
+    <clr-icon size="20" clrVerticalNavIcon shape="world" title="Hosting"></clr-icon>
     Hosting
     <clr-vertical-nav-group-children>
       <a clrVerticalNavLink routerLink="./hosting.disable" routerLinkActive="active">

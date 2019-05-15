@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ClrDropdown } from '@clr/angular';
@@ -37,6 +38,7 @@ export class HeaderComponent implements OnInit {
   );
 
   constructor(
+    private router: Router,
     private store: Store<AppState>,
     private electron: ElectronService,
     private fb: FirebaseToolsService
@@ -52,6 +54,7 @@ export class HeaderComponent implements OnInit {
 
   selectWorkspace(workspace: Workspace): void {
     this.store.dispatch(new workspacesActions.SetSelected(workspace));
+    this.router.navigate(['home', 'settings']);
   }
 
   getWorkspaceName(workspace: Workspace): string {

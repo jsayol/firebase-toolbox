@@ -1,5 +1,10 @@
 clr-vertical-nav {
   height: 100%;
+  background-color: #eceff1;
+
+  .nav-divider {
+    border-bottom: 0;
+  }
 
   clr-icon[size="18"] {
     min-width: 18px;
@@ -9,7 +14,7 @@ clr-vertical-nav {
     min-width: 20px;
   }
 
-  .nav-divider {
-    border-bottom: 0;
+  .nav-link.active .nav-icon {
+    fill: #039be5;
   }
 }

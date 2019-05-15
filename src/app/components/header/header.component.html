@@ -18,7 +18,7 @@
           <clr-icon shape="caret down"></clr-icon>
         </a>
         <clr-dropdown-menu *clrIfOpen class="workspace-selector-menu">
-          <div class="workspace-list nice-scrollbar">
+          <div class="workspace-list">
             <ng-container *ngFor="let workspace of (workspaceList$ | async)">
               <div clrDropdownItem (click)="selectWorkspace(workspace)">
                 <div>
