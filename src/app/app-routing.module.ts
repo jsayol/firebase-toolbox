@@ -82,11 +82,7 @@ const routes: Routes = [
         component: InitializingComponent
       },
       {
-        path: 'emulators.setup.firestore',
-        component: InitializingComponent
-      },
-      {
-        path: 'emulators.setup.database',
+        path: 'emulators.setup',
         component: InitializingComponent
       },
       {
@@ -124,7 +120,7 @@ const routes: Routes = [
       {
         path: 'hosting.disable',
         component: InitializingComponent
-      },
+      }
     ]
   }
 ];

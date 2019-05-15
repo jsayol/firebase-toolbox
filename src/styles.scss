@@ -31,36 +31,28 @@ button:focus {
   outline: none !important;
 }
 
-.btn.btn-primary {
-  // color: #2c384a;
+.btn.btn-secondary {
   color: #fff;
   border-color: #ffa000;
   background-color: #ffa000;
   transition: background-color 0.1s;
 
   &:active {
-    // box-shadow: 0 1px 0 0 #FFCA28 inset;
     box-shadow: none;
   }
 
   &:hover {
-    // color: #2c384a;
     color: #fff;
     border-color: #f57c00;
     background-color: #f57c00;
   }
 }
 
-.btn.btn-navy {
+.btn.btn-primary {
   color: #eceff1;
   border-color: #2c384a;
   background-color: #2c384a;
   transition: background-color 0.1s;
-
-  // &:active {
-  //   // box-shadow: 0 1px 0 0 #FFCA28 inset;
-  //   box-shadow: none;
-  // }
 
   &:hover {
     color: #ffffff;

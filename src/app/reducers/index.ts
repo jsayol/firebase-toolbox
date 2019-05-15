@@ -6,7 +6,7 @@ import {
   MetaReducer
 } from '@ngrx/store';
 
-import { AppConfig } from '../../environments/environment';
+import { environment } from '../../environments/environment';
 import { User } from '../models/user.model';
 import { userReducer } from './user.reducers';
 import { Workspaces } from '../models/workspaces.model';
@@ -26,6 +26,6 @@ export const reducers: ActionReducerMap<State> = {
   projects: projectsReducer
 };
 
-export const metaReducers: MetaReducer<State>[] = !AppConfig.production
+export const metaReducers: MetaReducer<State>[] = !environment.production
   ? []
   : [];
