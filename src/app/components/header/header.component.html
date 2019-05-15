@@ -1,6 +1,6 @@
 <ng-container *ngxLet="workspace$ | async; let selectedWorkspace">
   <ng-container *ngxLet="user$ | async; let user">
-    <clr-header class="header">
+    <clr-header class="header" [class.inactive]="inactive">
       <clr-dropdown class="branding" #workspaceDropdown>
         <a class="logo-and-title nav-icon" clrDropdownTrigger href="javascript://">
           <span class="clr-icon app-logo"></span>

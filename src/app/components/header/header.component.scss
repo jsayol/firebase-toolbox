@@ -10,6 +10,16 @@ clr-header {
   background-color: #039be5;
   -webkit-app-region: drag;
 
+  &.inactive {
+    // background-color: #2C384A;
+    background-color: #32b9fc;
+    color: #222222;
+
+    .title {
+      color: #222222;
+    }
+  }
+
   .branding {
     -webkit-app-region: no-drag;
     min-width: 9rem;

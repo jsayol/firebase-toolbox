@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -20,6 +20,8 @@ import { FirebaseToolsService } from '../../providers/firebase-tools.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  inactive = false;
+
   user$: Observable<User> = this.store.select('user');
 
   workspace$: Observable<Workspace | null> = this.store.select(
@@ -39,12 +41,27 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private ngZone: NgZone,
     private store: Store<AppState>,
     private electron: ElectronService,
     private fb: FirebaseToolsService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    const win = this.electron.remote.getCurrentWindow();
+
+    win.on('blur', () => {
+      this.ngZone.run(() => {
+        this.inactive = true;
+      });
+    });
+
+    win.on('focus', () => {
+      this.ngZone.run(() => {
+        this.inactive = false;
+      });
+    });
+  }
 
   async logout() {
     // TODO: this should dispatch a "Logout" ngrx action instead

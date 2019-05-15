@@ -88,12 +88,6 @@ export class ElectronService {
     });
 
     this.ipcRenderer.on('stderr', (event: IpcEvent, data: string) => {
-      // if (/^Attempting to call a function/.test(data)) {
-      //   return;
-      // }
-      if (/ExperimentalWarning: The fs.promises API is experimental/.test(data)) {
-        return;
-      }
       console.error('STDERR:');
       console.log(data);
     });
