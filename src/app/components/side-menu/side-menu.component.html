@@ -15,6 +15,11 @@
     Deploy
   </a>
 
+  <a clrVerticalNavLink routerLink="./targets" routerLinkActive="active">
+    <clr-icon size="20" clrVerticalNavIcon shape="target" title="Targets"></clr-icon>
+    Targets
+  </a>
+
   <div class="nav-divider"></div>
 
   <clr-vertical-nav-group [clrVerticalNavGroupExpanded]="false">
@@ -57,7 +62,7 @@
         Remove
       </a>
       <a clrVerticalNavLink routerLink="./database.profile" routerLinkActive="active">
-        <clr-icon size="20" clrVerticalNavIcon shape="line-chart"></clr-icon>
+        <clr-icon size="20" clrVerticalNavIcon shape="dashboard"></clr-icon>
         Profile
       </a>
       <a clrVerticalNavLink routerLink="./database.settings.get" routerLinkActive="active">
@@ -138,12 +143,22 @@
         Clone config
       </a>
     </clr-vertical-nav-group-children>
-
   </clr-vertical-nav-group>
 
   <clr-vertical-nav-group [clrVerticalNavGroupExpanded]="false">
     <clr-icon size="20" clrVerticalNavIcon shape="world" title="Hosting"></clr-icon>
     Hosting
+    <clr-vertical-nav-group-children>
+      <a clrVerticalNavLink routerLink="./hosting.disable" routerLinkActive="active">
+        <clr-icon size="20" clrVerticalNavIcon shape="ban"></clr-icon>
+        Disable
+      </a>
+    </clr-vertical-nav-group-children>
+  </clr-vertical-nav-group>
+
+  <clr-vertical-nav-group [clrVerticalNavGroupExpanded]="false">
+    <clr-icon size="20" clrVerticalNavIcon shape="target" title="Hosting"></clr-icon>
+    Targets
     <clr-vertical-nav-group-children>
       <a clrVerticalNavLink routerLink="./hosting.disable" routerLinkActive="active">
         <clr-icon size="20" clrVerticalNavIcon shape="ban"></clr-icon>

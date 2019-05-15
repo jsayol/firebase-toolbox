@@ -30,6 +30,10 @@ const routes: Routes = [
         component: InitializingComponent
       },
       {
+        path: 'targets',
+        component: InitializingComponent
+      },
+      {
         path: 'auth.export',
         component: InitializingComponent
       },
