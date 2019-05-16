@@ -5,34 +5,32 @@
   "projects": {
     "firebase-toolbox": {
       "root": "",
-      "sourceRoot": "src",
+      "sourceRoot": "app-angular/src",
       "projectType": "application",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
+            "outputPath": "app-angular/dist",
+            "index": "app-angular/src/index.html",
+            "main": "app-angular/src/main.ts",
+            "tsConfig": "app-angular/src/tsconfig.app.json",
+            "polyfills": "app-angular/src/polyfills.ts",
             "assets": [
-              "src/assets",
-              "src/favicon.ico",
-              "src/favicon.png",
-              "src/favicon.icns",
-              "src/favicon.64x64.png",
-              "src/favicon.128x128.png",
-              "src/favicon.256x256.png",
-              "src/favicon.512x512.png"
+              "app-angular/src/assets",
+              "app-angular/src/favicon.ico",
+              "app-angular/src/favicon.png",
+              "app-angular/src/favicon.icns",
+              "app-angular/src/favicon.64x64.png",
+              "app-angular/src/favicon.128x128.png",
+              "app-angular/src/favicon.256x256.png",
+              "app-angular/src/favicon.512x512.png"
             ],
             "styles": [
               "node_modules/@clr/icons/clr-icons.css",
-              "src/styles.scss"
+              "app-angular/src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/@clr/icons/clr-icons.min.js"
-            ]
+            "scripts": ["node_modules/@clr/icons/clr-icons.min.js"]
           },
           "configurations": {
             "dev": {
@@ -47,8 +45,8 @@
               "buildOptimizer": false,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
+                  "replace": "app-angular/src/environments/environment.ts",
+                  "with": "app-angular/src/environments/environment.dev.ts"
                 }
               ]
             },
@@ -64,8 +62,8 @@
               "buildOptimizer": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "app-angular/src/environments/environment.ts",
+                  "with": "app-angular/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -94,21 +92,19 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills-test.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
+            "main": "app-angular/src/test.ts",
+            "polyfills": "app-angular/src/polyfills-test.ts",
+            "tsConfig": "app-angular/src/tsconfig.spec.json",
+            "karmaConfig": "app-angular/src/karma.conf.js",
             "scripts": [],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["app-angular/src/styles.scss"],
             "assets": [
-              "src/assets",
-              "src/favicon.ico",
-              "src/favicon.png",
-              "src/favicon.icns",
-              "src/favicon.256x256.png",
-              "src/favicon.512x512.png"
+              "app-angular/src/assets",
+              "app-angular/src/favicon.ico",
+              "app-angular/src/favicon.png",
+              "app-angular/src/favicon.icns",
+              "app-angular/src/favicon.256x256.png",
+              "app-angular/src/favicon.512x512.png"
             ]
           }
         },
@@ -116,29 +112,23 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "app-angular/src/tsconfig.app.json",
+              "app-angular/src/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
     },
     "firebase-toolbox-e2e": {
-      "root": "e2e",
+      "root": "app-angular/e2e",
       "projectType": "application",
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["app-angular/e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }

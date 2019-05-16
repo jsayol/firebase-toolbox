@@ -1,18 +1,18 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist
+/app-angular/dist
 /tmp
 /out-tsc
 /app-builds
 /release
-main.js
+/main.js
 src/**/*.js
-!src/karma.conf.js
+!/app-angular/src/karma.conf.js
 *.js.map
 
 # dependencies
-/node_modules
+node_modules
 
 # IDEs and editors
 /.idea
@@ -40,9 +40,9 @@ testem.log
 /typings
 
 # e2e
-/e2e/*.js
-!/e2e/protractor.conf.js
-/e2e/*.map
+/app-angular/e2e/*.js
+!/app-angular/e2e/protractor.conf.js
+/app-angular/e2e/*.map
 
 # System Files
 .DS_Store
