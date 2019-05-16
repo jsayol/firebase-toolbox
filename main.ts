@@ -1,6 +1,9 @@
 import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as childProcess from 'child_process';
+// import * as mockRequire from 'mock-require';
+// import * as inquirer from 'inquirer';
 
 const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
@@ -66,20 +69,89 @@ function createWindow() {
     done();
   };
 
-  ipcMain.on('winston-add-console-transport', () => {
-    try {
-      require('firebase-tools').logger.add(
-        require('firebase-tools/node_modules/winston').transports.Console,
-        {
-          level: process.env.DEBUG ? 'debug' : 'info',
-          showLevel: false,
-          colorize: true
+  interface FbToolsErrorMessage {
+    type: 'error';
+    error: any;
+  }
+
+  interface FbToolsRunCommandResultMessage {
+    type: 'run-command-result';
+    result: any;
+  }
+
+  interface FbToolsRunCommandErrorMessage {
+    type: 'run-command-error';
+    error: any;
+  }
+
+  interface FbToolsPromptMessage {
+    type: 'prompt';
+    id: string;
+    options: any;
+    question: any;
+  }
+
+  type FbToolsMessage =
+    | FbToolsErrorMessage
+    | FbToolsRunCommandResultMessage
+    | FbToolsRunCommandErrorMessage
+    | FbToolsPromptMessage;
+
+  ipcMain.on(
+    'fbtools',
+    (
+      event: any,
+      replyId: string,
+      command: string,
+      args: any[],
+      options: any
+    ) => {
+      const child = childProcess.fork('./fbtools.js', [], {
+        stdio: ['pipe', 'pipe', 'pipe', 'ipc']
+      });
+
+      child.on('message', (msg: FbToolsMessage) => {
+        if (msg.type === 'error' || msg.type === 'run-command-error') {
+          win.webContents.send(replyId, undefined, msg.error);
+          child.kill();
+          return;
         }
-      );
-    } catch (e) {
-      // ignore
+
+        if (msg.type === 'run-command-result') {
+          win.webContents.send(replyId, msg.result);
+          child.kill();
+          return;
+        }
+
+        if (msg.type === 'prompt') {
+          const { id, options, question } = msg;
+          ipcMain.once(
+            'prompt-response--' + id,
+            (event: any, answer: any, error: any) => {
+              child.send({ type: 'prompt-response', id, answer, error });
+            }
+          );
+          win.webContents.send('prompt', { id, options, question });
+          return;
+        }
+      });
+
+      child.stdout.on('data', (data: any) => {
+        win.webContents.send('stdout-' + replyId, data.toString());
+      });
+
+      child.stderr.on('data', (data: any) => {
+        win.webContents.send('stderr-' + replyId, data.toString());
+      });
+
+      child.send({
+        type: 'run-command',
+        command,
+        args,
+        options
+      });
     }
-  });
+  );
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -90,7 +162,105 @@ function createWindow() {
   });
 }
 
+// function getRandomId(): string {
+//   const ID_LENGTH = 15;
+
+//   let id = '';
+//   do {
+//     id += Math.random()
+//       .toString(36)
+//       .substr(2);
+//   } while (id.length < ID_LENGTH);
+
+//   id = id.substr(0, ID_LENGTH);
+
+//   return id;
+// }
+
+// function interceptCliPrompt() {
+//   // Path to the prompt module we need to intercept
+//   const PROMPT_PATH = './node_modules/firebase-tools/lib/prompt';
+
+//   interface PromptOptions {
+//     [k: string]: any;
+//   }
+
+//   const originalPrompt = require(PROMPT_PATH);
+
+//   const prompt = function(
+//     options: PromptOptions,
+//     questions: inquirer.Question[]
+//   ) {
+//     return new Promise(async (resolve, reject) => {
+//       const id = getRandomId();
+
+//       const prompts: Promise<any>[] = [];
+
+//       for (let i = 0; i < questions.length; i++) {
+//         const question = questions[i];
+
+//         if (!options[question.name]) {
+//           const ipcPrompt = new Promise((ipcResolve, ipcReject) => {
+//             ipcMain.once(
+//               'prompt-response--' + id,
+//               (event: any, answer: any, error: any) => {
+//                 if (error) {
+//                   ipcReject(error);
+//                 } else {
+//                   ipcResolve({ name: question.name, response: answer });
+//                 }
+//               }
+//             );
+
+//             win.webContents.send('prompt', { id, options, question });
+//           });
+
+//           prompts.push(ipcPrompt);
+//         }
+//       }
+
+//       try {
+//         const responses = await Promise.all(prompts);
+//         responses.forEach(({ name, response }) => {
+//           options[name] = response;
+//         });
+//         resolve(options);
+//       } catch (err) {
+//         reject(err);
+//       }
+//     });
+//   };
+
+//   prompt.once = (question: inquirer.Question) => {
+//     question.name = question.name || 'question';
+//     return prompt({}, [question]).then((answers: PromptOptions) => {
+//       return answers[question.name];
+//     });
+//   };
+
+//   prompt.convertLabeledListChoices = originalPrompt.convertLabeledListChoices;
+//   prompt.listLabelToValue = originalPrompt.listLabelToValue;
+
+//   mockRequire(PROMPT_PATH, prompt);
+// }
+
+function addWinstonConsoleTransport() {
+  try {
+    const logger = require('firebase-tools').logger;
+    const winston = require('winston');
+    logger.add(winston.transports.Console, {
+      level: 'info',
+      showLevel: false,
+      colorize: true
+    });
+  } catch (e) {
+    console.error('Failed patching winston logger:', e);
+  }
+}
+
 try {
+  addWinstonConsoleTransport();
+
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.

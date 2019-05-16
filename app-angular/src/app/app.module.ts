@@ -24,6 +24,7 @@ import { HomeComponent } from './components/home/home.component';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SettingsModuleComponent } from './components/modules/settings-module/settings-module.component';
+import { PromptModalComponent } from './components/prompt-modal/prompt-modal.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { SettingsModuleComponent } from './components/modules/settings-module/se
     HomeComponent,
     SideMenuComponent,
     HeaderComponent,
-    SettingsModuleComponent
+    SettingsModuleComponent,
+    PromptModalComponent
   ],
   imports: [
     BrowserModule,

@@ -36,8 +36,6 @@ export class FirebaseToolsService {
       CLI_CLIENT_ID,
       CLI_CLIENT_SECRET
     ) as any;
-
-    this.patchWinstonLogger();
   }
 
   async login(options?: cli.LoginOptions): Promise<void> {
@@ -138,8 +136,12 @@ export class FirebaseToolsService {
     return this.cli.list();
   }
 
-  private patchWinstonLogger() {
-    this.electron.ipcRenderer.send('winston-add-console-transport');
+  init(path: string, feature: cli.InitFeatureName): Promise<void> {
+    // return this.cli.init(feature, { cwd: path, interactive: true });
+    return this.electron.sendAndWait('fbtools', 'init', [feature], {
+      cwd: path,
+      interactive: true
+    });
   }
 }
 

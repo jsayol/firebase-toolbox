@@ -1,27 +1,34 @@
 import { Injectable } from '@angular/core';
 
+import { getRandomId } from '../../utils';
+import { PromptService } from './prompt.service';
+
 // IMPORTANT: These imports should only be used for types!
 import { ipcRenderer, webFrame, remote, IpcRenderer } from 'electron';
-import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as inquirer from 'inquirer';
+
+interface PromptRequest {
+  id: string;
+  question: inquirer.Question;
+}
 
 @Injectable()
 export class ElectronService {
   readonly ipcRenderer: typeof ipcRenderer;
   readonly webFrame: typeof webFrame;
   readonly remote: typeof remote;
-  readonly childProcess: typeof childProcess;
   readonly path: typeof path;
   readonly fs: typeof fs;
 
-  constructor() {
+  constructor(private prompt: PromptService) {
     if (this.isElectron()) {
-      this.ipcRenderer = window.require('electron').ipcRenderer;
-      this.webFrame = window.require('electron').webFrame;
-      this.remote = window.require('electron').remote;
+      const electron = window.require('electron');
 
-      this.childProcess = window.require('child_process');
+      this.ipcRenderer = electron.ipcRenderer;
+      this.webFrame = electron.webFrame;
+      this.remote = electron.remote;
       this.path = window.require('path');
       this.fs = window.require('fs');
 
@@ -31,6 +38,38 @@ export class ElectronService {
 
   isElectron = () => {
     return window && window.process && window.process.type;
+  }
+
+  send(channel: string, ...args: any[]): void {
+    this.ipcRenderer.send(channel, ...args);
+  }
+
+  sendAndWait<T = any>(channel: string, ...args: any[]): Promise<T> {
+    return new Promise((resolve, reject) => {
+      const replyId = getRandomId();
+
+      this.ipcRenderer.on(replyId, (event: any, response: any, error: any) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      });
+
+      this.ipcRenderer.on('stdout-' + replyId, (event: any, data: string) => {
+        console.log(`STDOUT[${replyId}]: ${data}`);
+      });
+
+      this.ipcRenderer.on('stderr-' + replyId, (event: any, data: string) => {
+        console.log(`STDERR[${replyId}]: ${data}`);
+      });
+
+      this.ipcRenderer.send(channel, replyId, ...args);
+    });
+  }
+
+  sendSync(channel: string, ...args: any[]): any {
+    return this.ipcRenderer.sendSync(channel, ...args);
   }
 
   private ipcEvents(): void {
@@ -43,6 +82,26 @@ export class ElectronService {
       console.error('STDERR:');
       console.log(data);
     });
+
+    this.ipcRenderer.on(
+      'prompt',
+      async (event: IpcEvent, promptReq: PromptRequest) => {
+        console.error('PROMPT:');
+        console.log(promptReq);
+        let answer: string;
+        let error: any;
+
+        try {
+          answer = await this.prompt.show(promptReq.question);
+        } catch (err) {
+          error = err;
+        }
+
+        console.log({ answer, error });
+
+        event.sender.send('prompt-response--' + promptReq.id, answer, error);
+      }
+    );
   }
 }
 

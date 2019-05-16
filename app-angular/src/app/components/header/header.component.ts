@@ -65,8 +65,8 @@ export class HeaderComponent implements OnInit {
     // TODO: remove this
     this.selectWorkspace({
       alias: 'default',
-      projectId: 'mods-test',
-      path: '/home/josep/projects/firebase-mods/mods/rtdb-writes-logger'
+      projectId: 'josep-sayol',
+      path: '/home/josep/projects/quick/emulators-demo'
     });
   }
 
