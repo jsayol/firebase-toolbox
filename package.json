@@ -18,7 +18,7 @@
     "typescript",
     "sass"
   ],
-  "main": "main.js",
+  "main": "app-main/index.js",
   "private": true,
   "scripts": {
     "postinstall": "npm run postinstall:electron && electron-builder install-app-deps",
@@ -39,9 +39,10 @@
     "electron:mac": "npm run build:prod && electron-builder build --mac",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "test": "npm run postinstall:web && ng test",
-    "rxjs-5-to-6-migrate": "rxjs-5-to-6-migrate -p src/tsconfig.app.json",
     "e2e": "npm run build:prod && mocha --timeout 300000 --require ts-node/register e2e/**/*.spec.ts",
-    "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
+    "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
+    "build:stats": "ng build --stats-json",
+    "analyze": "webpack-bundle-analyzer app-angular/dist/stats.json"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.800.0-rc.2",

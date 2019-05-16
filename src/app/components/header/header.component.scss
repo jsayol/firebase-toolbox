@@ -1,3 +1,5 @@
+@import "../../../theme";
+
 @media screen and (max-width: 576px) {
   .main-container .header .branding {
     max-width: initial;
@@ -7,12 +9,12 @@
 }
 
 clr-header {
-  background-color: #039be5;
-  -webkit-app-region: drag;
+  // -webkit-app-region: drag;
 
   &.inactive {
     // background-color: #2C384A;
-    background-color: #32b9fc;
+    // background-color: lighten($clr-header-bgColor, 15%); /*#32b9fc;*/
+    background-color: scale-color($clr-header-bgColor, $lightness: +30%); /*#32b9fc;*/
     color: #222222;
 
     .title {
@@ -21,7 +23,7 @@ clr-header {
   }
 
   .branding {
-    -webkit-app-region: no-drag;
+    // -webkit-app-region: no-drag;
     min-width: 9rem;
     max-width: none;
     padding: 0 0.5rem;
@@ -123,7 +125,7 @@ clr-header {
 
   .header-actions {
     .user-profile-picture {
-      -webkit-app-region: no-drag;
+      // -webkit-app-region: no-drag;
       opacity: 1;
 
       .clr-icon {

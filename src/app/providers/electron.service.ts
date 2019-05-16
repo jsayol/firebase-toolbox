@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as ElectronStore from 'electron-store';
-
-import { UserInfo } from '../models/user.model';
-import { FirebaseProject } from '../models/projects.model';
 
 // IMPORTANT: These imports should only be used for types!
 import { ipcRenderer, webFrame, remote, IpcRenderer } from 'electron';
@@ -18,10 +14,8 @@ export class ElectronService {
   readonly childProcess: typeof childProcess;
   readonly path: typeof path;
   readonly fs: typeof fs;
-  private readonly config = new ElectronStore();
 
   constructor() {
-    // Conditional imports
     if (this.isElectron()) {
       this.ipcRenderer = window.require('electron').ipcRenderer;
       this.webFrame = window.require('electron').webFrame;
@@ -37,48 +31,6 @@ export class ElectronService {
 
   isElectron = () => {
     return window && window.process && window.process.type;
-  }
-
-  configSet(key: string, value: any): void {
-    if (this.isElectron()) {
-      this.config.set(key, value);
-    }
-  }
-
-  configGet<T = any>(key: string, defaultValue?: T | undefined): T | undefined {
-    if (this.isElectron()) {
-      return this.config.get(key, defaultValue) as T;
-    } else {
-      return defaultValue;
-    }
-  }
-
-  // TODO: this should go on a PersistenceService
-  getCachedUserInfo(email: string): UserInfo | null {
-    if (this.isElectron()) {
-      const config = this.configGet<{ [email: string]: UserInfo }>('userinfo');
-      if (!config) {
-        return null;
-      }
-      return config[email];
-    } else {
-      return null;
-    }
-  }
-
-  // TODO: this should go on a PersistenceService
-  getCachedUserProjects(email: string): FirebaseProject[] {
-    if (this.isElectron()) {
-      const config = this.configGet<{ [email: string]: FirebaseProject[] }>(
-        'userprojects'
-      );
-      if (!config) {
-        return [];
-      }
-      return config[email];
-    } else {
-      return [];
-    }
   }
 
   private ipcEvents(): void {

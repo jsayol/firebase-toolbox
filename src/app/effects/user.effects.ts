@@ -6,7 +6,7 @@ import { map, switchMap, catchError, tap, startWith } from 'rxjs/operators';
 
 import * as userActions from '../actions/user.actions';
 import { FirebaseToolsService } from '../providers/firebase-tools.service';
-import { ElectronService } from '../providers/electron.service';
+import { ConfigService } from '../providers/config.service';
 
 export type Action = userActions.All;
 
@@ -15,7 +15,7 @@ export class UserEffects implements OnInitEffects {
   constructor(
     private actions$: Actions,
     private fb: FirebaseToolsService,
-    private electron: ElectronService,
+    private config: ConfigService,
     private router: Router,
     private ngZone: NgZone
   ) {}
@@ -44,7 +44,7 @@ export class UserEffects implements OnInitEffects {
     map((action: userActions.GetUserInfo) => action.payload),
     switchMap(email =>
       from(this.fb.getUserInfo()).pipe(
-        startWith(this.electron.getCachedUserInfo(email)),
+        startWith(this.config.getUserInfo(email)),
         map(userInfo => new userActions.GetUserInfoSuccess(userInfo)),
         catchError(error => of(new userActions.GetUserInfoFailure(error)))
       )
@@ -56,9 +56,7 @@ export class UserEffects implements OnInitEffects {
     ofType(userActions.GET_USER_INFO_SUCCESS),
     tap((action: userActions.GetUserInfoSuccess) => {
       if (action.payload) {
-        const configUserInfo = this.electron.configGet('userinfo', {});
-        configUserInfo[this.fb.getUserEmail()] = action.payload;
-        this.electron.configSet('userinfo', configUserInfo);
+        this.config.setUserInfo(this.fb.getUserEmail(), action.payload);
       }
     })
   );

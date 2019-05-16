@@ -6,7 +6,7 @@ import { map, switchMap, catchError, tap, startWith } from 'rxjs/operators';
 import * as projectsActions from '../actions/projects.actions';
 import * as userActions from '../actions/user.actions';
 import { FirebaseToolsService } from '../providers/firebase-tools.service';
-import { ElectronService } from '../providers/electron.service';
+import { ConfigService } from '../providers/config.service';
 
 export type Action = projectsActions.All;
 
@@ -15,7 +15,7 @@ export class ProjectsEffects {
   constructor(
     private actions$: Actions,
     private fb: FirebaseToolsService,
-    private electron: ElectronService
+    private config: ConfigService
   ) {}
 
   @Effect()
@@ -32,7 +32,7 @@ export class ProjectsEffects {
     switchMap(email => {
       if (email) {
         return from(this.fb.getProjects()).pipe(
-          startWith(this.electron.getCachedUserProjects(email)),
+          startWith(this.config.getUserProjects(email)),
           map(list => new projectsActions.GetListSuccess(list)),
           catchError((error: Error) =>
             of(new projectsActions.GetListFailure(error))
@@ -49,9 +49,7 @@ export class ProjectsEffects {
     ofType(projectsActions.GET_LIST_SUCCESS),
     tap((action: projectsActions.GetListSuccess) => {
       if (action.payload) {
-        const configUserInfo = this.electron.configGet('userprojects', {});
-        configUserInfo[this.fb.getUserEmail()] = action.payload;
-        this.electron.configSet('userprojects', configUserInfo);
+        this.config.setUserProjects(this.fb.getUserEmail(), action.payload);
       }
     })
   );

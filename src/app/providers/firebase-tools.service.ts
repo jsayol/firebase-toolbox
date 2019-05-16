@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ElectronService } from './electron.service';
-import { HttpClient } from '@angular/common/http';
-// import { google } from 'googleapis';
 
 // IMPORTANT: These imports should only be used for types!
 import * as path from 'path';
@@ -26,7 +24,7 @@ export class FirebaseToolsService {
   private oauth2Client: OAuth2Client;
   private google: GoogleApis;
 
-  constructor(private electron: ElectronService, private http: HttpClient) {
+  constructor(private electron: ElectronService) {
     const Configstore = this.electron.remote.require('configstore');
     this.fs = this.electron.remote.require('fs').promises;
     this.cli = this.electron.remote.require('firebase-tools');

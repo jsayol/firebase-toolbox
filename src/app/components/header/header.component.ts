@@ -61,6 +61,13 @@ export class HeaderComponent implements OnInit {
         this.inactive = false;
       });
     });
+
+    // TODO: remove this
+    this.selectWorkspace({
+      alias: 'default',
+      projectId: 'mods-test',
+      path: '/home/josep/projects/firebase-mods/mods/rtdb-writes-logger'
+    });
   }
 
   async logout() {
