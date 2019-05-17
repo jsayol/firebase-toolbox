@@ -12,11 +12,12 @@ import { EffectsModule } from '@ngrx/effects';
 import { NgxLetModule } from '@ngx-utilities/ngx-let';
 import { ClarityModule } from '@clr/angular';
 
+import { reducers, metaReducers } from './reducers';
+import { effects } from './effects';
 import { AppRoutingModule } from './app-routing.module';
 import { ElectronService } from './providers/electron.service';
 import { WebviewDirective } from './directives/webview.directive';
-import { reducers, metaReducers } from './reducers';
-import { effects } from './effects';
+import { AutofocusDirective } from './directives/autofocus.directive';
 import { AppComponent } from './app.component';
 import { InitializingComponent } from './components/initializing/initializing.component';
 import { LoginComponent } from './components/login/login.component';
@@ -36,7 +37,8 @@ import { PromptModalComponent } from './components/prompt-modal/prompt-modal.com
     SideMenuComponent,
     HeaderComponent,
     SettingsModuleComponent,
-    PromptModalComponent
+    PromptModalComponent,
+    AutofocusDirective
   ],
   imports: [
     BrowserModule,

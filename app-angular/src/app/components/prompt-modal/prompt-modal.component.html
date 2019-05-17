@@ -6,7 +6,7 @@
       <ng-container *ngIf="question?.type === 'input'">
         <clr-input-container>
           <label>Answer:</label>
-          <input clrInput placeholder="{{ question?.default }}" name="input" [(ngModel)]="answer" />
+          <input clrInput appAutoFocus placeholder="{{ question?.default }}" name="input" [(ngModel)]="answer" />
         </clr-input-container>
       </ng-container>
       <input type="submit" hidden (click)="continue()">
