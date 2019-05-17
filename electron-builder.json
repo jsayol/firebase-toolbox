@@ -11,26 +11,26 @@
     "!LICENSE.md",
     "!package.json",
     "!package-lock.json",
-    "!src/",
-    "!e2e/",
+    "!app-angular/src/",
+    "!app-angular/e2e/",
     "!hooks/",
     "!angular.json",
     "!_config.yml",
     "!karma.conf.js",
-    "!tsconfig.json",
+    "!**/tsconfig.json",
     "!tslint.json"
   ],
   "win": {
-    "icon": "dist",
+    "icon": "app-angular/dist",
     "target": ["portable"]
   },
   "mac": {
-    "icon": "dist",
+    "icon": "app-angular/dist",
     "target": ["dmg"]
   },
   "linux": {
-    "icon": "icon-512x512.png",
+    "icon": "app-angular/src/favicon.512x512.png",
     "target": ["AppImage"],
-    "executableName": "firebase-toolbox"
+    "category": "Utility"
   }
 }

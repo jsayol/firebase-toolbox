@@ -37,7 +37,7 @@
     "electron:linux": "npm run build:prod && electron-builder build --linux",
     "electron:windows": "npm run build:prod && electron-builder build --windows",
     "electron:mac": "npm run build:prod && electron-builder build --mac",
-    "lint": "npmr run lint:main && npm run lint:angular",
+    "lint": "npm run lint:main && npm run lint:angular",
     "lint:main": "tslint -c tslint.json -p tsconfig.json",
     "lint:angular": "tslint -c tslint.json -p app-angular/tsconfig.json",
     "test": "npm run postinstall:web && ng test",

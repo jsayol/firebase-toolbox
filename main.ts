@@ -27,7 +27,7 @@ function createWindow() {
       nodeIntegration: true
     },
     icon:
-      (serve ? 'src/' : '') +
+      (serve ? 'app-angular/src/' : '') +
       'favicon.64x64.' +
       (process.platform === 'win32' ? 'ico' : 'png')
   });
@@ -40,7 +40,7 @@ function createWindow() {
   } else {
     win.loadURL(
       url.format({
-        pathname: path.join(__dirname, 'dist/index.html'),
+        pathname: path.join(__dirname, 'app-angular/dist/index.html'),
         protocol: 'file:',
         slashes: true
       })
@@ -106,9 +106,13 @@ function createWindow() {
       args: any[],
       options: any
     ) => {
-      const child = childProcess.fork('./fbtools.js', [], {
-        stdio: ['pipe', 'pipe', 'pipe', 'ipc']
-      });
+      const child = childProcess.fork(
+        path.resolve(__dirname, './fbtools.js'),
+        [],
+        {
+          stdio: ['pipe', 'pipe', 'pipe', 'ipc']
+        }
+      );
 
       child.on('message', (msg: FbToolsMessage) => {
         if (msg.type === 'error' || msg.type === 'run-command-error') {

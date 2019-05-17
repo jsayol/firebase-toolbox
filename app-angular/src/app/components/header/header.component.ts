@@ -76,6 +76,10 @@ export class HeaderComponent implements OnInit {
     this.store.dispatch(new userActions.GetUserEmail());
   }
 
+  openDevTools() {
+    this.electron.remote.getCurrentWindow().webContents.openDevTools();
+  }
+
   selectWorkspace(workspace: Workspace): void {
     this.store.dispatch(new workspacesActions.SetSelected(workspace));
     this.router.navigate(['home', 'settings']);

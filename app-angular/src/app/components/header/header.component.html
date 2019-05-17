@@ -61,6 +61,10 @@
             <clr-icon shape="user" size="32"></clr-icon>
           </button>
           <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+            <a href="javascript://" clrDropdownItem (click)="openDevTools()">
+              <clr-icon shape="wrench"></clr-icon>
+              Open DevTools
+            </a>
             <a href="javascript://" clrDropdownItem (click)="logout()">
               <clr-icon shape="logout"></clr-icon>
               Sign out
