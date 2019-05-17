@@ -2,8 +2,8 @@ import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as childProcess from 'child_process';
-// import * as mockRequire from 'mock-require';
-// import * as inquirer from 'inquirer';
+
+import { addWinstonConsoleTransport } from './utils';
 
 const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
@@ -160,102 +160,6 @@ function createWindow() {
     // when you should delete the corresponding element.
     win = null;
   });
-}
-
-// function getRandomId(): string {
-//   const ID_LENGTH = 15;
-
-//   let id = '';
-//   do {
-//     id += Math.random()
-//       .toString(36)
-//       .substr(2);
-//   } while (id.length < ID_LENGTH);
-
-//   id = id.substr(0, ID_LENGTH);
-
-//   return id;
-// }
-
-// function interceptCliPrompt() {
-//   // Path to the prompt module we need to intercept
-//   const PROMPT_PATH = './node_modules/firebase-tools/lib/prompt';
-
-//   interface PromptOptions {
-//     [k: string]: any;
-//   }
-
-//   const originalPrompt = require(PROMPT_PATH);
-
-//   const prompt = function(
-//     options: PromptOptions,
-//     questions: inquirer.Question[]
-//   ) {
-//     return new Promise(async (resolve, reject) => {
-//       const id = getRandomId();
-
-//       const prompts: Promise<any>[] = [];
-
-//       for (let i = 0; i < questions.length; i++) {
-//         const question = questions[i];
-
-//         if (!options[question.name]) {
-//           const ipcPrompt = new Promise((ipcResolve, ipcReject) => {
-//             ipcMain.once(
-//               'prompt-response--' + id,
-//               (event: any, answer: any, error: any) => {
-//                 if (error) {
-//                   ipcReject(error);
-//                 } else {
-//                   ipcResolve({ name: question.name, response: answer });
-//                 }
-//               }
-//             );
-
-//             win.webContents.send('prompt', { id, options, question });
-//           });
-
-//           prompts.push(ipcPrompt);
-//         }
-//       }
-
-//       try {
-//         const responses = await Promise.all(prompts);
-//         responses.forEach(({ name, response }) => {
-//           options[name] = response;
-//         });
-//         resolve(options);
-//       } catch (err) {
-//         reject(err);
-//       }
-//     });
-//   };
-
-//   prompt.once = (question: inquirer.Question) => {
-//     question.name = question.name || 'question';
-//     return prompt({}, [question]).then((answers: PromptOptions) => {
-//       return answers[question.name];
-//     });
-//   };
-
-//   prompt.convertLabeledListChoices = originalPrompt.convertLabeledListChoices;
-//   prompt.listLabelToValue = originalPrompt.listLabelToValue;
-
-//   mockRequire(PROMPT_PATH, prompt);
-// }
-
-function addWinstonConsoleTransport() {
-  try {
-    const logger = require('firebase-tools').logger;
-    const winston = require('winston');
-    logger.add(winston.transports.Console, {
-      level: 'info',
-      showLevel: false,
-      colorize: true
-    });
-  } catch (e) {
-    console.error('Failed patching winston logger:', e);
-  }
 }
 
 try {

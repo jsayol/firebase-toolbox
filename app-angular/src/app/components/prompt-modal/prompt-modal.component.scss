@@ -1,0 +1,11 @@
+clr-modal {
+  &.type--input {
+    label {
+      display: none;
+    }
+
+    input[name="input"] {
+      width: 500px;
+    }
+  }
+}

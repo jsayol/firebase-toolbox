@@ -5,17 +5,26 @@ import { Question } from 'inquirer';
 import { getRandomId } from '../../utils';
 import { filter, first } from 'rxjs/operators';
 
+export interface PromptQuestion {
+  id: string;
+  question: Question;
+}
+
+export interface PromptAnswer {
+  id: string;
+  answer?: string;
+  error?: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class PromptService {
-  questions$ = new Subject<{ id: string; question: Question }>();
-  answers$ = new Subject<{ id: string; error?: any; answer: string }>();
+  questions$ = new Subject<PromptQuestion>();
+  private answers$ = new Subject<PromptAnswer>();
 
-  show(question: Question): Promise<string> {
+  show(id: string, question: Question): Promise<string> {
     return new Promise((resolve, reject) => {
-      const id = getRandomId();
-
       this.answers$
         .pipe(
           filter(value => value.id === id),
@@ -31,5 +40,9 @@ export class PromptService {
 
       this.questions$.next({ id, question });
     });
+  }
+
+  answer(id, answer: string | undefined, error?: any): void {
+    this.answers$.next({ id, answer, error });
   }
 }

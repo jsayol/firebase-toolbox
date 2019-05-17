@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { getRandomId } from '../../utils';
 import { PromptService } from './prompt.service';
+import { getRandomId } from '../../utils';
 
 // IMPORTANT: These imports should only be used for types!
 import { ipcRenderer, webFrame, remote, IpcRenderer } from 'electron';
@@ -92,13 +92,12 @@ export class ElectronService {
         let error: any;
 
         try {
-          answer = await this.prompt.show(promptReq.question);
+          answer = await this.prompt.show(promptReq.id, promptReq.question);
         } catch (err) {
           error = err;
         }
 
         console.log({ answer, error });
-
         event.sender.send('prompt-response--' + promptReq.id, answer, error);
       }
     );

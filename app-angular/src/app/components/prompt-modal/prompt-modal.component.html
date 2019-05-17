@@ -1,0 +1,21 @@
+<clr-modal [(clrModalOpen)]="open" [clrModalClosable]="false" class="type--{{ question?.type }}">
+  <h3 class="modal-title">{{ question?.message }}</h3>
+  <div class="modal-body">
+    <!-- <pre><code>{{ question | json }}</code></pre> -->
+    <form clrForm>
+      <ng-container *ngIf="question?.type === 'input'">
+        <clr-input-container>
+          <label>Answer:</label>
+          <input clrInput placeholder="{{ question?.default }}" name="input" [(ngModel)]="answer" />
+        </clr-input-container>
+      </ng-container>
+      <input type="submit" hidden (click)="continue()">
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning-outline" (click)="cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="continue()">
+      Continue
+    </button>
+  </div>
+</clr-modal>

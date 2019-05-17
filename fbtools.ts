@@ -1,9 +1,12 @@
 import * as firebaseTools from 'firebase-tools';
 import * as mockRequire from 'mock-require';
 import * as inquirer from 'inquirer';
+import { addWinstonConsoleTransport, getRandomId } from './utils';
 
+// These 3 calls need to happen in this specific order.
 interceptCliPrompt();
 const tools = require('firebase-tools') as typeof firebaseTools;
+addWinstonConsoleTransport();
 
 interface RunCommandMessage {
   type: 'run-command';
@@ -59,21 +62,6 @@ async function runCommand(message: RunCommandMessage): Promise<void> {
   }
 }
 
-function getRandomId(): string {
-  const ID_LENGTH = 15;
-
-  let id = '';
-  do {
-    id += Math.random()
-      .toString(36)
-      .substr(2);
-  } while (id.length < ID_LENGTH);
-
-  id = id.substr(0, ID_LENGTH);
-
-  return id;
-}
-
 export function interceptCliPrompt() {
   // Path to the prompt module we need to intercept
   const PROMPT_PATH = './node_modules/firebase-tools/lib/prompt';
@@ -117,8 +105,8 @@ export function interceptCliPrompt() {
 
       try {
         const responses = await Promise.all(prompts);
-        responses.forEach(({ name, response }) => {
-          options[name] = response;
+        responses.forEach(({ name, answer }) => {
+          options[name] = answer;
         });
         resolve(options);
       } catch (err) {
