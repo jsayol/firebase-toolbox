@@ -29,7 +29,6 @@ process.on('disconnect', () => {
 });
 
 process.on('message', (message: Message) => {
-  console.log('GOT MESSAGE', message);
   if (message.type === 'run-command') {
     runCommand(message);
   }

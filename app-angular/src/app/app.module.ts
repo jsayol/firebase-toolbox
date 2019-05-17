@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { NgxLetModule } from '@ngx-utilities/ngx-let';
@@ -26,6 +25,7 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SettingsModuleComponent } from './components/modules/settings-module/settings-module.component';
 import { PromptModalComponent } from './components/prompt-modal/prompt-modal.component';
+import { ShellOutputComponent } from './components/shell-output/shell-output.component';
 
 @NgModule({
   declarations: [
@@ -38,13 +38,13 @@ import { PromptModalComponent } from './components/prompt-modal/prompt-modal.com
     HeaderComponent,
     SettingsModuleComponent,
     PromptModalComponent,
-    AutofocusDirective
+    AutofocusDirective,
+    ShellOutputComponent
   ],
   imports: [
     BrowserModule,
     RouterModule,
     FormsModule,
-    HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ClarityModule,

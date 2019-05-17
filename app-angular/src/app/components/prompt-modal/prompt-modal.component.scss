@@ -1,4 +1,12 @@
 clr-modal {
+  .clr-form {
+    padding-left: 0;
+
+    .clr-form-control {
+      margin-top: 0;
+    }
+  }
+  
   &.type--input {
     label {
       display: none;

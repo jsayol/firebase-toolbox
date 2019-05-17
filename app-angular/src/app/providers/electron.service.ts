@@ -9,6 +9,11 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as inquirer from 'inquirer';
 
+export interface OutputCapture {
+  stdout: (text: string) => void;
+  stderr: (text: string) => void;
+}
+
 interface PromptRequest {
   id: string;
   question: inquirer.Question;
@@ -44,7 +49,7 @@ export class ElectronService {
     this.ipcRenderer.send(channel, ...args);
   }
 
-  sendAndWait<T = any>(channel: string, ...args: any[]): Promise<T> {
+  sendAndWait<T = any>(output: OutputCapture, channel: string, ...args: any[]): Promise<T> {
     return new Promise((resolve, reject) => {
       const replyId = getRandomId();
 
@@ -57,11 +62,13 @@ export class ElectronService {
       });
 
       this.ipcRenderer.on('stdout-' + replyId, (event: any, data: string) => {
-        console.log(`STDOUT[${replyId}]: ${data}`);
+        // console.log(`STDOUT[${replyId}]: ${data}`);
+        output.stdout(data);
       });
 
       this.ipcRenderer.on('stderr-' + replyId, (event: any, data: string) => {
-        console.log(`STDERR[${replyId}]: ${data}`);
+        // console.log(`STDERR[${replyId}]: ${data}`);
+        output.stderr(data);
       });
 
       this.ipcRenderer.send(channel, replyId, ...args);

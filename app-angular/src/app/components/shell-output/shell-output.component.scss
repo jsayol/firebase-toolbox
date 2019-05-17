@@ -1,0 +1,53 @@
+@import "../../../theme";
+
+:host {
+  // height: 10rem;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  display: none;
+}
+
+:host.visible {
+  display: block;
+}
+
+.toggle {
+  cursor: pointer;
+  color: $app-shell-output-toggle-color;
+  background-color: $app-shell-output-header-bg-color;
+  display: flex;
+  justify-content: flex-end;
+  height: 1rem;
+  align-items: center;
+  padding-right: 0.15rem;
+  font-size: 0.87em;
+
+  // &.open {
+  & {
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  * + * {
+    margin-left: 0.3rem;
+  }
+}
+
+.output-container {
+  height: 0;
+  transition: height 0.15s ease-in-out;
+
+  &.open {
+    height: 65vh;
+
+    .output {
+      padding: 0 0.2rem;
+    }
+  }
+
+  .output {
+    width: 100%;
+    height: 100%;
+  }
+}

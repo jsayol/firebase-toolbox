@@ -11,6 +11,10 @@ body {
   background-color: rgba(0, 0, 0, 0);
 }
 
+* {
+  user-select: none;
+}
+
 body > .titlebar {
   &.linux,
   &.windows {
@@ -72,4 +76,187 @@ button:focus {
 *::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: #555;
+}
+
+app-home .app-module {
+  .module-title {
+    margin: $app-module-title-margin;
+    padding: $app-module-title-padding;
+    border-bottom: 1px solid $app-module-title-border-color;
+    background-color: $app-module-title-background-color;
+    color: $app-module-title-color;
+  }
+
+  .module-content {
+    padding: $app-module-content-padding;
+    height: calc(100vh - 5.28rem);
+    position: relative;
+
+    // .card {
+    //   box-shadow: none;
+    //   border-radius: 0.2rem;
+    //   border-color: #eceff1;
+    // }
+  }
+}
+
+.card {
+  margin-top: 0;
+  .card-header {
+    background-color: $app-card-header-bg-color;
+    border-color: $app-card-header-border-color;
+  }
+
+  .clr-form-control {
+    margin-top: 0;
+  }
+}
+
+.shell-output {
+  color: $app-shell-output-fg-color;
+  background-color: $app-shell-output-bg-color;
+  font-size: $app-shell-output-font-size;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-family: monospace;
+  line-height: 0.67rem;
+
+  &,
+  * {
+    user-select: text;
+  }
+
+  &::selection,
+  & *::selection {
+    color: $app-shell-output-selection-fg-color;
+    background-color: $app-shell-output-selection-bg-color;
+  }
+
+  .ansi-black-fg {
+    color: $app-shell-output-ansiBlack;
+  }
+
+  .ansi-black-bg {
+    background-color: $app-shell-output-ansiBlack;
+  }
+
+  .ansi-black-fg {
+    color: $app-shell-output-ansiBrightBlack;
+  }
+
+  .ansi-black-bg {
+    background-color: $app-shell-output-ansiBrightBlack;
+  }
+
+  .ansi-red-fg {
+    color: $app-shell-output-ansiRed;
+  }
+
+  .ansi-red-bg {
+    background-color: $app-shell-output-ansiRed;
+  }
+
+  .ansi-red-fg {
+    color: $app-shell-output-ansiBrightRed;
+  }
+
+  .ansi-red-bg {
+    background-color: $app-shell-output-ansiBrightRed;
+  }
+
+  .ansi-green-fg {
+    color: $app-shell-output-ansiGreen;
+  }
+
+  .ansi-green-bg {
+    background-color: $app-shell-output-ansiGreen;
+  }
+
+  .ansi-green-fg {
+    color: $app-shell-output-ansiBrightGreen;
+  }
+
+  .ansi-green-bg {
+    background-color: $app-shell-output-ansiBrightGreen;
+  }
+
+  .ansi-yellow-fg {
+    color: $app-shell-output-ansiYellow;
+  }
+
+  .ansi-yellow-bg {
+    background-color: $app-shell-output-ansiYellow;
+  }
+
+  .ansi-yellow-fg {
+    color: $app-shell-output-ansiBrightYellow;
+  }
+
+  .ansi-yellow-bg {
+    background-color: $app-shell-output-ansiBrightYellow;
+  }
+
+  .ansi-blue-fg {
+    color: $app-shell-output-ansiBlue;
+  }
+
+  .ansi-blue-bg {
+    background-color: $app-shell-output-ansiBlue;
+  }
+
+  .ansi-blue-fg {
+    color: $app-shell-output-ansiBrightBlue;
+  }
+
+  .ansi-blue-bg {
+    background-color: $app-shell-output-ansiBrightBlue;
+  }
+
+  .ansi-magenta-fg {
+    color: $app-shell-output-ansiMagenta;
+  }
+
+  .ansi-magenta-bg {
+    background-color: $app-shell-output-ansiMagenta;
+  }
+
+  .ansi-magenta-fg {
+    color: $app-shell-output-ansiBrightMagenta;
+  }
+
+  .ansi-magenta-bg {
+    background-color: $app-shell-output-ansiBrightMagenta;
+  }
+
+  .ansi-cyan-fg {
+    color: $app-shell-output-ansiCyan;
+  }
+
+  .ansi-cyan-bg {
+    background-color: $app-shell-output-ansiCyan;
+  }
+
+  .ansi-cyan-fg {
+    color: $app-shell-output-ansiBrightCyan;
+  }
+
+  .ansi-cyan-bg {
+    background-color: $app-shell-output-ansiBrightCyan;
+  }
+
+  .ansi-white-fg {
+    color: $app-shell-output-ansiWhite;
+  }
+
+  .ansi-white-bg {
+    background-color: $app-shell-output-ansiWhite;
+  }
+
+  .ansi-white-fg {
+    color: $app-shell-output-ansiBrightWhite;
+  }
+
+  .ansi-white-bg {
+    background-color: $app-shell-output-ansiBrightWhite;
+  }
 }

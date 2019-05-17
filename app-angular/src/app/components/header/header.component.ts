@@ -2,6 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { first, filter } from 'rxjs/operators';
 import { ClrDropdown } from '@clr/angular';
 
 import { AppState } from '../../models';
@@ -9,6 +10,7 @@ import { User } from '../../models/user.model';
 import { Workspace } from '../../models/workspaces.model';
 import { FirebaseProject } from '../../models/projects.model';
 
+import { environment } from '../../../environments/environment';
 import * as workspacesActions from '../../actions/workspaces.actions';
 import * as userActions from '../../actions/user.actions';
 import { ElectronService } from '../../providers/electron.service';
@@ -62,12 +64,21 @@ export class HeaderComponent implements OnInit {
       });
     });
 
-    // TODO: remove this
-    this.selectWorkspace({
-      alias: 'default',
-      projectId: 'josep-sayol',
-      path: '/home/josep/projects/quick/emulators-demo'
-    });
+    // TODO: This is only to speed up the development cycle (avoids having
+    // to select a workspace every time). Remove it eventually.
+    if (!environment.production) {
+      this.workspaceList$
+        .pipe(
+          filter(list => !!list && list.length > 0),
+          first()
+        )
+        .subscribe(list => {
+          const workspace = list.find(w => w.path.endsWith('/emulators-demo'));
+          if (workspace) {
+            this.selectWorkspace(workspace);
+          }
+        });
+    }
   }
 
   async logout() {

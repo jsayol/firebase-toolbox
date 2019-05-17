@@ -32,8 +32,8 @@
                   <span class="workspace-project-path">{{ workspace.path }}</span>
                 </div>
                 <div class="workspace-project-name p2">
-                  Project: {{ workspace.alias }}
-                  <ng-container *ngIf="workspace.projectId !==workspace.alias">
+                  Project: {{ workspace.projectAlias }}
+                  <ng-container *ngIf="workspace.projectId !== workspace.projectAlias">
                     ({{ workspace.projectId }})
                   </ng-container>
                 </div>

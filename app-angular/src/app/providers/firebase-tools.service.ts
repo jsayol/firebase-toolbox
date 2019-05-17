@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ElectronService } from './electron.service';
+import { ElectronService, OutputCapture } from './electron.service';
 
 // IMPORTANT: These imports should only be used for types!
 import * as path from 'path';
@@ -17,8 +17,8 @@ const CLI_CLIENT_SECRET = 'j9iVZfS8kkCEFUPaAeJV0sAi';
   providedIn: 'root'
 })
 export class FirebaseToolsService {
+  readonly cli: typeof cli;
   private fs: typeof fs;
-  private cli: typeof cli;
   private path: typeof path;
   private configstore: Configstore;
   private oauth2Client: OAuth2Client;
@@ -112,17 +112,12 @@ export class FirebaseToolsService {
         const workspace: Workspace = {
           path,
           projectId: name,
-          alias: name
+          projectAlias: name
         };
 
-        try {
-          const rcPath = this.path.join(path, '.firebaserc');
-          const rc = JSON.parse(await fs.readFile(rcPath, 'utf8'));
-          if (contains(rc, 'projects') && contains(rc.projects, name)) {
-            workspace.projectId = rc.projects[name];
-          }
-        } catch (err) {
-          // Either ".firebaserc" doesn't exists or is incorrect. No problem.
+        const rc = await this.rcFile(workspace);
+        if (rc && contains(rc, 'projects') && contains(rc.projects, name)) {
+          workspace.projectId = rc.projects[name];
         }
 
         return workspace;
@@ -136,12 +131,63 @@ export class FirebaseToolsService {
     return this.cli.list();
   }
 
-  init(path: string, feature: cli.InitFeatureName): Promise<void> {
-    // return this.cli.init(feature, { cwd: path, interactive: true });
-    return this.electron.sendAndWait('fbtools', 'init', [feature], {
+  async getWorkspaceProjects(
+    workspace: Workspace
+  ): Promise<Array<{ id: string; alias: string }>> {
+    const rc = await this.rcFile(workspace);
+
+    if (
+      !rc ||
+      !contains(rc, 'projects') ||
+      Object.keys(rc.projects).length === 0
+    ) {
+      return [{ id: workspace.projectId, alias: workspace.projectAlias }];
+    }
+
+    const projects: Array<{ id: string; alias: string }> = [];
+    let hasActiveProject = false;
+
+    for (const alias in rc.projects) {
+      const id = rc.projects[alias];
+      projects.push({ id, alias });
+      if (id === workspace.projectId) {
+        hasActiveProject = true;
+      }
+    }
+
+    if (!hasActiveProject) {
+      projects.unshift({
+        id: workspace.projectId,
+        alias: workspace.projectAlias
+      });
+    }
+
+    return projects;
+  }
+
+  init(
+    output: OutputCapture,
+    path: string,
+    feature: cli.InitFeatureName
+  ): Promise<void> {
+    return this.electron.sendAndWait(output, 'fbtools', 'init', [feature], {
       cwd: path,
       interactive: true
     });
+  }
+
+  useProject(workspace) {}
+
+  private async rcFile(
+    workspace: Workspace
+  ): Promise<{ [k: string]: any } | null> {
+    try {
+      const rcPath = this.path.join(workspace.path, '.firebaserc');
+      return JSON.parse(await fs.readFile(rcPath, 'utf8'));
+    } catch (err) {
+      // Either ".firebaserc" doesn't exist or is corrupted
+      return null;
+    }
   }
 }
 
@@ -153,7 +199,7 @@ export interface UserInfo {
 export interface Workspace {
   path: string;
   projectId: string;
-  alias: string;
+  projectAlias: string;
 }
 
 function contains(obj: { [k: string]: any }, key: string): boolean {
@@ -161,3 +207,8 @@ function contains(obj: { [k: string]: any }, key: string): boolean {
 }
 
 export type FirebaseProject = cli.FirebaseProject;
+
+// TODO: decide if we want this, and finish it if so
+interface Commands {
+  init: typeof cli.init;
+}

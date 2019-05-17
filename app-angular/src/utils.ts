@@ -1,3 +1,12 @@
+import * as AnsiUp from 'ansi_up';
+
+const ansiUp: AnsiUp.AnsiUp = new (AnsiUp as any).default();
+ansiUp.use_classes = true;
+
+export function ansiToHTML(text: string): string {
+  return ansiUp.ansi_to_html(text);
+}
+
 export function getRandomId(): string {
   const ID_LENGTH = 15;
 

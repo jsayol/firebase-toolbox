@@ -35,7 +35,7 @@ export class PromptModalComponent implements OnInit, OnDestroy {
     this.prompt.questions$
       .pipe(takeWhile(() => this.destroy === false))
       .subscribe(question => {
-        if (this.currentId !== null) {
+        if (this.currentId) {
           this.buffer.push(question);
         } else {
           this.showQuestion(question);
@@ -75,9 +75,10 @@ export class PromptModalComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
+    this.prompt.answer(this.currentId, undefined, true);
+    this.open = false;
     this.buffer = [];
     this.currentId = null;
     this.question = null;
-    this.prompt.answer(this.currentId, undefined, true);
   }
 }

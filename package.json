@@ -73,6 +73,7 @@
     "@types/mock-require": "^2.0.0",
     "@types/node": "^10.14.6",
     "@webcomponents/custom-elements": "^1.2.4",
+    "ansi_up": "^4.0.3",
     "chai": "^4.2.0",
     "codelyzer": "^5.0.1",
     "conventional-changelog-cli": "2.0.11",

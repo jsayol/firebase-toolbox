@@ -6,6 +6,10 @@ $FIREBASE_NAVY: #2c384a;
 $FIREBASE_CORAL: #ff8a65;
 $FIREBASE_GREY: #eceff1;
 
+/* GENERAL */
+$clr-default-borderwidth: 1px;
+$clr-global-borderradius: 0.125rem;
+
 /** HEADER **/
 $clr-header-bgColor: $FIREBASE_BLUE;
 
@@ -16,6 +20,12 @@ $clr-vertical-nav-item-active-color: $FIREBASE_NAVY;
 $clr-vertical-nav-active-bg-color: #fafafa;
 $clr-vertical-nav-icon-active-color: $FIREBASE_BLUE;
 $clr-vertical-nav-toggle-icon-color: $FIREBASE_NAVY;
+// $clr-vertical-nav-bg-color: $FIREBASE_NAVY;
+// $clr-vertical-nav-item-color: $FIREBASE_GREY;
+// $clr-vertical-nav-item-active-color: $FIREBASE_BLUE;
+// $clr-vertical-nav-active-bg-color: $FIREBASE_AMBER;
+// $clr-vertical-nav-icon-active-color: $FIREBASE_BLUE;
+// $clr-vertical-nav-toggle-icon-color: $FIREBASE_GREY;
 
 /* TYPOGRAPHY */
 $clr-global-font-color: $FIREBASE_NAVY;
@@ -26,3 +36,49 @@ $clr-h4-color: $FIREBASE_NAVY;
 $clr-h5-color: $FIREBASE_NAVY;
 $clr-h6-color: $FIREBASE_NAVY;
 $clr-p1-color: $FIREBASE_NAVY;
+
+/* CARDS */
+// $clr-card-box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+$clr-card-box-shadow: none;
+$clr-card-border-color: $FIREBASE_GREY;
+$clr-card-border: $clr-default-borderwidth solid $clr-card-border-color;
+$app-card-header-bg-color: $FIREBASE_GREY;
+$app-card-header-border-color: $FIREBASE_GREY;
+
+/* MODULE TITLE */
+// $app-module-title-border-color: $FIREBASE_BLUE;
+// $app-module-title-background-color: $FIREBASE_BLUE;
+// $app-module-title-color: $FIREBASE_GREY;
+$app-module-title-border-color: $FIREBASE_GREY;
+$app-module-title-background-color: inherit;
+$app-module-title-color: inherit;
+$app-module-title-margin: 0;
+$app-module-title-padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+
+/* MODULE CONTENT */
+$app-module-content-padding: 0.5rem;
+
+/* SHELL OUTPUT */
+$app-shell-output-header-bg-color: $FIREBASE_GREY;
+$app-shell-output-toggle-color: $FIREBASE_NAVY;
+$app-shell-output-font-size: 0.92em;
+$app-shell-output-bg-color: #1e1e1e;
+$app-shell-output-fg-color: #cccccc;
+$app-shell-output-selection-bg-color: $app-shell-output-fg-color;
+$app-shell-output-selection-fg-color: $app-shell-output-bg-color;
+$app-shell-output-ansiBlack: #000000;
+$app-shell-output-ansiRed: #cd3131;
+$app-shell-output-ansiGreen: #0dbc79;
+$app-shell-output-ansiYellow: #e5e510;
+$app-shell-output-ansiBlue: #2472c8;
+$app-shell-output-ansiMagenta: #bc3fbc;
+$app-shell-output-ansiCyan: #11a8cd;
+$app-shell-output-ansiWhite: #e5e5e5;
+$app-shell-output-ansiBrightBlack: #666666;
+$app-shell-output-ansiBrightRed: #f14c4c;
+$app-shell-output-ansiBrightGreen: #23d18b;
+$app-shell-output-ansiBrightYellow: #f5f543;
+$app-shell-output-ansiBrightBlue: #3b8eea;
+$app-shell-output-ansiBrightMagenta: #d670d6;
+$app-shell-output-ansiBrightCyan: #29b8db;
+$app-shell-output-ansiBrightWhite: #e5e5e5;

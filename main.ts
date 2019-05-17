@@ -2,7 +2,6 @@ import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as childProcess from 'child_process';
-
 import { addWinstonConsoleTransport } from './utils';
 
 const args = process.argv.slice(1);
@@ -15,8 +14,8 @@ function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     center: true,
-    width: Math.min(serve ? 1500 : 1000, size.width),
-    height: Math.min(serve ? 850 : 700, size.height),
+    width: Math.min(serve ? 1800 : 1000, size.width),
+    height: Math.min(serve ? 950 : 700, size.height),
     minWidth: 450,
     minHeight: 500,
     frame: false,

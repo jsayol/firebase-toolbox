@@ -16,6 +16,80 @@
 
 -->
 
-<h3>Settings</h3>
+<h3 class="module-title">Settings</h3>
 
-<button class="btn btn-primary" (click)="init()">Init</button>
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-lg-5 clr-col-md-8 clr-col-12">
+      <div class="card">
+        <!-- <div class="card-header">
+          Active project
+        </div> -->
+        <div class="card-block">
+          <div class="card-title">
+            Active project
+          </div>
+          <div class="alert alert-danger alert-sm" role="alert" [hidden]="!projectsAlertText">
+            <div class="alert-items">
+              <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                  <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+                </div>
+                <span class="alert-text" [innerHTML]="projectsAlertText"></span>
+              </div>
+            </div>
+            <button type="button" class="close" aria-label="Close" (click)="dismissProjectsAlert()">
+              <clr-icon aria-hidden="true" shape="close"></clr-icon>
+            </button>
+          </div>
+          <div class="progress loop top" [style.display]="projectsRunning ? 'block' : 'none'">
+            <progress></progress>
+          </div>
+          <div class="card-text">
+            <clr-radio-container [class.clr-form-control-disabled]="projectsRunning">
+              <clr-radio-wrapper *ngFor="let project of workspaceProjects$ | async">
+                <input type="radio" clrRadio [value]="project.id" name="activeProject" [(ngModel)]="activeProject"
+                  [disabled]="useAddRunning" />
+                <label>
+                  {{ project.alias }}
+                  <ng-container *ngIf="project.id !== project.alias">({{ project.id }})</ng-container>
+                </label>
+              </clr-radio-wrapper>
+            </clr-radio-container>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button [clrLoading]="useAddRunning" [disabled]="projectsRunning" class="btn btn-primary"
+            (click)="showUseAddModal()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <button [clrLoading]="initRunning" class="btn btn-primary" (click)="init()">Init</button> -->
+
+  <clr-modal [(clrModalOpen)]="useAddModalVisible" class="use-add-modal">
+    <h3 class="modal-title">Add a project to use</h3>
+    <div class="modal-body">
+      <form clrForm>
+        <clr-select-container>
+          <label>Project</label>
+          <select clrSelect name="project" #useAddProjectId>
+            <option [value]="project.id" *ngFor="let project of projects$ | async">{{ project.id }}</option>
+          </select>
+        </clr-select-container>
+        <clr-input-container>
+          <label>Alias</label>
+          <input clrInput type="text" name="alias" #useAddProjectAlias />
+          <clr-control-helper>Optional alias for this project</clr-control-helper>
+        </clr-input-container>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline" (click)="useAddModalVisible = false">Cancel</button>
+      <button type="button" class="btn btn-primary"
+        (click)="useAddProject(useAddProjectId.value, useAddProjectAlias.value)">Add</button>
+    </div>
+  </clr-modal>
+
+  <app-shell-output></app-shell-output>
+</div>

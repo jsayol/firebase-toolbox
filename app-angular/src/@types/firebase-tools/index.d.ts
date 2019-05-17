@@ -200,6 +200,11 @@ declare module "firebase-tools" {
       infile?: string,
       options?: DatabaseUpdateOptions
     ) => Promise<void>;
+    // TODO: add these new methods from 6.10.0
+    // instances: {
+    //   create: () => TODO,
+    //   list: () => TODO,
+    // }
   }
 
   export interface DatabaseGetOptions extends Options {
