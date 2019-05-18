@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { InitializingComponent } from './components/initializing/initializing.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
-import { SettingsModuleComponent } from './components/modules/settings-module/settings-module.component';
+import { SettingsModuleComponent } from './components/modules/settings/settings-module.component';
 
 const routes: Routes = [
   {
