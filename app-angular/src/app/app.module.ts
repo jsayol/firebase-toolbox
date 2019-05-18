@@ -2,31 +2,44 @@ import 'reflect-metadata';
 import '../polyfills';
 
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { NgxLetModule } from '@ngx-utilities/ngx-let';
+import { RouterModule } from '@angular/router';
 import { ClarityModule } from '@clr/angular';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { NgxLetModule } from '@ngx-utilities/ngx-let';
 
+// Routing
+import { AppRoutingModule } from './app-routing.module';
+
+// Store
 import { reducers, metaReducers } from './reducers';
 import { effects } from './effects';
-import { AppRoutingModule } from './app-routing.module';
+
+// Providers
 import { ElectronService } from './providers/electron.service';
+
+// Directives
 import { WebviewDirective } from './directives/webview.directive';
 import { AutofocusDirective } from './directives/autofocus.directive';
+
+// Pipes
+import { AnsiPipe } from './pipes/ansi.pipe';
+
+// General components
 import { AppComponent } from './app.component';
 import { InitializingComponent } from './components/initializing/initializing.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { HeaderComponent } from './components/header/header.component';
-import { SettingsSectionComponent } from './components/sections/settings/settings-section.component';
 import { PromptModalComponent } from './components/prompt-modal/prompt-modal.component';
 import { ShellOutputComponent } from './components/shell-output/shell-output.component';
-import { AnsiPipe } from './pipes/ansi.pipe';
+
+// Section components
+import { SettingsSectionComponent } from './components/sections/settings/settings-section.component';
 
 @NgModule({
   declarations: [
