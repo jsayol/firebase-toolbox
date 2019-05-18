@@ -47,10 +47,10 @@
     "analyze": "webpack-bundle-analyzer app-angular/dist/stats.json"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.800.0-rc.2",
+    "@angular-devkit/build-angular": "~0.800.0-rc.4",
     "@angular/animations": "^8.0.0-rc.4",
     "@angular/cdk": "^8.0.0-rc.1",
-    "@angular/cli": "8.0.0-rc.3",
+    "@angular/cli": "8.0.0-rc.4",
     "@angular/common": "8.0.0-rc.4",
     "@angular/compiler": "8.0.0-rc.4",
     "@angular/compiler-cli": "8.0.0-rc.4",
@@ -62,8 +62,8 @@
     "@angular/router": "8.0.0-rc.4",
     "@clr/icons": "^2.0.0-rc.2",
     "@clr/ui": "^2.0.0-rc.2",
-    "@ngrx/effects": "^8.0.0-beta.1",
-    "@ngrx/store": "^8.0.0-beta.1",
+    "@ngrx/effects": "^8.0.0-beta.2",
+    "@ngrx/store": "^8.0.0-beta.2",
     "@ngx-utilities/ngx-let": "0.0.2",
     "@types/configstore": "^4.0.0",
     "@types/inquirer": "^6.0.2",
@@ -103,11 +103,11 @@
     "zone.js": "~0.9.0"
   },
   "dependencies": {
-    "@clr/angular": "^2.0.0-rc.2",
+    "@clr/angular": "2.0.0-rc.2",
     "configstore": "4.0.0",
     "electron-store": "3.2.0",
-    "firebase-tools": "6.9.2",
+    "firebase-tools": "6.10.0",
     "googleapis": "40.0.0",
-    "mock-require": "^3.0.3"
+    "mock-require": "3.0.3"
   }
 }
