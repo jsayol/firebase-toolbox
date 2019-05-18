@@ -39,7 +39,7 @@
         </div>
         <div class="card-footer">
           <button [clrLoading]="useAddRunning" [disabled]="projectsRunning" class="btn btn-primary"
-            (click)="showUseAddModal()">Add</button>
+            (click)="showUseAddModal()">Add Existing Project</button>
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@
               <clr-icon aria-hidden="true" shape="close"></clr-icon>
             </button>
           </div>
-          <div class="progress loop top" [hidden]="!featuresRunning">
+          <div class="progress loop top" [hidden]="!initRunning">
             <progress></progress>
           </div>
           <div class="card-text">
@@ -73,8 +73,38 @@
           </div>
         </div>
         <div class="card-footer">
-          <button [clrLoading]="useAddRunning" [disabled]="featuresRunning" class="btn btn-primary"
-            (click)="showInitModal()">Add</button>
+          <clr-dropdown>
+            <button [clrLoading]="initRunning" class="btn btn-primary"
+              (click)="showInitModal()" clrDropdownTrigger>
+              Add Feature
+              <clr-icon shape="caret down"></clr-icon>
+            </button>
+            <clr-dropdown-menu *clrIfOpen>
+              <label class="dropdown-header">Select a feature</label>
+              <button type="button" clrDropdownItem (click)="initFeature('database')">
+                <clr-icon shape="data-cluster"></clr-icon>
+                Database
+              </button>
+              <button type="button" clrDropdownItem (click)="initFeature('firestore')">
+                <clr-icon shape="file-group"></clr-icon>
+                Firestore
+              </button>
+              <button type="button" clrDropdownItem (click)="initFeature('functions')">
+                <clr-icon shape="cluster"></clr-icon>
+                Functions
+              </button>
+              <button type="button" clrDropdownItem (click)="initFeature('hosting')">
+                <clr-icon shape="world"></clr-icon>
+                Hosting
+              </button>
+              <button type="button" clrDropdownItem (click)="initFeature('storage')">
+                <clr-icon shape="container-volume"></clr-icon>
+                Storage
+              </button>
+            </clr-dropdown-menu>
+          </clr-dropdown>
+
+
         </div>
       </div>
     </div>

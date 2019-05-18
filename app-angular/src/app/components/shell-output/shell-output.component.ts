@@ -39,24 +39,12 @@ export class ShellOutputComponent implements OnInit {
   }
 
   stdout(text: string): void {
-    this.unsafedOutput += ansiToHTML(text);
-    this.safeOutput = this.sanitizer.bypassSecurityTrustHtml(
-      this.unsafedOutput
-    );
-    this.changeDetRef.markForCheck();
-    this.show();
-    this.scrolltoBottom();
+    this.add(text);
   }
 
   stderr(text: string): void {
-    this.unsafedOutput += ansiToHTML(text);
-    this.safeOutput = this.sanitizer.bypassSecurityTrustHtml(
-      this.unsafedOutput
-    );
-    this.changeDetRef.markForCheck();
     this.show();
-    this.open();
-    this.scrolltoBottom();
+    this.add(text);
   }
 
   scrolltoBottom(delay = 0) {
@@ -75,5 +63,20 @@ export class ShellOutputComponent implements OnInit {
 
   open() {
     this.isOpen = true;
+  }
+
+  clear() {
+    this.safeOutput = '';
+    this.unsafedOutput = '';
+  }
+
+  private add(text: string): void {
+    this.unsafedOutput += ansiToHTML(text);
+    this.safeOutput = this.sanitizer.bypassSecurityTrustHtml(
+      this.unsafedOutput
+    );
+    this.changeDetRef.markForCheck();
+    this.show();
+    this.scrolltoBottom();
   }
 }

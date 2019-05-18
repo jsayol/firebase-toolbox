@@ -1,14 +1,47 @@
 <clr-modal [(clrModalOpen)]="open" [clrModalClosable]="false" class="type--{{ question?.type }}">
-  <h3 class="modal-title">{{ question?.message }}</h3>
+  <h3 class="modal-title" [innerHTML]="question?.message | ansi:true"></h3>
   <div class="modal-body">
-    <!-- <pre><code>{{ question | json }}</code></pre> -->
-    <form clrForm>
-      <ng-container *ngIf="question?.type === 'input'">
+    <form clrForm *ngIf="question">
+
+      <ng-container *ngIf="question.type === 'input'">
         <clr-input-container>
           <label>Answer:</label>
-          <input clrInput appAutoFocus placeholder="{{ question?.default }}" name="input" [(ngModel)]="answer" />
+          <input clrInput appAutoFocus placeholder="{{ question.default }}" name="input" [(ngModel)]="answer" />
         </clr-input-container>
       </ng-container>
+
+      <ng-container *ngIf="question.type === 'list'">
+        <clr-radio-container>
+          <clr-radio-wrapper *ngFor="let choice of question.choices">
+            <input type="radio" clrRadio [value]="choice.value" name="list" required [disabled]="choice.disabled"
+              [(ngModel)]="answer" />
+            <label>{{ choice.name }}</label>
+          </clr-radio-wrapper>
+        </clr-radio-container>
+      </ng-container>
+
+      <ng-container *ngIf="question.type === 'checkbox'">
+        <clr-checkbox-container>
+          <clr-checkbox-wrapper *ngFor="let choice of question.choices">
+            <input type="checkbox" clrCheckbox [value]="choice.value" name="checkbox" required [(ngModel)]="answer" />
+            <label>{{ choice.name }}</label>
+          </clr-checkbox-wrapper>
+        </clr-checkbox-container>
+      </ng-container>
+
+      <ng-container *ngIf="question.type === 'confirm'">
+        <clr-radio-container>
+          <clr-radio-wrapper>
+            <input type="radio" clrRadio [value]="true" name="list" [(ngModel)]="answer" />
+            <label>Yes</label>
+          </clr-radio-wrapper>
+          <clr-radio-wrapper>
+            <input type="radio" clrRadio [value]="false" name="list" [(ngModel)]="answer" />
+            <label>No</label>
+          </clr-radio-wrapper>
+        </clr-radio-container>
+      </ng-container>
+
       <input type="submit" hidden (click)="continue()">
     </form>
   </div>

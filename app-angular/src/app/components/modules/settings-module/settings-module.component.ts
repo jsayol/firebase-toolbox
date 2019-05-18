@@ -10,7 +10,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable, from, BehaviorSubject } from 'rxjs';
 import { switchMap, takeWhile, map, filter } from 'rxjs/operators';
-import { UseOptions } from 'firebase-tools';
+import { UseOptions, InitFeatureName } from 'firebase-tools';
 
 import {
   FirebaseToolsService,
@@ -87,7 +87,6 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
     this.workspace$
       .pipe(takeWhile(() => !this.destroy))
       .subscribe((workspace: Workspace) => {
-        console.log({ workspace });
         this.workspace = workspace;
         this._activeProject = workspace.projectId;
         this.getFeatures$.next(workspace);
@@ -107,7 +106,6 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
     const oldActive = this._activeProject;
     this._activeProject = projectId;
     this.useRunning = true;
-    console.log('useProject:', projectId);
 
     this.fb.cli
       .use(projectId, {
@@ -149,7 +147,6 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
   }
 
   async useAddProject(projectId: any, projectAlias: any): Promise<void> {
-    console.log({ projectId, projectAlias });
     this.useAddModalVisible = false;
     this.useAddRunning = true;
 
@@ -184,8 +181,7 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
     this.changeDetRef.markForCheck();
   }
 
-  async init(): Promise<void> {
-    this.initRunning = true;
+  async initFeature(feature: InitFeatureName): Promise<void> {
     const output: OutputCapture = {
       stdout: text => {
         this.shellOutput.stdout(text);
@@ -195,14 +191,19 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
       }
     };
 
+    this.initRunning = true;
+    this.shellOutput.clear();
+    this.changeDetRef.markForCheck();
+
     try {
-      const resp = await this.fb.init(output, this.workspace.path, 'firestore');
+      const resp = await this.fb.init(output, this.workspace.path, feature);
       console.log('Init done:', resp);
     } catch (err) {
       console.log('Init error:', err);
     }
 
     this.initRunning = false;
+    this.getFeatures$.next(this.workspace);
     this.changeDetRef.markForCheck();
   }
 }

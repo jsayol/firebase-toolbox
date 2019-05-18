@@ -165,8 +165,10 @@ export class FirebaseToolsService {
     return projects;
   }
 
-  async getWorkspaceFeatures(workspace: Workspace): Promise<string[]> {
-    const features = [
+  async getWorkspaceFeatures(
+    workspace: Workspace
+  ): Promise<cli.InitFeatureName[]> {
+    const features: cli.InitFeatureName[] = [
       'database',
       'firestore',
       'functions',

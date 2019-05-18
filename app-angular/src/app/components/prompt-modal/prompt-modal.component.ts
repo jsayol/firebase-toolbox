@@ -49,23 +49,26 @@ export class PromptModalComponent implements OnInit, OnDestroy {
 
   showQuestion(question: PromptQuestion): void {
     this.ngZone.run(() => {
+      // TODO: question type "checkbox" needs to be handled as a special
+      // case ("default" is an array, choices might have {checked:true}, etc.)
+      // See https://github.com/SBoudrias/Inquirer.js#checkbox---type-checkbox
       this.currentId = question.id;
       this.question = question.question;
-
-      if (this.question.type === 'input') {
-        this.answer = this.question.default;
-      }
-
+      this.answer = this.question.default;
       this.open = true;
       this.changeDetRef.markForCheck();
     });
   }
 
   continue() {
-    this.prompt.answer(this.currentId, this.answer);
+    const id = this.currentId;
+    const answer = this.answer;
+
     this.currentId = null;
     this.question = null;
     this.answer = '';
+
+    this.prompt.answer(id, answer);
 
     if (this.buffer.length > 0) {
       this.showQuestion(this.buffer.shift());
@@ -75,10 +78,13 @@ export class PromptModalComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.prompt.answer(this.currentId, undefined, true);
+    const id = this.currentId;
+
     this.open = false;
     this.buffer = [];
     this.currentId = null;
     this.question = null;
+
+    this.prompt.answer(id, undefined, true);
   }
 }

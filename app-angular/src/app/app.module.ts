@@ -26,6 +26,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { SettingsModuleComponent } from './components/modules/settings-module/settings-module.component';
 import { PromptModalComponent } from './components/prompt-modal/prompt-modal.component';
 import { ShellOutputComponent } from './components/shell-output/shell-output.component';
+import { AnsiPipe } from './pipes/ansi.pipe';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { ShellOutputComponent } from './components/shell-output/shell-output.com
     SettingsModuleComponent,
     PromptModalComponent,
     AutofocusDirective,
-    ShellOutputComponent
+    ShellOutputComponent,
+    AnsiPipe
   ],
   imports: [
     BrowserModule,
