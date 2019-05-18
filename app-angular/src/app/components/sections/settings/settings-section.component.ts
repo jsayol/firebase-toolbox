@@ -24,15 +24,15 @@ import { ansiToHTML } from '../../../../utils';
 import * as workspacesActions from '../../../actions/workspaces.actions';
 
 @Component({
-  selector: 'app-settings-module',
-  templateUrl: './settings-module.component.html',
-  styleUrls: ['./settings-module.component.scss'],
+  selector: 'app-settings-section',
+  templateUrl: './settings-section.component.html',
+  styleUrls: ['./settings-section.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.app-module]': 'true'
   }
 })
-export class SettingsModuleComponent implements OnInit, OnDestroy {
+export class SettingsSectionComponent implements OnInit, OnDestroy {
   workspace: Workspace;
   useRunning = false;
   useAddRunning = false;

@@ -23,7 +23,7 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { HeaderComponent } from './components/header/header.component';
-import { SettingsModuleComponent } from './components/modules/settings/settings-module.component';
+import { SettingsSectionComponent } from './components/sections/settings/settings-section.component';
 import { PromptModalComponent } from './components/prompt-modal/prompt-modal.component';
 import { ShellOutputComponent } from './components/shell-output/shell-output.component';
 import { AnsiPipe } from './pipes/ansi.pipe';
@@ -37,7 +37,7 @@ import { AnsiPipe } from './pipes/ansi.pipe';
     HomeComponent,
     SideMenuComponent,
     HeaderComponent,
-    SettingsModuleComponent,
+    SettingsSectionComponent,
     PromptModalComponent,
     AutofocusDirective,
     ShellOutputComponent,
