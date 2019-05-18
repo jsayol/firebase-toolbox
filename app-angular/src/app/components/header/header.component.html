@@ -81,7 +81,7 @@
   </ng-container>
 </ng-container>
 
-<clr-modal [(clrModalOpen)]="infoModalVisible" class="app-info-modal">
+<clr-modal [(clrModalOpen)]="infoModalVisible" [clrModalStaticBackdrop]="false" class="app-info-modal">
   <h3 class="modal-title">Firebase Toolbox</h3>
   <div class="modal-body">
     <table *ngIf="appInfo" class="table table-vertical table-compact">

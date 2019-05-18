@@ -9,6 +9,10 @@ import {
 import { PromptService, PromptQuestion } from '../../providers/prompt.service';
 import { takeWhile } from 'rxjs/operators';
 
+const REPLACE_IN_MESSAGE = [
+  [' Press Space to select features, then Enter to confirm your choices.', '']
+];
+
 @Component({
   selector: 'app-prompt-modal',
   templateUrl: './prompt-modal.component.html',
@@ -52,6 +56,16 @@ export class PromptModalComponent implements OnInit, OnDestroy {
       // TODO: question type "checkbox" needs to be handled as a special
       // case ("default" is an array, choices might have {checked:true}, etc.)
       // See https://github.com/SBoudrias/Inquirer.js#checkbox---type-checkbox
+
+      if (typeof question.question.message === 'string') {
+        for (const [pattern, value] of REPLACE_IN_MESSAGE) {
+          question.question.message = question.question.message.replace(
+            pattern,
+            value
+          );
+        }
+      }
+
       this.currentId = question.id;
       this.question = question.question;
       this.answer = this.question.default;
