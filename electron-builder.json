@@ -32,5 +32,8 @@
     "icon": "app-angular/src/favicon.512x512.png",
     "target": ["AppImage"],
     "category": "Utility"
+  },
+  "appImage": {
+    "systemIntegration": "doNotAsk"
   }
 }
