@@ -10,12 +10,11 @@ import { AppState } from '../../models';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   workspace$: Observable<Workspace | null> = this.store.select(
     'workspaces',
     'selected'
   );
 
   constructor(private store: Store<AppState>) {}
-  ngOnInit() {}
 }

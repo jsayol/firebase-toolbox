@@ -5,12 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.scss']
 })
-export class SideMenuComponent implements OnInit {
+export class SideMenuComponent {
   collapsed = false;
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }

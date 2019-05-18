@@ -68,7 +68,7 @@ export class UserEffects implements OnInitEffects {
     tap(email => {
       this.ngZone.run(() => {
         if (email) {
-          this.router.navigate(['home']);
+          this.router.navigate(['home', '_']);
         } else {
           this.router.navigate(['login']);
         }

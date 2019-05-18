@@ -105,7 +105,7 @@ export class HeaderComponent implements OnInit {
 
   selectWorkspace(workspace: Workspace): void {
     this.store.dispatch(new workspacesActions.SetSelected(workspace));
-    this.router.navigate(['home', 'settings']);
+    this.router.navigate(['/home', workspace.path, 'settings']);
   }
 
   getWorkspaceName(workspace: Workspace): string {

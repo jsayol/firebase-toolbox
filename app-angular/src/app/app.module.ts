@@ -55,7 +55,10 @@ import { AnsiPipe } from './pipes/ansi.pipe';
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot(effects)
   ],
-  providers: [ElectronService],
+  providers: [
+    ElectronService
+    // TODO: implement a RouteReuseStrategy to cache views
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
