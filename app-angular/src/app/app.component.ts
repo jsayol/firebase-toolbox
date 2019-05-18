@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ElectronService } from './providers/electron.service';
 import { environment } from '../environments/environment';
 
@@ -7,7 +7,7 @@ import { environment } from '../environments/environment';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   constructor(public electronService: ElectronService) {
     console.log('AppConfig', environment);
 
@@ -19,10 +19,5 @@ export class AppComponent implements OnInit {
         console.log('Mode web');
       }
     }
-  }
-
-  ngOnInit(): void {
-    document.querySelector('#bootanim').classList.add('is-destroying');
-    setTimeout(() => document.querySelector('#bootanim').remove(), 0);
   }
 }

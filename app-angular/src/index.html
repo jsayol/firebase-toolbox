@@ -26,11 +26,6 @@
       z-index: 999;
     }
 
-    #bootanim.is-destroying {
-      opacity: 0;
-      visibility: hidden;
-    }
-
     #bootanim__filmstrip {
       --fs-frames: 51;
       --fs-width: 180px;
@@ -43,9 +38,6 @@
     #bootanim__filmstrip img {
       height: 100%;
       width: calc(var(--fs-width) * var(--fs-frames));
-    }
-
-    #bootanim.is-loaded #bootanim__filmstrip img {
       animation: bootanim__filmstrip .85s steps(calc(var(--fs-frames) - 1)) 0s;
       animation-fill-mode: forwards;
     }
@@ -63,9 +55,6 @@
     #bootanim__spinner {
       margin-top: 0;
       opacity: 0;
-    }
-
-    #bootanim.is-loaded #bootanim__spinner {
       animation: bootanim__spinner-fade .6s ease 1.5s, bootanim__spinner-rotate 1s linear infinite;
       animation-fill-mode: forwards;
     }
@@ -93,22 +82,16 @@
 </head>
 
 <body>
-  <div id="bootanim">
-    <div id="bootanim__filmstrip">
-      <img alt="" aria-hidden="true" src="assets/bootanim-sprite.png">
+  <app-root>
+    <div id="bootanim">
+      <div id="bootanim__filmstrip">
+        <img alt="" aria-hidden="true" src="assets/bootanim-sprite.png">
+      </div>
+      <svg id="bootanim__spinner" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 21a9 9 0 1 0-9-9" fill="none" stroke="#b0bec5" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
     </div>
-    <svg id="bootanim__spinner" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 21a9 9 0 1 0-9-9" fill="none" stroke="#b0bec5" stroke-width="2" stroke-linecap="round"></path>
-    </svg>
-  </div>
-
-  <script>
-    document.querySelector('#bootanim__filmstrip img').addEventListener('load', () => {
-      document.querySelector('#bootanim').classList.add('is-loaded');
-    });
-  </script>
-
-  <app-root></app-root>
+  </app-root>
 </body>
 
 </html>
