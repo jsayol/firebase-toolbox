@@ -107,7 +107,7 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
     this._activeProject = projectId;
     this.useRunning = true;
 
-    this.fb.cli
+    this.fb.tools
       .use(projectId, {
         cwd: this.workspace.path,
         interactive: true
@@ -161,7 +161,7 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
     }
 
     try {
-      await this.fb.cli.use(projectId, options);
+      await this.fb.tools.use(projectId, options);
       this.store.dispatch(new workspacesActions.GetList());
     } catch (err) {
       console.log(err);

@@ -16,6 +16,16 @@ import * as userActions from '../../actions/user.actions';
 import { ElectronService } from '../../providers/electron.service';
 import { FirebaseToolsService } from '../../providers/firebase-tools.service';
 
+interface AppInfo {
+  version: string;
+  fbtools: string;
+  electron: string;
+  chrome: string;
+  node: string;
+  v8: string;
+  os: string;
+}
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -23,6 +33,8 @@ import { FirebaseToolsService } from '../../providers/firebase-tools.service';
 })
 export class HeaderComponent implements OnInit {
   inactive = false;
+  infoModalVisible = false;
+  appInfo?: AppInfo;
 
   user$: Observable<User> = this.store.select('user');
 
@@ -118,5 +130,48 @@ export class HeaderComponent implements OnInit {
     dropdown.ifOpenService.open = false;
 
     // TODO: dialog to add a workspace
+  }
+
+  showInfo(): void {
+    this.loadAppInfo();
+    this.infoModalVisible = true;
+  }
+
+  copyInfo(): void {
+    this.loadAppInfo();
+
+    const appInfoText = `
+      Version: ${this.appInfo.version}
+      Tools: ${this.appInfo.fbtools}
+      Electron: ${this.appInfo.electron}
+      Chrome: ${this.appInfo.chrome}
+      Node: ${this.appInfo.node}
+      V8: ${this.appInfo.v8}
+      OS: ${this.appInfo.os}
+    `
+      .trim()
+      .replace(/  +/g, '');
+
+    this.electron.clipboard.writeText(appInfoText);
+    this.infoModalVisible = false;
+  }
+
+  private loadAppInfo(): void {
+    if (!this.appInfo) {
+      const os = this.electron.os;
+      const isSnap =
+        process.platform === 'linux' &&
+        process.env.SNAP &&
+        process.env.SNAP_REVISION;
+      this.appInfo = {
+        version: this.electron.app.getVersion(),
+        fbtools: this.fb.version,
+        electron: process.versions['electron'],
+        chrome: process.versions['chrome'],
+        node: process.versions['node'],
+        v8: process.versions['v8'],
+        os: `${os.type()} ${os.arch()} ${os.release()}${isSnap ? ' snap' : ''}`
+      };
+    }
   }
 }

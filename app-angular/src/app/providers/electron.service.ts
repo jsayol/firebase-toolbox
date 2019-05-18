@@ -4,10 +4,11 @@ import { PromptService } from './prompt.service';
 import { getRandomId } from '../../utils';
 
 // IMPORTANT: These imports should only be used for types!
-import { ipcRenderer, webFrame, remote, IpcRenderer } from 'electron';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as inquirer from 'inquirer';
+import * as electron_Type from 'electron';
+import * as path_Type from 'path';
+import * as fs_Type from 'fs';
+import * as os_Type from 'os';
+import * as inquirer_Type from 'inquirer';
 
 export interface OutputCapture {
   stdout: (text: string) => void;
@@ -16,26 +17,30 @@ export interface OutputCapture {
 
 interface PromptRequest {
   id: string;
-  question: inquirer.Question;
+  question: inquirer_Type.Question;
 }
 
 @Injectable()
 export class ElectronService {
-  readonly ipcRenderer: typeof ipcRenderer;
-  readonly webFrame: typeof webFrame;
-  readonly remote: typeof remote;
-  readonly path: typeof path;
-  readonly fs: typeof fs;
+  readonly ipcRenderer: typeof electron_Type.ipcRenderer;
+  readonly webFrame: typeof electron_Type.webFrame;
+  readonly remote: typeof electron_Type.remote;
+  readonly path: typeof path_Type;
+  readonly fs: typeof fs_Type;
+  readonly os: typeof os_Type;
+
+  private readonly electron: typeof electron_Type;
 
   constructor(private prompt: PromptService) {
     if (this.isElectron()) {
-      const electron = window.require('electron');
+      this.electron = window.require('electron');
 
-      this.ipcRenderer = electron.ipcRenderer;
-      this.webFrame = electron.webFrame;
-      this.remote = electron.remote;
+      this.ipcRenderer = this.electron.ipcRenderer;
+      this.webFrame = this.electron.webFrame;
+      this.remote = this.electron.remote;
       this.path = window.require('path');
       this.fs = window.require('fs');
+      this.os = window.require('os');
 
       this.ipcEvents();
     }
@@ -45,11 +50,23 @@ export class ElectronService {
     return window && window.process && window.process.type;
   }
 
+  get app(): electron_Type.App {
+    return this.electron.remote.app;
+  }
+
+  get clipboard(): electron_Type.Clipboard {
+    return this.electron.clipboard;
+  }
+
   send(channel: string, ...args: any[]): void {
     this.ipcRenderer.send(channel, ...args);
   }
 
-  sendAndWait<T = any>(output: OutputCapture, channel: string, ...args: any[]): Promise<T> {
+  sendAndWait<T = any>(
+    output: OutputCapture,
+    channel: string,
+    ...args: any[]
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
       const replyId = getRandomId();
 
@@ -112,6 +129,6 @@ export class ElectronService {
 }
 
 interface IpcEvent {
-  sender: IpcRenderer;
+  sender: electron_Type.IpcRenderer;
   senderId: number;
 }

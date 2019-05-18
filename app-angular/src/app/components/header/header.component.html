@@ -61,10 +61,15 @@
             <clr-icon shape="user" size="32"></clr-icon>
           </button>
           <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+            <a href="javascript://" clrDropdownItem (click)="showInfo()">
+              <clr-icon shape="info-standard"></clr-icon>
+              About
+            </a>
             <a href="javascript://" clrDropdownItem (click)="openDevTools()">
               <clr-icon shape="wrench"></clr-icon>
               Open DevTools
             </a>
+            <div class="dropdown-divider"></div>
             <a href="javascript://" clrDropdownItem (click)="logout()">
               <clr-icon shape="logout"></clr-icon>
               Sign out
@@ -75,3 +80,45 @@
     </clr-header>
   </ng-container>
 </ng-container>
+
+<clr-modal [(clrModalOpen)]="infoModalVisible" class="app-info-modal">
+  <h3 class="modal-title">Firebase Toolbox</h3>
+  <div class="modal-body">
+    <table *ngIf="appInfo" class="table table-vertical table-noborder table-compact">
+      <tbody>
+        <tr>
+          <th>Version</th>
+          <td>{{ appInfo.version }}</td>
+        </tr>
+        <tr>
+          <th>Tools</th>
+          <td>{{ appInfo.fbtools }}</td>
+        </tr>
+        <tr>
+          <th>Electron</th>
+          <td>{{ appInfo.electron }}</td>
+        </tr>
+        <tr>
+          <th>Chrome</th>
+          <td>{{ appInfo.chrome }}</td>
+        </tr>
+        <tr>
+          <th>Node</th>
+          <td>{{ appInfo.node }}</td>
+        </tr>
+        <tr>
+          <th>V8</th>
+          <td>{{ appInfo.v8 }}</td>
+        </tr>
+        <tr>
+          <th>OS</th>
+          <td>{{ appInfo.os }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="copyInfo()">Copy</button>
+    <button type="button" class="btn btn-primary" (click)="infoModalVisible = false">Ok</button>
+  </div>
+</clr-modal>

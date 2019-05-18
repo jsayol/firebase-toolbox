@@ -259,3 +259,13 @@ app-home .app-module {
     background-color: $app-shell-output-ansiBrightWhite;
   }
 }
+
+clr-modal.app-info-modal {
+  .modal-dialog {
+    width: auto;
+
+    table {
+      width: auto;
+    }
+  }
+}

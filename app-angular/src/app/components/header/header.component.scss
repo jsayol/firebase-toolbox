@@ -14,7 +14,10 @@ clr-header {
   &.inactive {
     // background-color: #2C384A;
     // background-color: lighten($clr-header-bgColor, 15%); /*#32b9fc;*/
-    background-color: scale-color($clr-header-bgColor, $lightness: +30%); /*#32b9fc;*/
+    background-color: scale-color(
+      $clr-header-bgColor,
+      $lightness: +30%
+    ); /*#32b9fc;*/
     color: #222222;
 
     .title {

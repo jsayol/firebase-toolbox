@@ -17,7 +17,7 @@ const CLI_CLIENT_SECRET = 'j9iVZfS8kkCEFUPaAeJV0sAi';
   providedIn: 'root'
 })
 export class FirebaseToolsService {
-  readonly cli: typeof cli;
+  readonly tools: typeof cli;
   private fs: typeof fs;
   private path: typeof path;
   private configstore: Configstore;
@@ -27,7 +27,7 @@ export class FirebaseToolsService {
   constructor(private electron: ElectronService) {
     const Configstore = this.electron.remote.require('configstore');
     this.fs = this.electron.remote.require('fs').promises;
-    this.cli = this.electron.remote.require('firebase-tools');
+    this.tools = this.electron.remote.require('firebase-tools');
     this.path = this.electron.remote.require('path');
     this.google = this.electron.remote.require('googleapis').google;
 
@@ -38,12 +38,16 @@ export class FirebaseToolsService {
     ) as any;
   }
 
+  get version(): string {
+    return this.tools.cli._version;
+  }
+
   async login(options?: cli.LoginOptions): Promise<void> {
-    await this.cli.login(options);
+    await this.tools.login(options);
   }
 
   async logout(options?: cli.LoginOptions): Promise<void> {
-    await this.cli.logout(options);
+    await this.tools.logout(options);
   }
 
   getUserEmail(): string | null {
@@ -128,7 +132,7 @@ export class FirebaseToolsService {
   }
 
   getProjects(): Promise<FirebaseProject[]> {
-    return this.cli.list();
+    return this.tools.list();
   }
 
   async getWorkspaceProjects(
