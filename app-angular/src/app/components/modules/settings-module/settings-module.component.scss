@@ -1,3 +1,11 @@
+.module-content {
+  padding-top: 0 !important;
+
+  > .clr-row {
+    max-width: 35rem;
+  }
+}
+
 .card-block {
   .progress {
     display: none;

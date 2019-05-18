@@ -165,6 +165,25 @@ export class FirebaseToolsService {
     return projects;
   }
 
+  async getWorkspaceFeatures(workspace: Workspace): Promise<string[]> {
+    const features = [
+      'database',
+      'firestore',
+      'functions',
+      'hosting',
+      'storage'
+    ];
+
+    try {
+      const path = this.path.join(workspace.path, 'firebase.json');
+      const json = JSON.parse(await fs.readFile(path, 'utf8'));
+      return features.filter(feature => contains(json, feature));
+    } catch (err) {
+      // Either "firebase.json" doesn't exist or is corrupted
+      return [];
+    }
+  }
+
   init(
     output: OutputCapture,
     path: string,
@@ -182,8 +201,8 @@ export class FirebaseToolsService {
     workspace: Workspace
   ): Promise<{ [k: string]: any } | null> {
     try {
-      const rcPath = this.path.join(workspace.path, '.firebaserc');
-      return JSON.parse(await fs.readFile(rcPath, 'utf8'));
+      const path = this.path.join(workspace.path, '.firebaserc');
+      return JSON.parse(await fs.readFile(path, 'utf8'));
     } catch (err) {
       // Either ".firebaserc" doesn't exist or is corrupted
       return null;

@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { Observable, from } from 'rxjs';
+import { Observable, from, BehaviorSubject } from 'rxjs';
 import { switchMap, takeWhile, map, filter } from 'rxjs/operators';
 import { UseOptions } from 'firebase-tools';
 
@@ -37,9 +37,12 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
   useRunning = false;
   useAddRunning = false;
   initRunning = false;
-  showProjectsProgress = false;
-  projectsAlertText: SafeHtml = '';
+  featuresRunning = false;
   useAddModalVisible = false;
+  initModalVisible = false;
+
+  projectsAlertText: SafeHtml = '';
+  featuresAlertText: SafeHtml = '';
 
   projects$: Observable<FirebaseProject[] | null> = this.store
     .select('projects', 'list')
@@ -57,18 +60,28 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
     switchMap(workspace => from(this.fb.getWorkspaceProjects(workspace)))
   );
 
+  workspaceFeatures$: Observable<string[]>;
+
   @ViewChild(ShellOutputComponent)
   shellOutput!: ShellOutputComponent;
 
   private destroy = false;
   private _activeProject: string;
+  private getFeatures$ = new BehaviorSubject<Workspace | null>(null);
 
   constructor(
     private fb: FirebaseToolsService,
     private store: Store<AppState>,
     private changeDetRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer
-  ) {}
+  ) {
+    this.workspaceFeatures$ = this.getFeatures$.pipe(
+      takeWhile(() => !this.destroy),
+      filter(workspace => !!workspace),
+      switchMap(workspace => from(this.fb.getWorkspaceFeatures(workspace))),
+      map(features => features.map(f => f.charAt(0).toUpperCase() + f.slice(1)))
+    );
+  }
 
   ngOnInit() {
     this.workspace$
@@ -77,6 +90,8 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
         console.log({ workspace });
         this.workspace = workspace;
         this._activeProject = workspace.projectId;
+        this.getFeatures$.next(workspace);
+        this.changeDetRef.markForCheck();
       });
   }
 
@@ -117,12 +132,20 @@ export class SettingsModuleComponent implements OnInit, OnDestroy {
     this.projectsAlertText = '';
   }
 
+  dismissFeaturesAlert() {
+    this.featuresAlertText = '';
+  }
+
   get projectsRunning(): boolean {
     return this.useRunning || this.useAddRunning;
   }
 
   showUseAddModal() {
     this.useAddModalVisible = true;
+  }
+
+  showInitModal() {
+    this.initModalVisible = true;
   }
 
   async useAddProject(projectId: any, projectAlias: any): Promise<void> {

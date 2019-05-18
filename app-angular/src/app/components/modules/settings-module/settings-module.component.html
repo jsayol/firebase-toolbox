@@ -1,30 +1,9 @@
-<!--
-
-  PROJECTS
-    - Current project (from Workspace)
-      * Project ID
-      * Alias
-    - Add project ("use" command). Prompt:
-      * Project from list
-      * Alias
-
-  FEATURES
-    - Currently enabled (from firebase.json)
-      * Name
-    - Initialize feature ("init" command). Prompt:
-      * Name ("database", "firestore", "functions", "hosting", "storage") 
-
--->
-
 <h3 class="module-title">Settings</h3>
 
 <div class="module-content">
   <div class="clr-row">
-    <div class="clr-col-lg-5 clr-col-md-8 clr-col-12">
+    <div class="clr-col-lg-6 clr-col-md-6 clr-col-12">
       <div class="card">
-        <!-- <div class="card-header">
-          Active project
-        </div> -->
         <div class="card-block">
           <div class="card-title">
             Active project
@@ -42,7 +21,7 @@
               <clr-icon aria-hidden="true" shape="close"></clr-icon>
             </button>
           </div>
-          <div class="progress loop top" [style.display]="projectsRunning ? 'block' : 'none'">
+          <div class="progress loop top" [hidden]="!projectsRunning">
             <progress></progress>
           </div>
           <div class="card-text">
@@ -61,6 +40,41 @@
         <div class="card-footer">
           <button [clrLoading]="useAddRunning" [disabled]="projectsRunning" class="btn btn-primary"
             (click)="showUseAddModal()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-col-lg-6 clr-col-md-6 clr-col-12">
+      <div class="card">
+        <div class="card-block">
+          <div class="card-title">
+            Initialized features
+          </div>
+          <div class="alert alert-danger alert-sm" role="alert" [hidden]="!featuresAlertText">
+            <div class="alert-items">
+              <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                  <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+                </div>
+                <span class="alert-text" [innerHTML]="featuresAlertText"></span>
+              </div>
+            </div>
+            <button type="button" class="close" aria-label="Close" (click)="dismissFeaturesAlert()">
+              <clr-icon aria-hidden="true" shape="close"></clr-icon>
+            </button>
+          </div>
+          <div class="progress loop top" [hidden]="!featuresRunning">
+            <progress></progress>
+          </div>
+          <div class="card-text">
+            <ul class="list" *ngIf="workspaceFeatures$ | async; let features">
+              <li *ngFor="let feature of features">{{ feature }}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button [clrLoading]="useAddRunning" [disabled]="featuresRunning" class="btn btn-primary"
+            (click)="showInitModal()">Add</button>
         </div>
       </div>
     </div>
