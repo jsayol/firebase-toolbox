@@ -70,24 +70,32 @@ export class ElectronService {
     return new Promise((resolve, reject) => {
       const replyId = getRandomId();
 
-      this.ipcRenderer.on(replyId, (event: any, response: any, error: any) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(response);
-        }
-      });
-
-      this.ipcRenderer.on('stdout-' + replyId, (event: any, data: string) => {
-        // console.log(`STDOUT[${replyId}]: ${data}`);
+      const onStdout = (event: any, data: string) => {
         output.stdout(data);
-      });
+      };
 
-      this.ipcRenderer.on('stderr-' + replyId, (event: any, data: string) => {
-        // console.log(`STDERR[${replyId}]: ${data}`);
+      const onStderr = (event: any, data: string) => {
+        console.error('STDERR:');
+        console.log(data);
         output.stderr(data);
-      });
+      };
 
+      this.ipcRenderer.once(
+        `result-${replyId}`,
+        (event: any, response: any, error: any) => {
+          this.ipcRenderer.removeListener(`stdout-${replyId}`, onStdout);
+          this.ipcRenderer.removeListener(`stderr-${replyId}`, onStderr);
+
+          if (error) {
+            reject(error);
+          } else {
+            resolve(response);
+          }
+        }
+      );
+
+      this.ipcRenderer.on(`stdout-${replyId}`, onStdout);
+      this.ipcRenderer.on(`stderr-${replyId}`, onStderr);
       this.ipcRenderer.send(channel, replyId, ...args);
     });
   }

@@ -1,4 +1,4 @@
-import * as firebaseTools from 'firebase-tools';
+import * as firebaseTools_Type from 'firebase-tools';
 import * as mockRequire from 'mock-require';
 import * as inquirer from 'inquirer';
 
@@ -6,7 +6,7 @@ import { addWinstonConsoleTransport, getRandomId } from './utils';
 
 // These 3 calls need to happen in this specific order.
 interceptCliPrompt();
-const tools = require('firebase-tools') as typeof firebaseTools;
+const tools = require('firebase-tools') as typeof firebaseTools_Type;
 addWinstonConsoleTransport();
 
 interface RunCommandMessage {
@@ -36,30 +36,41 @@ process.on('message', (message: Message) => {
 });
 
 async function runCommand(message: RunCommandMessage): Promise<void> {
-  const commandParts = message.command.split('.');
-  let commandFn;
-
   try {
-    commandFn = commandParts.reduce((obj, part) => obj[part], tools);
-  } catch (error) {
-    process.send({ type: 'error', error });
-    process.exit();
-  }
+    const commandParts = message.command.split('.');
+    let commandFn;
 
-  if (typeof commandFn !== 'function') {
+    try {
+      commandFn = commandParts.reduce((obj, part) => obj[part], tools);
+    } catch (error) {
+      process.send({ type: 'error', error });
+      process.exit();
+    }
+
+    if (typeof commandFn !== 'function') {
+      process.send({
+        type: 'error',
+        error: `There is no command "${message.command}"`
+      });
+      process.exit();
+      return;
+    }
+
+    try {
+      const result = await commandFn(...message.args, message.options);
+      process.send({ type: 'run-command-result', result });
+    } catch (error) {
+      process.send({ type: 'run-command-error', error });
+    }
+  } catch (err) {
+    // Something went wrong
     process.send({
       type: 'error',
-      error: `There is no command "${message.command}"`
+      error: err
     });
-    process.exit();
   }
 
-  try {
-    const result = await commandFn(...message.args, message.options);
-    process.send({ type: 'run-command-result', result });
-  } catch (error) {
-    process.send({ type: 'run-command-error', error });
-  }
+  process.exit();
 }
 
 export function interceptCliPrompt() {

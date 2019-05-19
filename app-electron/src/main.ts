@@ -125,20 +125,24 @@ function ipcFirebaseTools(win: BrowserWindow): void {
         path.resolve(__dirname, './fbtools.js'),
         [],
         {
+          execArgv: [],
+          cwd: options.cwd,
           stdio: ['pipe', 'pipe', 'pipe', 'ipc']
         }
       );
 
+      let resultSent = false;
+
       child.on('message', (msg: FbToolsMessage) => {
         if (msg.type === 'error' || msg.type === 'run-command-error') {
-          win.webContents.send(replyId, undefined, msg.error);
-          child.kill();
+          resultSent = true;
+          win.webContents.send(`result-${replyId}`, undefined, msg.error);
           return;
         }
 
         if (msg.type === 'run-command-result') {
-          win.webContents.send(replyId, msg.result);
-          child.kill();
+          resultSent = true;
+          win.webContents.send(`result-${replyId}`, msg.result);
           return;
         }
 
@@ -161,6 +165,16 @@ function ipcFirebaseTools(win: BrowserWindow): void {
 
       child.stderr.on('data', (data: any) => {
         win.webContents.send('stderr-' + replyId, data.toString());
+      });
+
+      child.once('exit', () => {
+        if (!resultSent) {
+          win.webContents.send(
+            `result-${replyId}`,
+            undefined,
+            'Child process exited without providing a result.'
+          );
+        }
       });
 
       child.send({
