@@ -84,11 +84,9 @@ export class ServeSectionComponent implements OnInit {
   startServe(): void {
     const output: OutputCapture = {
       stdout: text => {
-        console.log('Logging stdout:', text);
         this.shellOutput.stdout(text);
       },
       stderr: text => {
-        console.log('Logging stderr:', text);
         this.shellOutput.stderr(text);
       }
     };
