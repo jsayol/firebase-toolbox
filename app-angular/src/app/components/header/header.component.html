@@ -142,7 +142,11 @@
       <tbody>
         <tr *ngFor="let project of projectsList$ | async">
           <td class="left">{{ project.name }}</td>
-          <td class="left"><a href="javascript://" (click)="openProjectConsole(project)">{{ project.id }}</a></td>
+          <td class="left">
+            <a href="javascript://" (click)="openProjectConsole(project)" title="Open project in Firebase Console">
+              {{ project.id }}
+            </a>
+          </td>
           <td class="left">{{ projectPermission(project.permission) }}</td>
         </tr>
       </tbody>
