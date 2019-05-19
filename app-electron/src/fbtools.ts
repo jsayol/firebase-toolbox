@@ -96,7 +96,7 @@ export function interceptCliPrompt() {
           const ipcPrompt = new Promise((ipcResolve, ipcReject) => {
             const onResponse = (msg: Message) => {
               if (msg.type === 'prompt-response' && msg.id === id) {
-                process.off('message', onResponse);
+                process.removeListener('message' as any, onResponse);
                 if (msg.error) {
                   ipcReject(msg.error);
                 } else {
