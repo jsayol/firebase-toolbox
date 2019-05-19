@@ -10,7 +10,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable, from, BehaviorSubject } from 'rxjs';
 import { switchMap, takeWhile, map, filter } from 'rxjs/operators';
-import { UseOptions, InitFeatureName, use } from 'firebase-tools';
+import { UseOptions, InitFeatureName } from 'firebase-tools';
 
 import {
   FirebaseToolsService,
