@@ -194,6 +194,7 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
 
     this.initRunning = true;
     this.shellOutput.clear();
+    this.shellOutput.open();
     this.changeDetRef.markForCheck();
 
     try {

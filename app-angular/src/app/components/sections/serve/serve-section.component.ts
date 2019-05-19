@@ -105,7 +105,6 @@ export class ServeSectionComponent implements OnInit {
 
     this.serveRunning = true;
     this.shellOutput.clear();
-    this.shellOutput.show();
     this.shellOutput.open();
     this.changeDetRef.markForCheck();
 

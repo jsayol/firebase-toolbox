@@ -58,7 +58,6 @@ export class ShellOutputComponent implements OnInit {
 
   scrolltoBottom(delay = 0) {
     if (this.isOpen) {
-      // TODO: only scroll if the user hasn't manually scrolled up
       setTimeout(() => {
         const element: HTMLElement = this.outputRef.nativeElement;
         element.scrollTop = element.scrollHeight;
@@ -73,6 +72,7 @@ export class ShellOutputComponent implements OnInit {
 
   open() {
     this.isOpen = true;
+    this.isVisible = true;
     this.changeDetRef.markForCheck();
   }
 
