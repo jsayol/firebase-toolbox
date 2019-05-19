@@ -17,7 +17,8 @@ import { FirebaseToolsService } from '../../../providers/firebase-tools.service'
 import { ShellOutputComponent } from '../../shell-output/shell-output.component';
 import {
   OutputCapture,
-  ElectronService
+  ElectronService,
+  RunningCommand
 } from '../../../providers/electron.service';
 import { InitFeatureName } from 'firebase-tools';
 import { Store } from '@ngrx/store';
@@ -71,6 +72,8 @@ export class ServeSectionComponent implements OnInit {
     nodeVersion: ['system']
   });
 
+  runningCommand: RunningCommand<void> | null = null;
+
   @ViewChild(ShellOutputComponent)
   shellOutput!: ShellOutputComponent;
 
@@ -114,7 +117,7 @@ export class ServeSectionComponent implements OnInit {
       .toPromise();
 
     try {
-      const resp = await this.fb.serve(
+      this.runningCommand = this.fb.serve(
         output,
         workspace.path,
         targets,
@@ -122,6 +125,7 @@ export class ServeSectionComponent implements OnInit {
         port === '' ? undefined : port,
         this.systemNodeVersion ? nodeVersion : 'self'
       );
+      const resp = await this.runningCommand.done;
       console.log('Serve done:', resp);
     } catch (err) {
       console.log('Serve error:', err);
@@ -132,7 +136,8 @@ export class ServeSectionComponent implements OnInit {
   }
 
   stopServe(): void {
-    // TODO. This will require making changes to sendAndWait() to be able to
-    // send a kill command to the child process.
+    if (this.runningCommand) {
+      this.runningCommand.kill();
+    }
   }
 }

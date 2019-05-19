@@ -120,7 +120,7 @@ function ipcFirebaseTools(win: BrowserWindow): void {
     'fbtools',
     (
       event: any,
-      replyId: string,
+      id: string,
       command: string,
       args: any[],
       options: any,
@@ -147,13 +147,13 @@ function ipcFirebaseTools(win: BrowserWindow): void {
       child.on('message', (msg: FbToolsMessage) => {
         if (msg.type === 'error' || msg.type === 'run-command-error') {
           resultSent = true;
-          win.webContents.send(`result-${replyId}`, undefined, msg.error);
+          win.webContents.send(`result-${id}`, undefined, msg.error);
           return;
         }
 
         if (msg.type === 'run-command-result') {
           resultSent = true;
-          win.webContents.send(`result-${replyId}`, msg.result);
+          win.webContents.send(`result-${id}`, msg.result);
           return;
         }
 
@@ -171,17 +171,24 @@ function ipcFirebaseTools(win: BrowserWindow): void {
       });
 
       child.stdout.on('data', (data: any) => {
-        win.webContents.send('stdout-' + replyId, data.toString());
+        win.webContents.send('stdout-' + id, data.toString());
       });
 
       child.stderr.on('data', (data: any) => {
-        win.webContents.send('stderr-' + replyId, data.toString());
+        win.webContents.send('stderr-' + id, data.toString());
       });
 
+      const onKillRequest = () => {
+        child.kill();
+      };
+
+      ipcMain.on(`kill-${id}`, onKillRequest);
+
       child.once('exit', () => {
+        ipcMain.removeListener(`kill-${id}`, onKillRequest);
         if (!resultSent) {
           win.webContents.send(
-            `result-${replyId}`,
+            `result-${id}`,
             undefined,
             'Child process exited unexpectedly.'
           );

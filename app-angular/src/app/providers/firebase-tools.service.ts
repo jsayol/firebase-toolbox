@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ElectronService, OutputCapture } from './electron.service';
+import {
+  ElectronService,
+  OutputCapture,
+  RunningCommand
+} from './electron.service';
 
 // IMPORTANT: These imports should only be used for types!
 import * as path from 'path';
@@ -194,8 +198,8 @@ export class FirebaseToolsService {
     output: OutputCapture,
     path: string,
     feature: cli.InitFeatureName
-  ): Promise<void> {
-    return this.electron.sendAndWait(output, 'fbtools', 'init', [feature], {
+  ): RunningCommand<void> {
+    return this.electron.runToolsCommand(output, 'fbtools', 'init', [feature], {
       cwd: path,
       interactive: true
     });
@@ -208,13 +212,8 @@ export class FirebaseToolsService {
     host = 'localhost',
     port = 5000,
     nodeVersion: 'system' | 'self'
-  ): Promise<void> {
-    // TODO: when serving/emulating Functions, if the functions use any native
-    // modules they will fail since they will have been built against a
-    // different version of Node than our Electron. Not sure what to do...
-    // Maybe offer to run "npm rebuild"? Whay if they're using yarn?
-
-    return this.electron.sendAndWait(
+  ): RunningCommand<void> {
+    return this.electron.runToolsCommand(
       output,
       'fbtools',
       'serve',

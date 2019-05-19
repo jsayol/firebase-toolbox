@@ -16,6 +16,11 @@ export interface OutputCapture {
   stderr: (text: string) => void;
 }
 
+export interface RunningCommand<T = any> {
+  done: Promise<T>;
+  kill: () => void;
+}
+
 interface PromptRequest {
   id: string;
   question: inquirer_Type.Question;
@@ -69,14 +74,17 @@ export class ElectronService {
     this.ipcRenderer.send(channel, ...args);
   }
 
-  sendAndWait<T = any>(
+  sendSync(channel: string, ...args: any[]): any {
+    return this.ipcRenderer.sendSync(channel, ...args);
+  }
+
+  runToolsCommand<T = any>(
     output: OutputCapture,
     channel: string,
     ...args: any[]
-  ): Promise<T> {
-    return new Promise((resolve, reject) => {
-      const replyId = getRandomId();
-
+  ): RunningCommand<T> {
+    const id = getRandomId();
+    const promise = new Promise<T>((resolve, reject) => {
       const onStdout = (event: any, data: string) => {
         output.stdout(data);
       };
@@ -86,11 +94,11 @@ export class ElectronService {
       };
 
       this.ipcRenderer.once(
-        `result-${replyId}`,
+        `result-${id}`,
         (event: any, response: any, error: any) => {
-          console.log('RESULT', { replyId, response, error });
-          this.ipcRenderer.removeListener(`stdout-${replyId}`, onStdout);
-          this.ipcRenderer.removeListener(`stderr-${replyId}`, onStderr);
+          console.log('RESULT', { id, response, error });
+          this.ipcRenderer.removeListener(`stdout-${id}`, onStdout);
+          this.ipcRenderer.removeListener(`stderr-${id}`, onStderr);
 
           if (error) {
             reject(error);
@@ -100,14 +108,17 @@ export class ElectronService {
         }
       );
 
-      this.ipcRenderer.on(`stdout-${replyId}`, onStdout);
-      this.ipcRenderer.on(`stderr-${replyId}`, onStderr);
-      this.ipcRenderer.send(channel, replyId, ...args);
+      this.ipcRenderer.on(`stdout-${id}`, onStdout);
+      this.ipcRenderer.on(`stderr-${id}`, onStderr);
+      this.ipcRenderer.send(channel, id, ...args);
     });
-  }
 
-  sendSync(channel: string, ...args: any[]): any {
-    return this.ipcRenderer.sendSync(channel, ...args);
+    return {
+      done: promise,
+      kill: () => {
+        this.send(`kill-${id}`);
+      }
+    };
   }
 
   getSystemNodeVersion(): string | null {
