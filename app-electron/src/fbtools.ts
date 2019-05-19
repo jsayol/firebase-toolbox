@@ -1,6 +1,7 @@
 import * as firebaseTools from 'firebase-tools';
 import * as mockRequire from 'mock-require';
 import * as inquirer from 'inquirer';
+
 import { addWinstonConsoleTransport, getRandomId } from './utils';
 
 // These 3 calls need to happen in this specific order.
@@ -63,7 +64,7 @@ async function runCommand(message: RunCommandMessage): Promise<void> {
 
 export function interceptCliPrompt() {
   // Path to the prompt module we need to intercept
-  const PROMPT_PATH = './node_modules/firebase-tools/lib/prompt';
+  const PROMPT_PATH = '../../node_modules/firebase-tools/lib/prompt';
 
   interface PromptOptions {
     [k: string]: any;

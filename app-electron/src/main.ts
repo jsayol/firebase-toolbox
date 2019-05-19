@@ -4,8 +4,37 @@ import * as url from 'url';
 import * as childProcess from 'child_process';
 import { addWinstonConsoleTransport } from './utils';
 
+interface FbToolsErrorMessage {
+  type: 'error';
+  error: any;
+}
+
+interface FbToolsRunCommandResultMessage {
+  type: 'run-command-result';
+  result: any;
+}
+
+interface FbToolsRunCommandErrorMessage {
+  type: 'run-command-error';
+  error: any;
+}
+
+interface FbToolsPromptMessage {
+  type: 'prompt';
+  id: string;
+  options: any;
+  question: any;
+}
+
+type FbToolsMessage =
+  | FbToolsErrorMessage
+  | FbToolsRunCommandResultMessage
+  | FbToolsRunCommandErrorMessage
+  | FbToolsPromptMessage;
+
 const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
+
 let win: BrowserWindow;
 
 function createWindow() {
@@ -33,13 +62,13 @@ function createWindow() {
 
   if (serve) {
     require('electron-reload')(__dirname, {
-      electron: require(`${__dirname}/node_modules/electron`)
+      electron: require(path.resolve(__dirname, '../../node_modules/electron'))
     });
     win.loadURL('http://localhost:4200');
   } else {
     win.loadURL(
       url.format({
-        pathname: path.join(__dirname, 'app-angular/dist/index.html'),
+        pathname: path.resolve(__dirname, '../../app-angular/dist/index.html'),
         protocol: 'file:',
         slashes: true
       })
@@ -50,6 +79,19 @@ function createWindow() {
     win.webContents.openDevTools();
   }
 
+  captureOutput(win);
+  ipcFirebaseTools(win);
+
+  // Emitted when the window is closed.
+  win.on('closed', () => {
+    // Dereference the window object, usually you would store window
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    win = null;
+  });
+}
+
+function captureOutput(win: BrowserWindow): void {
   process.stdout._write = (
     chunk: any,
     encoding: string,
@@ -67,35 +109,9 @@ function createWindow() {
     win.webContents.send('stderr', chunk.toString());
     done();
   };
+}
 
-  interface FbToolsErrorMessage {
-    type: 'error';
-    error: any;
-  }
-
-  interface FbToolsRunCommandResultMessage {
-    type: 'run-command-result';
-    result: any;
-  }
-
-  interface FbToolsRunCommandErrorMessage {
-    type: 'run-command-error';
-    error: any;
-  }
-
-  interface FbToolsPromptMessage {
-    type: 'prompt';
-    id: string;
-    options: any;
-    question: any;
-  }
-
-  type FbToolsMessage =
-    | FbToolsErrorMessage
-    | FbToolsRunCommandResultMessage
-    | FbToolsRunCommandErrorMessage
-    | FbToolsPromptMessage;
-
+function ipcFirebaseTools(win: BrowserWindow): void {
   ipcMain.on(
     'fbtools',
     (
@@ -155,14 +171,6 @@ function createWindow() {
       });
     }
   );
-
-  // Emitted when the window is closed.
-  win.on('closed', () => {
-    // Dereference the window object, usually you would store window
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    win = null;
-  });
 }
 
 try {

@@ -2,13 +2,9 @@
 
 # compiled output
 /app-angular/dist
+/app-electron/dist
 /tmp
-/out-tsc
-/app-builds
 /release
-/main.js
-/utils.js
-/fbtools.js
 src/**/*.js
 !/app-angular/src/karma.conf.js
 *.js.map
