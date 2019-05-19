@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ResizeEvent } from 'angular-resizable-element';
+import * as linkify from 'linkify-urls';
 
 import { ansiToHTML } from '../../../utils';
 
@@ -93,7 +94,7 @@ export class ShellOutputComponent implements OnInit {
 
   private add(text: string): void {
     this.ngZone.run(() => {
-      this.unsafedOutput += ansiToHTML(text);
+      this.unsafedOutput += linkify(ansiToHTML(text));
       this.safeOutput = this.sanitizer.bypassSecurityTrustHtml(
         this.unsafedOutput
       );
