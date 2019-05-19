@@ -9,6 +9,8 @@ export const GET_USER_INFO = '[User] Get User Info';
 export const GET_USER_INFO_SUCCESS = '[User] Get User Info Success';
 export const GET_USER_INFO_FAILURE = '[User] Get User Info Failure';
 
+export const LOG_OUT = '[User] Log out';
+
 export class GetUserEmail implements Action {
   readonly type = GET_USER_EMAIL;
 }
@@ -33,9 +35,14 @@ export class GetUserInfoFailure implements Action {
   constructor(public payload: Error) {}
 }
 
+export class LogOut implements Action {
+  readonly type = LOG_OUT;
+}
+
 export type All =
   | GetUserEmail
   | SetUserEmail
   | GetUserInfo
   | GetUserInfoSuccess
-  | GetUserInfoFailure;
+  | GetUserInfoFailure
+  | LogOut;

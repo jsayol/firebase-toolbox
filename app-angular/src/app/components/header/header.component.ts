@@ -94,9 +94,7 @@ export class HeaderComponent implements OnInit {
   }
 
   async logout() {
-    // TODO: this should dispatch a "Logout" ngrx action instead
-    await this.fb.logout();
-    this.store.dispatch(new userActions.GetUserEmail());
+    this.store.dispatch(new userActions.LogOut());
   }
 
   openDevTools() {
@@ -105,7 +103,8 @@ export class HeaderComponent implements OnInit {
 
   selectWorkspace(workspace: Workspace): void {
     this.store.dispatch(new workspacesActions.SetSelected(workspace));
-    this.router.navigate(['/home', workspace.path, 'settings']);
+    // this.router.navigate(['/home', workspace.path, 'settings']);
+    this.router.navigate(['/home', workspace.path, 'serve']);
   }
 
   getWorkspaceName(workspace: Workspace): string {

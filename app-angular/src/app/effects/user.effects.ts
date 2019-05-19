@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Effect, Actions, ofType, OnInitEffects } from '@ngrx/effects';
-import { Observable, from, of } from 'rxjs';
+import { Observable, from, of, empty } from 'rxjs';
 import { map, switchMap, catchError, tap, startWith } from 'rxjs/operators';
 
 import * as userActions from '../actions/user.actions';
@@ -47,6 +47,17 @@ export class UserEffects implements OnInitEffects {
         startWith(this.config.getUserInfo(email)),
         map(userInfo => new userActions.GetUserInfoSuccess(userInfo)),
         catchError(error => of(new userActions.GetUserInfoFailure(error)))
+      )
+    )
+  );
+
+  @Effect()
+  logOut$: Observable<Action> = this.actions$.pipe(
+    ofType(userActions.LOG_OUT),
+    switchMap(() =>
+      from(this.fb.logout()).pipe(
+        catchError(() => empty()),
+        map(() => new userActions.GetUserEmail())
       )
     )
   );
