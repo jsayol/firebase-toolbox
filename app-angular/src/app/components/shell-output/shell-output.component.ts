@@ -4,7 +4,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   ViewChild,
-  ElementRef
+  ElementRef,
+  NgZone
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -29,7 +30,8 @@ export class ShellOutputComponent implements OnInit {
 
   constructor(
     private changeDetRef: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit() {}
@@ -73,11 +75,13 @@ export class ShellOutputComponent implements OnInit {
   }
 
   private add(text: string): void {
-    this.unsafedOutput += ansiToHTML(text);
-    this.safeOutput = this.sanitizer.bypassSecurityTrustHtml(
-      this.unsafedOutput
-    );
-    this.changeDetRef.markForCheck();
-    this.scrolltoBottom();
+    this.ngZone.run(() => {
+      this.unsafedOutput += ansiToHTML(text);
+      this.safeOutput = this.sanitizer.bypassSecurityTrustHtml(
+        this.unsafedOutput
+      );
+      this.changeDetRef.markForCheck();
+      this.scrolltoBottom();
+    });
   }
 }

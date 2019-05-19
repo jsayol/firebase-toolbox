@@ -15,7 +15,10 @@ import {
 
 import { FirebaseToolsService } from '../../../providers/firebase-tools.service';
 import { ShellOutputComponent } from '../../shell-output/shell-output.component';
-import { OutputCapture } from '../../../providers/electron.service';
+import {
+  OutputCapture,
+  ElectronService
+} from '../../../providers/electron.service';
 import { InitFeatureName } from 'firebase-tools';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../models';
@@ -44,6 +47,8 @@ function minTargetsValidator(minChecked = 1): ValidatorFn {
 })
 export class ServeSectionComponent implements OnInit {
   serveRunning = false;
+  ownNodeVersion = process.versions.node;
+  systemNodeVersion = this.electron.getSystemNodeVersion();
 
   targets: Array<{ name: string; value: InitFeatureName; checked: boolean }> = [
     { name: 'Hosting', value: 'hosting', checked: true },
@@ -62,7 +67,8 @@ export class ServeSectionComponent implements OnInit {
     targets: this.formBuilder.array(
       this.targets.map(t => t.checked),
       minTargetsValidator()
-    )
+    ),
+    nodeVersion: ['system']
   });
 
   @ViewChild(ShellOutputComponent)
@@ -72,7 +78,8 @@ export class ServeSectionComponent implements OnInit {
     private changeDetRef: ChangeDetectorRef,
     private store: Store<AppState>,
     private fb: FirebaseToolsService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private electron: ElectronService
   ) {}
 
   get formTargets(): FormArray {
@@ -81,7 +88,7 @@ export class ServeSectionComponent implements OnInit {
 
   ngOnInit() {}
 
-  startServe(): void {
+  async startServe(): Promise<void> {
     const output: OutputCapture = {
       stdout: text => {
         this.shellOutput.stdout(text);
@@ -91,7 +98,7 @@ export class ServeSectionComponent implements OnInit {
       }
     };
 
-    const { host, port, targets: targetsCheck } = this.form.value;
+    const { host, port, targets: targetsCheck, nodeVersion } = this.form.value;
     const targets: InitFeatureName[] = (targetsCheck as boolean[])
       .map((checked, i) => (checked ? this.targets[i].value : null))
       .filter(target => target !== null);
@@ -102,30 +109,27 @@ export class ServeSectionComponent implements OnInit {
     this.shellOutput.open();
     this.changeDetRef.markForCheck();
 
-    const serve = async () => {
-      const workspace = await this.store
-        .select('workspaces', 'selected')
-        .pipe(first())
-        .toPromise();
+    const workspace = await this.store
+      .select('workspaces', 'selected')
+      .pipe(first())
+      .toPromise();
 
-      try {
-        const resp = await this.fb.serve(
-          output,
-          workspace.path,
-          targets,
-          host === '' ? undefined : host,
-          port === '' ? undefined : port
-        );
-        console.log('Serve done:', resp);
-      } catch (err) {
-        console.log('Serve error:', err);
-      }
+    try {
+      const resp = await this.fb.serve(
+        output,
+        workspace.path,
+        targets,
+        host === '' ? undefined : host,
+        port === '' ? undefined : port,
+        this.systemNodeVersion ? nodeVersion : 'self'
+      );
+      console.log('Serve done:', resp);
+    } catch (err) {
+      console.log('Serve error:', err);
+    }
 
-      this.serveRunning = false;
-      this.changeDetRef.markForCheck();
-    };
-
-    serve();
+    this.serveRunning = false;
+    this.changeDetRef.markForCheck();
   }
 
   stopServe(): void {

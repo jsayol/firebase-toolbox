@@ -32,6 +32,10 @@ type FbToolsMessage =
   | FbToolsRunCommandErrorMessage
   | FbToolsPromptMessage;
 
+interface IpcFirebaseToolsOptions {
+  nodeVersion?: 'system' | 'self';
+}
+
 const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
 
@@ -119,17 +123,24 @@ function ipcFirebaseTools(win: BrowserWindow): void {
       replyId: string,
       command: string,
       args: any[],
-      options: any
+      options: any,
+      ownOptions: IpcFirebaseToolsOptions = {}
     ) => {
-      const child = childProcess.fork(
-        path.resolve(__dirname, './fbtools.js'),
-        [],
-        {
+      let child: childProcess.ChildProcess;
+      const fbtoolsPath = path.resolve(__dirname, './fbtools.js');
+
+      if (ownOptions.nodeVersion === 'self') {
+        child = childProcess.fork(fbtoolsPath, [], {
           execArgv: [],
           cwd: options.cwd,
           stdio: ['pipe', 'pipe', 'pipe', 'ipc']
-        }
-      );
+        });
+      } else {
+        child = childProcess.spawn('node', [fbtoolsPath], {
+          cwd: options.cwd,
+          stdio: ['pipe', 'pipe', 'pipe', 'ipc']
+        });
+      }
 
       let resultSent = false;
 

@@ -146,7 +146,7 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
     this.initModalVisible = true;
   }
 
-  useAddProject(projectId: any, projectAlias: any): void {
+  async useAddProject(projectId: any, projectAlias: any): Promise<void> {
     this.useAddModalVisible = false;
     this.useAddRunning = true;
 
@@ -160,30 +160,26 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
       options.alias = projectAlias;
     }
 
-    const useAdd = async () => {
-      try {
-        await this.fb.tools.use(projectId, options);
-        this.store.dispatch(new workspacesActions.GetList());
-      } catch (err) {
-        console.log(err);
-        this.projectsAlertText = this.sanitizer.bypassSecurityTrustHtml(
-          ansiToHTML(err && err.message ? err.message : err)
-        );
-      }
-
-      this.store.dispatch(
-        new workspacesActions.SetSelected({
-          ...this.workspace,
-          projectAlias,
-          projectId
-        })
+    try {
+      await this.fb.tools.use(projectId, options);
+      this.store.dispatch(new workspacesActions.GetList());
+    } catch (err) {
+      console.log(err);
+      this.projectsAlertText = this.sanitizer.bypassSecurityTrustHtml(
+        ansiToHTML(err && err.message ? err.message : err)
       );
+    }
 
-      this.useAddRunning = false;
-      this.changeDetRef.markForCheck();
-    };
+    this.store.dispatch(
+      new workspacesActions.SetSelected({
+        ...this.workspace,
+        projectAlias,
+        projectId
+      })
+    );
 
-    useAdd();
+    this.useAddRunning = false;
+    this.changeDetRef.markForCheck();
   }
 
   async initFeature(feature: InitFeatureName): Promise<void> {

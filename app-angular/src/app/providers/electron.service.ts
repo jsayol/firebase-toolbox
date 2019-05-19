@@ -5,10 +5,11 @@ import { getRandomId } from '../../utils';
 
 // IMPORTANT: These imports should only be used for types!
 import * as electron_Type from 'electron';
+import * as childProcess_Type from 'child_process';
+import * as inquirer_Type from 'inquirer';
 import * as path_Type from 'path';
 import * as fs_Type from 'fs';
 import * as os_Type from 'os';
-import * as inquirer_Type from 'inquirer';
 
 export interface OutputCapture {
   stdout: (text: string) => void;
@@ -25,6 +26,7 @@ export class ElectronService {
   readonly ipcRenderer: typeof electron_Type.ipcRenderer;
   readonly webFrame: typeof electron_Type.webFrame;
   readonly remote: typeof electron_Type.remote;
+  readonly childProcess: typeof childProcess_Type;
   readonly path: typeof path_Type;
   readonly fs: typeof fs_Type;
   readonly os: typeof os_Type;
@@ -38,6 +40,7 @@ export class ElectronService {
       this.ipcRenderer = this.electron.ipcRenderer;
       this.webFrame = this.electron.webFrame;
       this.remote = this.electron.remote;
+      this.childProcess = window.require('child_process');
       this.path = window.require('path');
       this.fs = window.require('fs');
       this.os = window.require('os');
@@ -58,6 +61,10 @@ export class ElectronService {
     return this.electron.clipboard;
   }
 
+  get shell(): electron_Type.Shell {
+    return this.electron.shell;
+  }
+
   send(channel: string, ...args: any[]): void {
     this.ipcRenderer.send(channel, ...args);
   }
@@ -71,13 +78,10 @@ export class ElectronService {
       const replyId = getRandomId();
 
       const onStdout = (event: any, data: string) => {
-        console.log('STDOUT:', { data });
         output.stdout(data);
       };
 
       const onStderr = (event: any, data: string) => {
-        console.error('STDERR:', { data });
-        console.log(data);
         output.stderr(data);
       };
 
@@ -104,6 +108,23 @@ export class ElectronService {
 
   sendSync(channel: string, ...args: any[]): any {
     return this.ipcRenderer.sendSync(channel, ...args);
+  }
+
+  getSystemNodeVersion(): string | null {
+    const { stdout } = this.childProcess.spawnSync('node', ['--version'], {
+      killSignal: 'SIGKILL',
+      timeout: 1000,
+      maxBuffer: 10,
+      encoding: 'utf8'
+    });
+
+    const possibleVersion = stdout && stdout.trim();
+
+    if (/^v(\d+)\.(\d+)\.(\d+)$/.test(possibleVersion)) {
+      return possibleVersion;
+    } else {
+      return null;
+    }
   }
 
   private ipcEvents(): void {
