@@ -53,7 +53,6 @@ async function runCommand(message: RunCommandMessage): Promise<void> {
         error: `There is no command "${message.command}"`
       });
       process.exit();
-      return;
     }
 
     try {

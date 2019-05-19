@@ -201,7 +201,26 @@ export class FirebaseToolsService {
     });
   }
 
-  useProject(workspace) {}
+  serve(
+    output: OutputCapture,
+    path: string,
+    targets: cli.InitFeatureName[],
+    host?: string,
+    port?: number
+  ): Promise<void> {
+    // TODO: when serving/emulating Functions, if the functions use any native
+    // modules they will fail since they will have been built against a
+    // different version of Node than our Electron. Not sure what to do...
+    // Maybe offer to run "npm rebuild"? Whay if they're using yarn?
+    
+    return this.electron.sendAndWait(output, 'fbtools', 'serve', [], {
+      cwd: path,
+      interactive: true,
+      only: targets.join(','),
+      host,
+      port
+    });
+  }
 
   private async rcFile(
     workspace: Workspace

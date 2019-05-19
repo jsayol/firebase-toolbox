@@ -71,11 +71,12 @@ export class ElectronService {
       const replyId = getRandomId();
 
       const onStdout = (event: any, data: string) => {
+        console.log('STDOUT:', { data });
         output.stdout(data);
       };
 
       const onStderr = (event: any, data: string) => {
-        console.error('STDERR:');
+        console.error('STDERR:', { data });
         console.log(data);
         output.stderr(data);
       };
@@ -83,6 +84,7 @@ export class ElectronService {
       this.ipcRenderer.once(
         `result-${replyId}`,
         (event: any, response: any, error: any) => {
+          console.log('RESULT', { replyId, response, error });
           this.ipcRenderer.removeListener(`stdout-${replyId}`, onStdout);
           this.ipcRenderer.removeListener(`stderr-${replyId}`, onStderr);
 

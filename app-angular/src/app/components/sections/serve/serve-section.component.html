@@ -8,17 +8,6 @@
   </div>
   <div class="clr-row">
     <div class="clr-col-12">
-      <!-- <div class="card">
-        <div class="card-block">
-          <div class="card-text">
-          </div>
-        </div>
-        <div class="card-footer">
-          <button class="btn btn-primary serve" (click)="toggleServe()">{{ serveRunning ? 'Stop' : 'Start' }}
-            serving</button>
-        </div>
-      </div> -->
-
       <form clrForm [formGroup]="form" class="clr-form-horizontal">
         <clr-input-container>
           <label>Host</label>
@@ -26,7 +15,8 @@
         </clr-input-container>
         <clr-input-container>
           <label>Port</label>
-          <input clrInput type="number" formControlName="port" placeholder="5000" />
+          <input clrInput type="number" formControlName="port" placeholder="5000" min="1" max="65535" />
+          <clr-control-error>Enter a number between 1 and 65535.</clr-control-error>
         </clr-input-container>
 
         <clr-checkbox-container>
@@ -35,11 +25,13 @@
             <input type="checkbox" clrCheckbox [formControl]="target" />
             <label>{{ targets[i].name }}</label>
           </clr-checkbox-wrapper>
+          <clr-control-error>Select at least one target.</clr-control-error>
         </clr-checkbox-container>
-
-
         <br />
-        <button class="btn btn-primary" type="submit" (click)="toggleServe()" [disabled]="!form.valid">Start</button>
+        <button *ngIf="!serveRunning" class="btn btn-primary" type="submit" (click)="startServe()" [disabled]="!form.valid">
+          Start
+        </button>
+        <button *ngIf="serveRunning" class="btn btn-primary" (click)="stopServe()">Stop</button>
       </form>
     </div>
   </div>

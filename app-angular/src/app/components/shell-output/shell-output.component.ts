@@ -59,10 +59,12 @@ export class ShellOutputComponent implements OnInit {
 
   show() {
     this.isVisible = true;
+    this.changeDetRef.markForCheck();
   }
 
   open() {
     this.isOpen = true;
+    this.changeDetRef.markForCheck();
   }
 
   clear() {
@@ -76,7 +78,6 @@ export class ShellOutputComponent implements OnInit {
       this.unsafedOutput
     );
     this.changeDetRef.markForCheck();
-    this.show();
     this.scrolltoBottom();
   }
 }

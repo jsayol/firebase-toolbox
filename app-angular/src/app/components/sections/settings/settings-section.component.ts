@@ -10,7 +10,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable, from, BehaviorSubject } from 'rxjs';
 import { switchMap, takeWhile, map, filter } from 'rxjs/operators';
-import { UseOptions, InitFeatureName } from 'firebase-tools';
+import { UseOptions, InitFeatureName, use } from 'firebase-tools';
 
 import {
   FirebaseToolsService,
@@ -146,7 +146,7 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
     this.initModalVisible = true;
   }
 
-  async useAddProject(projectId: any, projectAlias: any): Promise<void> {
+  useAddProject(projectId: any, projectAlias: any): void {
     this.useAddModalVisible = false;
     this.useAddRunning = true;
 
@@ -160,25 +160,30 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
       options.alias = projectAlias;
     }
 
-    try {
-      await this.fb.tools.use(projectId, options);
-      this.store.dispatch(new workspacesActions.GetList());
-    } catch (err) {
-      console.log(err);
-      this.projectsAlertText = this.sanitizer.bypassSecurityTrustHtml(
-        ansiToHTML(err && err.message ? err.message : err)
-      );
-    }
+    const useAdd = async () => {
+      try {
+        await this.fb.tools.use(projectId, options);
+        this.store.dispatch(new workspacesActions.GetList());
+      } catch (err) {
+        console.log(err);
+        this.projectsAlertText = this.sanitizer.bypassSecurityTrustHtml(
+          ansiToHTML(err && err.message ? err.message : err)
+        );
+      }
 
-    this.store.dispatch(
-      new workspacesActions.SetSelected({
-        ...this.workspace,
-        projectAlias,
-        projectId
-      })
-    );
-    this.useAddRunning = false;
-    this.changeDetRef.markForCheck();
+      this.store.dispatch(
+        new workspacesActions.SetSelected({
+          ...this.workspace,
+          projectAlias,
+          projectId
+        })
+      );
+
+      this.useAddRunning = false;
+      this.changeDetRef.markForCheck();
+    };
+
+    useAdd();
   }
 
   async initFeature(feature: InitFeatureName): Promise<void> {

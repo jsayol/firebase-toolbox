@@ -172,7 +172,7 @@ function ipcFirebaseTools(win: BrowserWindow): void {
           win.webContents.send(
             `result-${replyId}`,
             undefined,
-            'Child process exited without providing a result.'
+            'Child process exited unexpectedly.'
           );
         }
       });
