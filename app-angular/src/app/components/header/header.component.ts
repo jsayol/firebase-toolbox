@@ -33,8 +33,9 @@ interface AppInfo {
 })
 export class HeaderComponent implements OnInit {
   inactive = false;
-  infoModalVisible = false;
   appInfo?: AppInfo;
+  infoModalVisible = false;
+  projectsListModalVisible = false;
 
   user$: Observable<User> = this.store.select('user');
 
@@ -153,6 +154,28 @@ export class HeaderComponent implements OnInit {
 
     this.electron.clipboard.writeText(appInfoText);
     this.infoModalVisible = false;
+  }
+
+  showProjectsList() {
+    this.projectsListModalVisible = true;
+  }
+
+  projectPermission(permission: string): string {
+    switch (permission) {
+      case 'own':
+        return 'Owner';
+      case 'edit':
+        return 'Editor';
+      case 'view':
+      default:
+        return 'Viewer';
+    }
+  }
+
+  openProjectConsole(project: FirebaseProject): void {
+    this.electron.shell.openExternal(
+      `https://console.firebase.google.com/project/${project.id}/overview`
+    );
   }
 
   private loadAppInfo(): void {

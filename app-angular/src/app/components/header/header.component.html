@@ -61,6 +61,11 @@
             <clr-icon shape="user" size="32"></clr-icon>
           </button>
           <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+            <a href="javascript://" clrDropdownItem (click)="showProjectsList()">
+              <clr-icon shape="info-standard"></clr-icon>
+              Projects list
+            </a>
+            <div class="dropdown-divider"></div>
             <a href="javascript://" clrDropdownItem (click)="showInfo()">
               <clr-icon shape="info-standard"></clr-icon>
               About
@@ -119,6 +124,31 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="copyInfo()">Copy</button>
-    <button type="button" class="btn btn-primary" (click)="infoModalVisible = false">Ok</button>
+    <button type="button" class="btn btn-primary" (click)="infoModalVisible = false">Close</button>
+  </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="projectsListModalVisible" [clrModalStaticBackdrop]="false" class="projects-list-modal">
+  <h3 class="modal-title">Your Firebase Projects</h3>
+  <div class="modal-body">
+    <table *ngIf="projectsListModalVisible" class="table table-compact">
+      <thead>
+        <tr>
+          <th class="left">Project name</th>
+          <th class="left">Project ID</th>
+          <th class="left">Permissions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let project of projectsList$ | async">
+          <td class="left">{{ project.name }}</td>
+          <td class="left"><a href="javascript://" (click)="openProjectConsole(project)">{{ project.id }}</a></td>
+          <td class="left">{{ projectPermission(project.permission) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="projectsListModalVisible = false">Close</button>
   </div>
 </clr-modal>

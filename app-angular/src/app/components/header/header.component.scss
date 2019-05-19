@@ -146,3 +146,25 @@ clr-header {
     }
   }
 }
+
+.app-info-modal {
+  .modal-dialog {
+    width: auto;
+
+    table {
+      width: auto;
+    }
+  }
+}
+
+.projects-list-modal {
+  .modal-body {
+    max-height: 25rem;
+
+    table thead tr th {
+      background-color: $clr-thead-bgcolor;
+      position: sticky;
+      top: 0;
+    }
+  }
+}

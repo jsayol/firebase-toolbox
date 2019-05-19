@@ -15,6 +15,7 @@ body {
 
 * {
   user-select: none;
+  -webkit-user-drag: none;
 }
 
 body > .titlebar {
@@ -110,16 +111,6 @@ app-home .app-module {
 
   .clr-form-control {
     margin-top: 0;
-  }
-}
-
-clr-modal.app-info-modal {
-  .modal-dialog {
-    width: auto;
-
-    table {
-      width: auto;
-    }
   }
 }
 
