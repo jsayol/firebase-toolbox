@@ -4,6 +4,15 @@
   <div class="clr-row">
     <div class="clr-col-lg-6 clr-col-md-6 clr-col-12">
       <div class="card">
+        <div class="card-header">
+          Projects
+        </div>
+        <div class="card-block">
+          <div class="card-text">
+            <span class="p3">You can associate the projects that you commonly use with this workspace. Additionally, you
+              can set a custom alias (like "staging", "testing", "default", etc.) to easily identify the project.</span>
+          </div>
+        </div>
         <div class="card-block">
           <div class="card-title">
             Active project
@@ -46,6 +55,15 @@
 
     <div class="clr-col-lg-6 clr-col-md-6 clr-col-12">
       <div class="card">
+        <div class="card-header">
+          Features
+        </div>
+        <div class="card-block">
+          <div class="card-text">
+            <span class="p3">Each workspace can have a set of initialized Firebase features. A feature is shown here if
+              it has an entry in the <code>firebase.json</code> file for the workspace.</span>
+          </div>
+        </div>
         <div class="card-block">
           <div class="card-title">
             Initialized features
@@ -74,13 +92,16 @@
         </div>
         <div class="card-footer">
           <clr-dropdown>
-            <button [clrLoading]="initRunning" class="btn btn-primary"
-              (click)="showInitModal()" clrDropdownTrigger>
+            <button [clrLoading]="initRunning" class="btn btn-primary" (click)="showInitModal()" clrDropdownTrigger>
               Add Feature
               <clr-icon shape="caret down"></clr-icon>
             </button>
             <clr-dropdown-menu *clrIfOpen>
-              <label class="dropdown-header">Select a feature</label>
+              <button type="button" clrDropdownItem (click)="initFeature()">
+                Multiple features
+              </button>
+              <div class="dropdown-divider"></div>
+              <label class="dropdown-header">Only one:</label>
               <button type="button" clrDropdownItem (click)="initFeature('database')">
                 <clr-icon shape="data-cluster"></clr-icon>
                 Database
