@@ -10,6 +10,7 @@ import { ClarityModule } from '@clr/angular';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { NgxLetModule } from '@ngx-utilities/ngx-let';
+import { ResizableModule } from 'angular-resizable-element';
 
 // Routing
 import { AppRoutingModule } from './app-routing.module';
@@ -67,6 +68,7 @@ import { ServeSectionComponent } from './components/sections/serve/serve-section
     BrowserAnimationsModule,
     ClarityModule,
     NgxLetModule,
+    ResizableModule,
 
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot(effects)

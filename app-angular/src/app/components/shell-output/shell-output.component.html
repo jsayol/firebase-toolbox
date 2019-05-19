@@ -1,7 +1,12 @@
-<div class="toggle" [class.open]="isOpen" (click)="toggle()">
-  <div>CLI Output</div>
-  <clr-icon shape="angle-double" [dir]="isOpen ? 'down' : 'up'"></clr-icon>
-</div>
-<div class="output-container" [class.open]="isOpen">
-  <div class="output shell-output" [innerHTML]="safeOutput" #outputRef></div>
+<div class="wrapper" mwlResizable [enableGhostResize]="true"
+  [resizeEdges]="{ bottom: false, right: false, top: isOpen, left: false }" (resizeEnd)="onResizeEnd($event)">
+  <div class="toggle" [class.open]="isOpen">
+    <a href="javascript://" class="label clickable" (click)="toggle()">
+      <div>CLI Output</div>
+      <clr-icon shape="angle-double" [dir]="isOpen ? 'down' : 'up'"></clr-icon>
+    </a>
+  </div>
+  <div class="output-container" [class.open]="isOpen" [style.transition]="'height 0.15s ease-in-out'">
+    <div class="output shell-output" [innerHTML]="safeOutput" #outputRef></div>
+  </div>
 </div>

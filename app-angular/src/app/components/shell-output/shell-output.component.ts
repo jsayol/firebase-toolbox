@@ -8,6 +8,7 @@ import {
   NgZone
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ResizeEvent } from 'angular-resizable-element';
 
 import { ansiToHTML } from '../../../utils';
 
@@ -15,13 +16,19 @@ import { ansiToHTML } from '../../../utils';
   selector: 'app-shell-output',
   templateUrl: './shell-output.component.html',
   styleUrls: ['./shell-output.component.scss'],
-  host: { '[class.visible]': 'isVisible' },
+  host: {
+    '[class.visible]': 'isVisible',
+    '[style.top]': 'isOpen ? hostTop : "calc(100vh - 6.3rem)"',
+    '[style.transition]': 'isResizing ? none : "top 0.1s ease-in-out 0s"'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShellOutputComponent implements OnInit {
   isVisible = false;
   isOpen = false;
   safeOutput: SafeHtml = '';
+  hostTop = '40vh';
+  isResizing = false;
 
   @ViewChild('outputRef')
   outputRef: ElementRef;
@@ -72,6 +79,16 @@ export class ShellOutputComponent implements OnInit {
   clear() {
     this.safeOutput = '';
     this.unsafedOutput = '';
+  }
+
+  onResizeEnd(event: ResizeEvent): void {
+    this.isResizing = true;
+    this.hostTop = `${event.rectangle.top - 127}px`;
+    setImmediate(() => {
+      this.ngZone.run(() => {
+        this.isResizing = false;
+      });
+    });
   }
 
   private add(text: string): void {
