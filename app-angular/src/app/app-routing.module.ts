@@ -4,6 +4,7 @@ import { InitializingComponent } from './components/initializing/initializing.co
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { SettingsSectionComponent } from './components/sections/settings/settings-section.component';
+import { ServeSectionComponent } from './components/sections/serve/serve-section.component';
 
 const routes: Routes = [
   {
@@ -24,7 +25,7 @@ const routes: Routes = [
       },
       {
         path: 'serve',
-        component: InitializingComponent
+        component: ServeSectionComponent
       },
       {
         path: 'deploy',

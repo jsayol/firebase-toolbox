@@ -1,0 +1,47 @@
+<h3 class="module-title">Serve</h3>
+
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <p>Start a local server for your static assets</p>
+    </div>
+  </div>
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <!-- <div class="card">
+        <div class="card-block">
+          <div class="card-text">
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-primary serve" (click)="toggleServe()">{{ serveRunning ? 'Stop' : 'Start' }}
+            serving</button>
+        </div>
+      </div> -->
+
+      <form clrForm [formGroup]="form" class="clr-form-horizontal">
+        <clr-input-container>
+          <label>Host</label>
+          <input clrInput type="text" formControlName="host" placeholder="localhost" />
+        </clr-input-container>
+        <clr-input-container>
+          <label>Port</label>
+          <input clrInput type="number" formControlName="port" placeholder="5000" />
+        </clr-input-container>
+
+        <clr-checkbox-container>
+          <label class="label-top">Targets</label>
+          <clr-checkbox-wrapper *ngFor="let target of formTargets.controls; let i=index">
+            <input type="checkbox" clrCheckbox [formControl]="target" />
+            <label>{{ targets[i].name }}</label>
+          </clr-checkbox-wrapper>
+        </clr-checkbox-container>
+
+
+        <br />
+        <button class="btn btn-primary" type="submit" (click)="toggleServe()" [disabled]="!form.valid">Start</button>
+      </form>
+    </div>
+  </div>
+  <app-shell-output></app-shell-output>
+</div>

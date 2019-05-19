@@ -122,3 +122,7 @@ clr-modal.app-info-modal {
     }
   }
 }
+
+.clr-form-control > .clr-control-label:not(.label-top) {
+  align-self: center;
+}

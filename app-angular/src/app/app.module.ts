@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import '../polyfills';
 
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
@@ -40,6 +40,7 @@ import { ShellOutputComponent } from './components/shell-output/shell-output.com
 
 // Section components
 import { SettingsSectionComponent } from './components/sections/settings/settings-section.component';
+import { ServeSectionComponent } from './components/sections/serve/serve-section.component';
 
 @NgModule({
   declarations: [
@@ -54,12 +55,14 @@ import { SettingsSectionComponent } from './components/sections/settings/setting
     PromptModalComponent,
     AutofocusDirective,
     ShellOutputComponent,
-    AnsiPipe
+    AnsiPipe,
+    ServeSectionComponent
   ],
   imports: [
     BrowserModule,
     RouterModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ClarityModule,
