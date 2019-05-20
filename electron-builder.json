@@ -13,6 +13,7 @@
     "!package-lock.json",
     "!app-angular/src/",
     "!app-angular/e2e/",
+    "!app-electron/src/",
     "!hooks/",
     "!angular.json",
     "!_config.yml",
@@ -20,6 +21,7 @@
     "!**/tsconfig.json",
     "!tslint.json"
   ],
+  "asar": false,
   "win": {
     "icon": "app-angular/dist",
     "target": ["portable"]
@@ -29,7 +31,7 @@
     "target": ["dmg"]
   },
   "linux": {
-    "icon": "app-angular/src/favicon.512x512.png",
+    "icon": "app-angular/dist/favicon.512x512.png",
     "target": ["AppImage"],
     "category": "Utility"
   },

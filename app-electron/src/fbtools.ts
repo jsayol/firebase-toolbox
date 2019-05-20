@@ -55,6 +55,8 @@ async function runCommand(message: RunCommandMessage): Promise<void> {
       process.exit();
     }
 
+    process.chdir(message.options.cwd); // TODO: windows?
+
     try {
       const result = await commandFn(...message.args, message.options);
       process.send({ type: 'run-command-result', result });

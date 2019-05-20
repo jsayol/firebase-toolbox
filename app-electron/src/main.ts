@@ -130,14 +130,18 @@ function ipcFirebaseTools(win: BrowserWindow): void {
       const fbtoolsPath = path.resolve(__dirname, './fbtools.js');
 
       if (ownOptions.nodeVersion === 'self') {
+        // TODO: this doesn't work in prod mode either, don't know why
         child = childProcess.fork(fbtoolsPath, [], {
           execArgv: [],
-          cwd: options.cwd,
+          // cwd: options.cwd,
           stdio: ['pipe', 'pipe', 'pipe', 'ipc']
         });
       } else {
+        // TODO: this doesn't work when runnin in prod mode, since the
+        // fbtools.js file is inside the app.asar package, plus none of the
+        // node modules used in there are available in the user's node.
         child = childProcess.spawn('node', [fbtoolsPath], {
-          cwd: options.cwd,
+          // cwd: options.cwd,
           stdio: ['pipe', 'pipe', 'pipe', 'ipc']
         });
       }
