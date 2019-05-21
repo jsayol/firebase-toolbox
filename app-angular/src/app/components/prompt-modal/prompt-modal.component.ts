@@ -6,17 +6,20 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
-import { PromptService, PromptQuestion } from '../../providers/prompt.service';
 import { takeWhile } from 'rxjs/operators';
-import { objects as inquirerObjects } from 'inquirer';
+import * as inquirer_Type from 'inquirer';
+
+import { PromptService, PromptQuestion } from '../../providers/prompt.service';
 
 const REPLACE_IN_MESSAGE = [
   [' Press Space to select features, then Enter to confirm your choices.', '']
 ];
 
 function checkboxToAnswer(question: PromptQuestion['question']): boolean[] {
-  return (question.choices as (string | inquirerObjects.ChoiceOption)[]).map(
-    choice => (typeof choice === 'string' ? false : choice.checked)
+  return (question.choices as (
+    | string
+    | inquirer_Type.objects.ChoiceOption)[]).map(choice =>
+    typeof choice === 'string' ? false : choice.checked
   );
 }
 
@@ -24,7 +27,7 @@ function answerToCheckbox(
   question: PromptQuestion['question'],
   answer: boolean[]
 ): string[] {
-  return (question.choices as (string | inquirerObjects.ChoiceOption)[])
+  return (question.choices as (string | inquirer_Type.objects.ChoiceOption)[])
     .map((choice, index) => {
       if (!answer[index]) {
         return null;
@@ -84,13 +87,21 @@ export class PromptModalComponent implements OnInit, OnDestroy {
         }
       }
 
-      // TODO: question type "checkbox" needs to be handled as a special
-      // case ("default" is an array, choices might have {checked:true}, etc.)
+      // Question type "checkbox" needs to be handled as a special case.
       // See https://github.com/SBoudrias/Inquirer.js#checkbox---type-checkbox
       if (this.question.type === 'checkbox') {
         this.checkboxAnswer = checkboxToAnswer(this.question);
       } else {
         this.answer = this.question.default;
+      }
+
+      // Remove certain choices from "list" when running "init"
+      if (this.question.name === 'id' && this.question.type === 'list') {
+        this.question.choices = (this.question.choices as any[]).filter(
+          choice =>
+            choice !== '[create a new project]' &&
+            choice !== '[don\'t setup a default project]'
+        );
       }
 
       this.open = true;
@@ -128,5 +139,23 @@ export class PromptModalComponent implements OnInit, OnDestroy {
     this.question = null;
 
     this.prompt.answer(id, undefined, true);
+  }
+
+  getListChoiceName(
+    choice: string | inquirer_Type.objects.ChoiceOption
+  ): string {
+    return typeof choice === 'string' ? choice : choice.name;
+  }
+
+  getListChoiceValue(
+    choice: string | inquirer_Type.objects.ChoiceOption
+  ): string {
+    return typeof choice === 'string' ? choice : choice.value;
+  }
+
+  getListChoiceDisabled(
+    choice: string | inquirer_Type.objects.ChoiceOption
+  ): boolean {
+    return typeof choice === 'string' ? false : !!choice.disabled;
   }
 }

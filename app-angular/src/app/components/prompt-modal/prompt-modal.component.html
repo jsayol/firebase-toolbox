@@ -13,9 +13,9 @@
       <ng-container *ngIf="question.type === 'list'">
         <clr-radio-container>
           <clr-radio-wrapper *ngFor="let choice of question.choices">
-            <input type="radio" clrRadio [value]="choice.value" name="list" required [disabled]="choice.disabled"
+            <input type="radio" clrRadio [value]="getListChoiceValue(choice)" name="list" required [disabled]="getListChoiceDisabled(choice)"
               [(ngModel)]="answer" />
-            <label>{{ choice.name }}</label>
+            <label>{{ getListChoiceName(choice) }}</label>
           </clr-radio-wrapper>
         </clr-radio-container>
       </ng-container>
