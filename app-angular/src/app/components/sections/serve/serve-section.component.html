@@ -43,16 +43,16 @@
             Decide if you want to use your system's Node.js version or the one bundled with Firebase toolbox.
           </clr-control-helper>
         </clr-radio-container>
+      </div>
+    </div>
 
-        <div class="clr-row">
-          <div class="clr-col-12">
-            <button *ngIf="!serveRunning" class="btn btn-primary" type="submit" (click)="startServe()"
-              [disabled]="!form.valid">
-              Start
-            </button>
-            <button *ngIf="serveRunning" class="btn btn-primary" (click)="stopServe()">Stop</button>
-          </div>
-        </div>
+    <div class="clr-row">
+      <div class="clr-col-12">
+        <button *ngIf="!serveRunning" class="btn btn-primary" type="submit" (click)="startServe()"
+          [disabled]="!form.valid">
+          Start
+        </button>
+        <button *ngIf="serveRunning" class="btn btn-primary" (click)="stopServe()">Stop</button>
       </div>
     </div>
   </form>
