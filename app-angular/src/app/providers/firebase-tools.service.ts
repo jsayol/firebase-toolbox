@@ -93,9 +93,7 @@ export class FirebaseToolsService {
     });
   }
 
-  async readRcFile(
-    workspace: Workspace
-  ): Promise<{ [k: string]: any } | null> {
+  async readRcFile(workspace: Workspace): Promise<{ [k: string]: any } | null> {
     try {
       const path = this.electron.path.join(workspace.path, '.firebaserc');
       return JSON.parse(await this.electron.fs.promises.readFile(path, 'utf8'));
@@ -141,6 +139,14 @@ export class FirebaseToolsService {
     );
 
     return workspaces.filter(workspace => !!workspace);
+  }
+
+  removeWorkspace(workspace: Workspace): void {
+    const activeProjects = (this.configstore.get('activeProjects') || {}) as {
+      [path: string]: string;
+    };
+    activeProjects[workspace.path] = undefined;
+    this.configstore.set('activeProjects', activeProjects);
   }
 
   getProjects(): Promise<FirebaseProject[]> {

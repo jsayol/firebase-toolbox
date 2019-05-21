@@ -38,7 +38,7 @@
                   </ng-container>
                 </div>
                 <button class="btn btn-icon remove-workspace" title="Remove this workspace"
-                  (click)="removeWorkspace($event, workspace, workspaceDropdown)">
+                  (click)="confirmRemoveWorkspace($event, workspace, workspaceDropdown)">
                   <clr-icon shape="trash"></clr-icon>
                 </button>
               </div>
@@ -154,5 +154,31 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="projectsListModalVisible = false">Close</button>
+  </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="removeWorkspaceModalVisible" class="remove-workspace-modal">
+  <h3 class="modal-title">Remove workspace</h3>
+  <div class="modal-body">
+    <div class="alert alert-info" role="alert">
+      <div class="alert-items">
+        <div class="alert-item static">
+          <div class="alert-icon-wrapper">
+            <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+          </div>
+          <span class="alert-text">
+            This won't affect any of the files in this workspace nor any of the projects associated with it.
+          </span>
+        </div>
+      </div>
+    </div>
+    <p>
+      Do you want to remove this workspace?<br />
+      <code>{{ pendingRemoveWorkspace?.path }}</code>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="dismissRemoveWorkspaceModal()">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="removeWorkspaceConfirmed()">Remove</button>
   </div>
 </clr-modal>

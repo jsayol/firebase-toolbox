@@ -9,12 +9,13 @@ import { AppState } from '../../models';
 import { User } from '../../models/user.model';
 import { Workspace } from '../../models/workspaces.model';
 import { FirebaseProject } from '../../models/projects.model';
-
 import { environment } from '../../../environments/environment';
 import * as workspacesActions from '../../actions/workspaces.actions';
 import * as userActions from '../../actions/user.actions';
 import { ElectronService } from '../../providers/electron.service';
 import { FirebaseToolsService } from '../../providers/firebase-tools.service';
+
+const INITIAL_SECTION = environment.production ? 'settings' : 'settings'; // 'auth.export';
 
 interface AppInfo {
   version: string;
@@ -36,6 +37,8 @@ export class HeaderComponent implements OnInit {
   appInfo?: AppInfo;
   infoModalVisible = false;
   projectsListModalVisible = false;
+  removeWorkspaceModalVisible = false;
+  pendingRemoveWorkspace: Workspace | null = null;
 
   user$: Observable<User> = this.store.select('user');
 
@@ -105,14 +108,14 @@ export class HeaderComponent implements OnInit {
   selectWorkspace(workspace: Workspace): void {
     this.store.dispatch(new workspacesActions.SetSelected(workspace));
     // this.router.navigate(['/home', workspace.path, 'settings']);
-    this.router.navigate(['/home', workspace.path, 'serve']);
+    this.router.navigate(['/home', workspace.path, INITIAL_SECTION]);
   }
 
   getWorkspaceName(workspace: Workspace): string {
     return this.electron.path.basename(workspace.path);
   }
 
-  removeWorkspace(
+  confirmRemoveWorkspace(
     event: MouseEvent,
     workspace: Workspace,
     dropdown: ClrDropdown
@@ -120,16 +123,68 @@ export class HeaderComponent implements OnInit {
     event.preventDefault();
     event.stopPropagation();
     dropdown.ifOpenService.open = false;
-
-    // TODO: dialog asking the user if they want to remove the workspace
+    this.pendingRemoveWorkspace = workspace;
+    this.removeWorkspaceModalVisible = true;
 
     return false;
+  }
+
+  async removeWorkspaceConfirmed(): Promise<void> {
+    this.removeWorkspaceModalVisible = false;
+    if (this.pendingRemoveWorkspace) {
+      this.fb.removeWorkspace(this.pendingRemoveWorkspace);
+
+      // If the workspace we just removed was the selected one, unselect it
+      const workspace = await this.workspace$.pipe(first()).toPromise();
+      if (workspace.path === this.pendingRemoveWorkspace.path) {
+        this.store.dispatch(new workspacesActions.SetSelected(null));
+      }
+
+      this.pendingRemoveWorkspace = null;
+      this.store.dispatch(new workspacesActions.GetList());
+    }
+  }
+
+  dismissRemoveWorkspaceModal(): void {
+    this.pendingRemoveWorkspace = null;
+    this.removeWorkspaceModalVisible = false;
   }
 
   addWorkspace(dropdown: ClrDropdown): void {
     dropdown.ifOpenService.open = false;
 
-    // TODO: dialog to add a workspace
+    this.electron.dialog.showOpenDialog(
+      {
+        properties: ['openDirectory', 'createDirectory']
+      },
+      async (paths: string[] | undefined) => {
+        if (paths && paths.length > 0) {
+          const path = paths[0];
+
+          // First check if it's already an existing workspace
+          const workspaces = await this.workspaceList$
+            .pipe(first())
+            .toPromise();
+          const existingWorkspace = workspaces.find(
+            workspace => workspace.path === path
+          );
+
+          if (existingWorkspace) {
+            this.store.dispatch(
+              new workspacesActions.SetSelected(existingWorkspace)
+            );
+          } else {
+            const workspace: Workspace = {
+              path,
+              projectId: null,
+              projectAlias: null,
+              isBeingAdded: true
+            };
+            this.store.dispatch(new workspacesActions.SetSelected(workspace));
+          }
+        }
+      }
+    );
   }
 
   showInfo(): void {

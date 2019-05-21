@@ -88,14 +88,20 @@ clr-header {
         button.remove-workspace {
           opacity: 0;
           position: absolute;
-          right: 0.2rem;
-          top: 0.35rem;
+          
+          // right: 0.2rem;
+          // top: 0.35rem;
+          // width: auto;
+          right: 0rem;
+          top: 0rem;
           width: auto;
+          height: 100%;
+
           color: #fff;
           padding: 0.2rem 0.25rem;
           border: 1px solid #e12200;
           background-color: #e12200;
-          transition: opacity 0.1s;
+          // transition: opacity 0.1s;
 
           &:hover {
             border-color: #ff2200;
@@ -103,8 +109,10 @@ clr-header {
           }
 
           clr-icon {
-            height: 0.8rem;
-            width: 0.8rem;
+            // height: 0.8rem;
+            // width: 0.8rem;
+            height: 0.95rem;
+            width: 0.95rem;
             margin-right: 0;
           }
         }
