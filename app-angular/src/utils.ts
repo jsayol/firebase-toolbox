@@ -21,3 +21,7 @@ export function getRandomId(): string {
 
   return id;
 }
+
+export function contains(obj: { [k: string]: any }, prop: string): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}

@@ -4,12 +4,13 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  NgZone
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { Observable, from, BehaviorSubject } from 'rxjs';
-import { switchMap, takeWhile, map, filter } from 'rxjs/operators';
+import { Observable, from, BehaviorSubject, Subject, merge } from 'rxjs';
+import { switchMap, takeWhile, map, filter, mapTo, tap } from 'rxjs/operators';
 import { UseOptions, InitFeatureName } from 'firebase-tools';
 
 import {
@@ -20,7 +21,7 @@ import {
 import { AppState } from '../../../models';
 import { ShellOutputComponent } from '../../shell-output/shell-output.component';
 import { OutputCapture } from '../../../providers/electron.service';
-import { ansiToHTML } from '../../../../utils';
+import { ansiToHTML, contains } from '../../../../utils';
 import * as workspacesActions from '../../../actions/workspaces.actions';
 
 @Component({
@@ -55,7 +56,12 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
     .select('workspaces', 'selected')
     .pipe(takeWhile(() => !this.destroy));
 
-  workspaceProjects$ = this.workspace$.pipe(
+  private reloadWorkspaceProjects$ = new Subject<void>();
+
+  workspaceProjects$ = merge(
+    this.workspace$,
+    this.reloadWorkspaceProjects$.pipe(mapTo(this.workspace))
+  ).pipe(
     filter(workspace => !!workspace),
     switchMap(workspace => from(this.fb.getWorkspaceProjects(workspace)))
   );
@@ -67,19 +73,28 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
 
   private destroy = false;
   private _activeProject: string;
+  private _isInitialized: boolean;
   private getFeatures$ = new BehaviorSubject<Workspace | null>(null);
 
   constructor(
     private fb: FirebaseToolsService,
     private store: Store<AppState>,
     private changeDetRef: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private ngZone: NgZone
   ) {
     this.workspaceFeatures$ = this.getFeatures$.pipe(
       takeWhile(() => !this.destroy),
       filter(workspace => !!workspace),
       switchMap(workspace => from(this.fb.getWorkspaceFeatures(workspace))),
-      map(features => features.map(f => f.charAt(0).toUpperCase() + f.slice(1)))
+      map(features =>
+        features.map(f => f.charAt(0).toUpperCase() + f.slice(1))
+      ),
+      tap(() => {
+        setImmediate(() => {
+          this.ngZone.run(() => this.changeDetRef.markForCheck());
+        });
+      })
     );
   }
 
@@ -88,8 +103,15 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => !this.destroy))
       .subscribe((workspace: Workspace) => {
         this.workspace = workspace;
-        this._activeProject = workspace.projectId;
         this.getFeatures$.next(workspace);
+
+        if (workspace) {
+          this._activeProject = workspace.projectId;
+          this.handleWorkspace();
+        } else {
+          this._activeProject = null;
+        }
+
         this.changeDetRef.markForCheck();
       });
   }
@@ -100,6 +122,13 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
 
   get activeProject(): string {
     return this._activeProject;
+  }
+
+  get isInitialized(): boolean {
+    if (this._isInitialized) {
+      return true;
+    }
+    return this.fb.isWorkspaceInitialized(this.workspace);
   }
 
   set activeProject(projectId: string) {
@@ -142,6 +171,13 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
     this.useAddModalVisible = true;
   }
 
+  dismissUseAddModal() {
+    this.useAddModalVisible = true;
+    if (this.workspace.isBeingAdded) {
+      this.store.dispatch(new workspacesActions.SetSelected(null));
+    }
+  }
+
   showInitModal() {
     this.initModalVisible = true;
   }
@@ -170,6 +206,12 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
       );
     }
 
+    if (this.workspace.isBeingAdded) {
+      this.workspace.isBeingAdded = false;
+      this.reloadWorkspaceProjects$.next();
+    }
+
+    this.useAddRunning = false;
     this.store.dispatch(
       new workspacesActions.SetSelected({
         ...this.workspace,
@@ -177,12 +219,10 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
         projectId
       })
     );
-
-    this.useAddRunning = false;
     this.changeDetRef.markForCheck();
   }
 
-  async initFeature(feature: InitFeatureName): Promise<void> {
+  async initFeature(feature?: InitFeatureName): Promise<void> {
     const output: OutputCapture = {
       stdout: text => {
         this.shellOutput.stdout(text);
@@ -205,8 +245,50 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
       console.log('Init error:', err);
     }
 
+    if (this.workspace.isBeingAdded) {
+      this.workspace.isBeingAdded = false;
+      this.reloadWorkspaceProjects$.next();
+      this.store.dispatch(new workspacesActions.GetList());
+    }
+
     this.initRunning = false;
     this.getFeatures$.next(this.workspace);
     this.changeDetRef.markForCheck();
+  }
+
+  private async handleWorkspace(): Promise<void> {
+    this._isInitialized = this.fb.isWorkspaceInitialized(this.workspace);
+
+    if (this.workspace.isBeingAdded) {
+      if (this._isInitialized) {
+        try {
+          const rcFile = await this.fb.readRcFile(this.workspace);
+          if (
+            contains(rcFile, 'projects') &&
+            Object.keys(rcFile.projects).length > 0
+          ) {
+            const aliases = Object.keys(rcFile.projects);
+            let projectId: string;
+            let projectAlias: string;
+
+            if (contains(rcFile.projects, 'default')) {
+              projectId = rcFile.projects.default;
+              projectAlias = 'default';
+            } else {
+              projectId = rcFile.projects[aliases[0]];
+              projectAlias = aliases[0];
+            }
+
+            this.useAddProject(projectId, projectAlias);
+          } else {
+            this.showUseAddModal();
+          }
+        } catch (err) {
+          this.showUseAddModal();
+        }
+      } else {
+        this.initFeature();
+      }
+    }
   }
 }

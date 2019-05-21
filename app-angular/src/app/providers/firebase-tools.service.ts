@@ -93,6 +93,18 @@ export class FirebaseToolsService {
     });
   }
 
+  async readRcFile(
+    workspace: Workspace
+  ): Promise<{ [k: string]: any } | null> {
+    try {
+      const path = this.electron.path.join(workspace.path, '.firebaserc');
+      return JSON.parse(await this.electron.fs.promises.readFile(path, 'utf8'));
+    } catch (err) {
+      // Either ".firebaserc" doesn't exist or is corrupted
+      return null;
+    }
+  }
+
   async getWorkspaces(): Promise<Workspace[]> {
     const activeProjects = this.configstore.get('activeProjects') as {
       [path: string]: string;
@@ -119,7 +131,7 @@ export class FirebaseToolsService {
           projectAlias: name
         };
 
-        const rc = await this.rcFile(workspace);
+        const rc = await this.readRcFile(workspace);
         if (rc && contains(rc, 'projects') && contains(rc.projects, name)) {
           workspace.projectId = rc.projects[name];
         }
@@ -138,7 +150,7 @@ export class FirebaseToolsService {
   async getWorkspaceProjects(
     workspace: Workspace
   ): Promise<Array<{ id: string; alias: string }>> {
-    const rc = await this.rcFile(workspace);
+    const rc = await this.readRcFile(workspace);
 
     if (
       !rc ||
@@ -159,7 +171,7 @@ export class FirebaseToolsService {
       }
     }
 
-    if (!hasActiveProject) {
+    if (!hasActiveProject && workspace.projectId !== null) {
       projects.unshift({
         id: workspace.projectId,
         alias: workspace.projectAlias
@@ -189,6 +201,17 @@ export class FirebaseToolsService {
     } catch (err) {
       // Either "firebase.json" doesn't exist or is corrupted
       return [];
+    }
+  }
+
+  isWorkspaceInitialized(workspace: Workspace): boolean {
+    try {
+      const stat = this.electron.fs.statSync(
+        this.electron.path.join(workspace.path, 'firebase.json')
+      );
+      return stat.isFile();
+    } catch (err) {
+      return false;
     }
   }
 
@@ -226,18 +249,6 @@ export class FirebaseToolsService {
       nodeVersion
     );
   }
-
-  private async rcFile(
-    workspace: Workspace
-  ): Promise<{ [k: string]: any } | null> {
-    try {
-      const path = this.electron.path.join(workspace.path, '.firebaserc');
-      return JSON.parse(await this.electron.fs.promises.readFile(path, 'utf8'));
-    } catch (err) {
-      // Either ".firebaserc" doesn't exist or is corrupted
-      return null;
-    }
-  }
 }
 
 export interface UserInfo {
@@ -249,6 +260,7 @@ export interface Workspace {
   path: string;
   projectId: string;
   projectAlias: string;
+  isBeingAdded?: boolean;
 }
 
 function contains(obj: { [k: string]: any }, key: string): boolean {

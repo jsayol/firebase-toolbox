@@ -81,6 +81,19 @@
               <clr-icon aria-hidden="true" shape="close"></clr-icon>
             </button>
           </div>
+          <div class="alert alert-warning alert-sm" role="alert" [hidden]="isInitialized">
+            <div class="alert-items">
+              <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                  <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+                </div>
+                <span class="alert-text">This workspace hasn't been initialized yet.<br />Add features before proceeding.</span>
+              </div>
+            </div>
+            <button type="button" class="close" aria-label="Close" (click)="dismissFeaturesAlert()">
+              <clr-icon aria-hidden="true" shape="close"></clr-icon>
+            </button>
+          </div>
           <div class="progress loop top" [hidden]="!initRunning">
             <progress></progress>
           </div>
@@ -150,7 +163,7 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline" (click)="useAddModalVisible = false">Cancel</button>
+      <button type="button" class="btn btn-outline" (click)="dismissUseAddModal()">Cancel</button>
       <button type="button" class="btn btn-primary"
         (click)="useAddProject(useAddProjectId.value, useAddProjectAlias.value)">Add</button>
     </div>
