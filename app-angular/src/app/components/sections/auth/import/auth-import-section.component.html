@@ -15,6 +15,7 @@
           <ng-container *ngIf="!selectedFile"> Choose a file </ng-container>
           <ng-container *ngIf="selectedFile"> {{ selectedFileBasename }} </ng-container>
         </button>
+        <span class="clr-subtext">The CSV or JSON file that contains the user accounts to import</span>
       </div>
     </div>
 
@@ -22,16 +23,16 @@
       <label>Users origin</label>
       <clr-radio-wrapper>
         <input type="radio" clrRadio name="fileOrigin" required value="firebase" [(ngModel)]="fileOrigin" />
-        <label>Password users exported from a Firebase project</label>
+        <label>Firebase password users</label>
       </clr-radio-wrapper>
       <clr-radio-wrapper>
         <input type="radio" clrRadio name="fileOrigin" required value="other" [(ngModel)]="fileOrigin" />
         <label>Other</label>
       </clr-radio-wrapper>
-      <clr-control-helper>If you're importing password users that were exported from a Firebase project, Firebase
-        Toolbox can try to automatically
-        load the
-        required hash algorithm configuration</clr-control-helper>
+      <clr-control-helper>
+        When importing password users exported from a Firebase project, Firebase
+        Toolbox can try to automatically load the required hash algorithm configuration
+      </clr-control-helper>
     </clr-radio-container>
 
     <clr-select-container *ngIf="fileOrigin === 'firebase'">
@@ -68,13 +69,13 @@
         <option value="BCRYPT">BCRYPT</option>
         <option value="STANDARD_SCRYPT">STANDARD_SCRYPT</option>
       </select>
-      <clr-control-helper>The hash algorithm used in the passwords for these accounts</clr-control-helper>
+      <clr-control-helper>The algorithm used to hash passwords in the user account file</clr-control-helper>
       <clr-control-helper *ngIf="!hashAlgo">
-        <div class="alert alert-warning alert-sm no-hashalgo-alert" role="alert">
+        <div class="alert alert-info alert-sm no-hashalgo-alert" role="alert">
           <div class="alert-items">
             <div class="alert-item static">
               <div class="alert-icon-wrapper">
-                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
               </div>
               <span class="alert-text">No hash algorithm specified. Password users cannot be imported.</span>
             </div>
@@ -87,46 +88,46 @@
       <clr-textarea-container>
         <label>Hash key</label>
         <textarea clrTextarea [(ngModel)]="hashKey" name="hashKey" class="hash-key-textarea"></textarea>
-        <clr-control-helper>The key used in the hash algorithm</clr-control-helper>
+        <clr-control-helper>The key used to hash passwords (must be a base64-encoded string)</clr-control-helper>
       </clr-textarea-container>
 
       <clr-input-container *ngIf="hashAlgo === 'SCRYPT'">
         <label>Salt separator</label>
         <input clrInput type="text" [(ngModel)]="saltSeparator" name="saltSeparator" />
-        <clr-control-helper>The salt separator that will be appended to salt when verifying password
+        <clr-control-helper>The salt separator that will be appended to salt when verifying passwords (must be a
+          base64-encoded string)
         </clr-control-helper>
       </clr-input-container>
 
       <clr-input-container *ngIf="!hashAlgo.startsWith('HMAC_') && !['BCRYPT', 'STANDARD_SCRYPT'].includes(hashAlgo)">
         <label>Rounds</label>
         <input clrInput type="number" min="0" [(ngModel)]="rounds" name="rounds" />
-        <clr-control-helper>How many rounds for hash calculation</clr-control-helper>
+        <clr-control-helper>The number of rounds used to hash passwords</clr-control-helper>
       </clr-input-container>
 
       <clr-input-container *ngIf="['SCRYPT', 'STANDARD_SCRYPT'].includes(hashAlgo)">
         <label>Memory cost</label>
         <input clrInput type="number" min="1" max="14" [(ngModel)]="memCost" name="memCost" />
-        <clr-control-helper *ngIf="hashAlgo === 'SCRYPT'">The memory cost for firebase scrypt</clr-control-helper>
-        <clr-control-helper *ngIf="hashAlgo === 'STANDARD_SCRYPT'">The cpu/memory cost for standard scrypt
-        </clr-control-helper>
+        <clr-control-helper *ngIf="hashAlgo === 'SCRYPT'">The memory cost</clr-control-helper>
+        <clr-control-helper *ngIf="hashAlgo === 'STANDARD_SCRYPT'">The CPU/memory cost</clr-control-helper>
       </clr-input-container>
 
       <clr-input-container *ngIf="hashAlgo === 'STANDARD_SCRYPT'">
         <label>Parallelization</label>
         <input clrInput type="number" [(ngModel)]="parallelization" name="parallelization" />
-        <clr-control-helper>The parallelization for standard scrypt</clr-control-helper>
+        <clr-control-helper>The parallelization of the hashing algorithm</clr-control-helper>
       </clr-input-container>
 
       <clr-input-container *ngIf="hashAlgo === 'STANDARD_SCRYPT'">
         <label>Block size</label>
         <input clrInput type="number" [(ngModel)]="blockSize" name="blockSize" />
-        <clr-control-helper>The block size (normally is 8) for standard scrypt</clr-control-helper>
+        <clr-control-helper>The block size (normally 8) of the hashing algorithm</clr-control-helper>
       </clr-input-container>
 
       <clr-input-container *ngIf="hashAlgo === 'STANDARD_SCRYPT'">
         <label>DK length</label>
         <input clrInput type="number" [(ngModel)]="dkLen" name="dkLen" />
-        <clr-control-helper>The derived key length for standard scrypt</clr-control-helper>
+        <clr-control-helper>The derived key length of the hashing algorithm</clr-control-helper>
       </clr-input-container>
 
       <clr-radio-container
