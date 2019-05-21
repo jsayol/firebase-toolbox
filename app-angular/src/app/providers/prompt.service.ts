@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Question } from 'inquirer';
-
-import { getRandomId } from '../../utils';
 import { filter, first } from 'rxjs/operators';
+
+// Just types!
+import * as inquirer_Type from 'inquirer';
 
 export interface PromptQuestion {
   id: string;
-  question: Question;
+  question: inquirer_Type.Question;
 }
 
 export interface PromptAnswer {
   id: string;
-  answer?: string;
+  answer?: string | string[];
   error?: any;
 }
 
@@ -23,7 +23,10 @@ export class PromptService {
   questions$ = new Subject<PromptQuestion>();
   private answers$ = new Subject<PromptAnswer>();
 
-  show(id: string, question: Question): Promise<string> {
+  show(
+    id: string,
+    question: inquirer_Type.Question
+  ): Promise<string | string[]> {
     return new Promise((resolve, reject) => {
       this.answers$
         .pipe(
@@ -42,7 +45,7 @@ export class PromptService {
     });
   }
 
-  answer(id, answer: string | undefined, error?: any): void {
+  answer(id, answer: string | string[] | undefined, error?: any): void {
     this.answers$.next({ id, answer, error });
   }
 }

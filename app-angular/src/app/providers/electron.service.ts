@@ -154,7 +154,7 @@ export class ElectronService {
       async (event: IpcEvent, promptReq: PromptRequest) => {
         console.error('PROMPT:');
         console.log(promptReq);
-        let answer: string;
+        let answer: string | string[];
         let error: any;
 
         try {

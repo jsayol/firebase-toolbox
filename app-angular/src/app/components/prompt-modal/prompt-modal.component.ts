@@ -8,10 +8,31 @@ import {
 } from '@angular/core';
 import { PromptService, PromptQuestion } from '../../providers/prompt.service';
 import { takeWhile } from 'rxjs/operators';
+import { objects as inquirerObjects } from 'inquirer';
 
 const REPLACE_IN_MESSAGE = [
   [' Press Space to select features, then Enter to confirm your choices.', '']
 ];
+
+function checkboxToAnswer(question: PromptQuestion['question']): boolean[] {
+  return (question.choices as (string | inquirerObjects.ChoiceOption)[]).map(
+    choice => (typeof choice === 'string' ? false : choice.checked)
+  );
+}
+
+function answerToCheckbox(
+  question: PromptQuestion['question'],
+  answer: boolean[]
+): string[] {
+  return (question.choices as (string | inquirerObjects.ChoiceOption)[])
+    .map((choice, index) => {
+      if (!answer[index]) {
+        return null;
+      }
+      return typeof choice === 'string' ? choice : choice.name;
+    })
+    .filter(choice => choice !== null);
+}
 
 @Component({
   selector: 'app-prompt-modal',
@@ -23,6 +44,7 @@ export class PromptModalComponent implements OnInit, OnDestroy {
   open = false;
   question: PromptQuestion['question'] | null = null;
   answer = '';
+  checkboxAnswer: boolean[] = [];
 
   private currentId: PromptQuestion['id'] | null = null;
 
@@ -53,22 +75,24 @@ export class PromptModalComponent implements OnInit, OnDestroy {
 
   showQuestion(question: PromptQuestion): void {
     this.ngZone.run(() => {
-      // TODO: question type "checkbox" needs to be handled as a special
-      // case ("default" is an array, choices might have {checked:true}, etc.)
-      // See https://github.com/SBoudrias/Inquirer.js#checkbox---type-checkbox
+      this.currentId = question.id;
+      this.question = question.question;
 
-      if (typeof question.question.message === 'string') {
+      if (typeof this.question.message === 'string') {
         for (const [pattern, value] of REPLACE_IN_MESSAGE) {
-          question.question.message = question.question.message.replace(
-            pattern,
-            value
-          );
+          this.question.message = this.question.message.replace(pattern, value);
         }
       }
 
-      this.currentId = question.id;
-      this.question = question.question;
-      this.answer = this.question.default;
+      // TODO: question type "checkbox" needs to be handled as a special
+      // case ("default" is an array, choices might have {checked:true}, etc.)
+      // See https://github.com/SBoudrias/Inquirer.js#checkbox---type-checkbox
+      if (this.question.type === 'checkbox') {
+        this.checkboxAnswer = checkboxToAnswer(this.question);
+      } else {
+        this.answer = this.question.default;
+      }
+
       this.open = true;
       this.changeDetRef.markForCheck();
     });
@@ -76,11 +100,15 @@ export class PromptModalComponent implements OnInit, OnDestroy {
 
   continue() {
     const id = this.currentId;
-    const answer = this.answer;
+    const answer =
+      this.question.type === 'checkbox'
+        ? answerToCheckbox(this.question, this.checkboxAnswer)
+        : this.answer;
 
     this.currentId = null;
     this.question = null;
     this.answer = '';
+    this.checkboxAnswer = [];
 
     this.prompt.answer(id, answer);
 
