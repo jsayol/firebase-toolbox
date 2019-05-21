@@ -1,0 +1,190 @@
+<h3 class="module-title">Import Users</h3>
+
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <p>Import users into your Firebase project from a data file.</p>
+    </div>
+  </div>
+  <form clrForm class="clr-form-horizontal">
+    <div class="clr-form-control clr-row file-control">
+      <label class="clr-control-label label-top">File</label>
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <button type="button" class="btn btn-outline btn-icon" (click)="openFileDialog()">
+          <clr-icon shape="upload"></clr-icon>
+          <ng-container *ngIf="!selectedFile"> Choose a file </ng-container>
+          <ng-container *ngIf="selectedFile"> {{ selectedFileBasename }} </ng-container>
+        </button>
+      </div>
+    </div>
+
+    <clr-radio-container>
+      <label>Users origin</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio name="fileOrigin" required value="firebase" [(ngModel)]="fileOrigin" />
+        <label>Password users exported from a Firebase project</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio name="fileOrigin" required value="other" [(ngModel)]="fileOrigin" />
+        <label>Other</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>If you're importing password users that were exported from a Firebase project, Firebase
+        Toolbox can try to automatically
+        load the
+        required hash algorithm configuration</clr-control-helper>
+    </clr-radio-container>
+
+    <clr-select-container *ngIf="fileOrigin === 'firebase'">
+      <label>Origin project</label>
+      <select clrSelect name="originProject" [(ngModel)]="originProject"
+        (change)="loadProjectConfig($event.target.value)">
+        <option value="" disabled selected></option>
+        <option *ngFor="let project of projectsList$ | async" [value]="project.id">{{ project.name }}</option>
+      </select>
+      <clr-control-helper>The Firebase project from which these users were originally exported</clr-control-helper>
+      <clr-control-helper>
+        <div class="loading-config-spinner" *ngIf="loadingOriginConfig">
+          <span class="spinner spinner-inline"></span>
+          <span class="p4">&nbsp;Loading... </span>
+        </div>
+      </clr-control-helper>
+    </clr-select-container>
+
+    <clr-select-container *ngIf="fileOrigin === 'other' || originConfigLoaded">
+      <label>Hash algorithm</label>
+      <select clrSelect name="hashAlgo" [(ngModel)]="hashAlgo">
+        <option value="">Unspecified</option>
+        <option value="HMAC_SHA512">HMAC_SHA512</option>
+        <option value="HMAC_SHA256">HMAC_SHA256</option>
+        <option value="HMAC_SHA1">HMAC_SHA1</option>
+        <option value="HMAC_MD5">HMAC_MD5</option>
+        <option value="MD5">MD5</option>
+        <option value="SHA1">SHA1</option>
+        <option value="SHA256">SHA256</option>
+        <option value="SHA512">SHA512</option>
+        <option value="PBKDF_SHA1">PBKDF_SHA1</option>
+        <option value="PBKDF2_SHA256">PBKDF2_SHA256</option>
+        <option value="SCRYPT">SCRYPT</option>
+        <option value="BCRYPT">BCRYPT</option>
+        <option value="STANDARD_SCRYPT">STANDARD_SCRYPT</option>
+      </select>
+      <clr-control-helper>The hash algorithm used in the passwords for these accounts</clr-control-helper>
+      <clr-control-helper *ngIf="!hashAlgo">
+        <div class="alert alert-warning alert-sm no-hashalgo-alert" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+              </div>
+              <span class="alert-text">No hash algorithm specified. Password users cannot be imported.</span>
+            </div>
+          </div>
+        </div>
+      </clr-control-helper>
+    </clr-select-container>
+
+    <ng-container *ngIf="hashAlgo">
+      <clr-textarea-container>
+        <label>Hash key</label>
+        <textarea clrTextarea [(ngModel)]="hashKey" name="hashKey" class="hash-key-textarea"></textarea>
+        <clr-control-helper>The key used in the hash algorithm</clr-control-helper>
+      </clr-textarea-container>
+
+      <clr-input-container *ngIf="hashAlgo === 'SCRYPT'">
+        <label>Salt separator</label>
+        <input clrInput type="text" [(ngModel)]="saltSeparator" name="saltSeparator" />
+        <clr-control-helper>The salt separator that will be appended to salt when verifying password
+        </clr-control-helper>
+      </clr-input-container>
+
+      <clr-input-container *ngIf="!hashAlgo.startsWith('HMAC_') && !['BCRYPT', 'STANDARD_SCRYPT'].includes(hashAlgo)">
+        <label>Rounds</label>
+        <input clrInput type="number" min="0" [(ngModel)]="rounds" name="rounds" />
+        <clr-control-helper>How many rounds for hash calculation</clr-control-helper>
+      </clr-input-container>
+
+      <clr-input-container *ngIf="['SCRYPT', 'STANDARD_SCRYPT'].includes(hashAlgo)">
+        <label>Memory cost</label>
+        <input clrInput type="number" min="1" max="14" [(ngModel)]="memCost" name="memCost" />
+        <clr-control-helper *ngIf="hashAlgo === 'SCRYPT'">The memory cost for firebase scrypt</clr-control-helper>
+        <clr-control-helper *ngIf="hashAlgo === 'STANDARD_SCRYPT'">The cpu/memory cost for standard scrypt
+        </clr-control-helper>
+      </clr-input-container>
+
+      <clr-input-container *ngIf="hashAlgo === 'STANDARD_SCRYPT'">
+        <label>Parallelization</label>
+        <input clrInput type="number" [(ngModel)]="parallelization" name="parallelization" />
+        <clr-control-helper>The parallelization for standard scrypt</clr-control-helper>
+      </clr-input-container>
+
+      <clr-input-container *ngIf="hashAlgo === 'STANDARD_SCRYPT'">
+        <label>Block size</label>
+        <input clrInput type="number" [(ngModel)]="blockSize" name="blockSize" />
+        <clr-control-helper>The block size (normally is 8) for standard scrypt</clr-control-helper>
+      </clr-input-container>
+
+      <clr-input-container *ngIf="hashAlgo === 'STANDARD_SCRYPT'">
+        <label>DK length</label>
+        <input clrInput type="number" [(ngModel)]="dkLen" name="dkLen" />
+        <clr-control-helper>The derived key length for standard scrypt</clr-control-helper>
+      </clr-input-container>
+
+      <clr-radio-container
+        *ngIf="['MD5', 'SHA1', 'SHA256', 'SHA512'].includes(hashAlgo) || hashAlgo.startsWith('HMAC_')">
+        <label>Hash input order</label>
+        <clr-radio-wrapper>
+          <input type="radio" clrRadio name="hashInputOrder" required value="" [(ngModel)]="hashInputOrder" />
+          <label>Default</label>
+        </clr-radio-wrapper>
+        <clr-radio-wrapper>
+          <input type="radio" clrRadio name="hashInputOrder" required value="SALT_FIRST" [(ngModel)]="hashInputOrder" />
+          <label>Salt first</label>
+        </clr-radio-wrapper>
+        <clr-radio-wrapper>
+          <input type="radio" clrRadio name="hashInputOrder" required value="PASSWORD_FIRST"
+            [(ngModel)]="hashInputOrder" />
+          <label>Password first</label>
+        </clr-radio-wrapper>
+        <clr-control-helper>The order of password and salt.</clr-control-helper>
+      </clr-radio-container>
+    </ng-container>
+
+    <div class="clr-form-control clr-row alert-control">
+      <label class="clr-control-label">&nbsp;</label>
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <div [hidden]="!showImportSuccess" class="alert alert-success alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+              </div>
+              <div class="alert-text">
+                Users imported successfully.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div [hidden]="!showImportError" class="alert alert-danger alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+              </div>
+              <div class="alert-text" [innerHTML]="showImportError"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-row">
+      <div class="clr-col-12">
+        <button [clrLoading]="exportState" class="btn btn-primary" type="submit" (click)="startImport()"
+          [disabled]="!selectedFile || (fileOrigin === 'firebase' && !originConfigLoaded)">
+          Import
+        </button>
+      </div>
+    </div>
+  </form>
+  <app-shell-output></app-shell-output>
+</div>

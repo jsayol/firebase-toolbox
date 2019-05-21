@@ -56,7 +56,9 @@ function createWindow() {
     titleBarStyle: 'hidden',
     backgroundColor: '#FFFFFFFF',
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      allowRunningInsecureContent: false,
+      webSecurity: false
     },
     icon:
       (serve ? 'app-angular/src/' : '') +

@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+
 import {
   ElectronService,
   OutputCapture,
   RunningCommand
 } from './electron.service';
+import { CLI_CLIENT_ID, CLI_CLIENT_SECRET } from '../../utils';
 
 // IMPORTANT: These imports should only be used for types!
 import * as Configstore_Type from 'configstore';
@@ -11,18 +13,14 @@ import * as firebaseTools_Type from 'firebase-tools';
 import { GoogleApis } from 'googleapis';
 import { OAuth2Client } from 'googleapis-common';
 
-const CLI_CLIENT_ID =
-  '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com';
-const CLI_CLIENT_SECRET = 'j9iVZfS8kkCEFUPaAeJV0sAi';
-
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseToolsService {
   readonly tools: typeof firebaseTools_Type;
   private configstore: Configstore_Type;
-  private oauth2Client: OAuth2Client;
   private google: GoogleApis;
+  private oauth2Client: OAuth2Client;
 
   constructor(private electron: ElectronService) {
     const Configstore = this.electron.remote.require('configstore');
@@ -219,6 +217,11 @@ export class FirebaseToolsService {
     } catch (err) {
       return false;
     }
+  }
+
+  async getAccessToken(): Promise<string> {
+    const response = await this.oauth2Client.getAccessToken();
+    return response.token;
   }
 
   init(

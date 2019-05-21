@@ -15,7 +15,7 @@ import * as userActions from '../../actions/user.actions';
 import { ElectronService } from '../../providers/electron.service';
 import { FirebaseToolsService } from '../../providers/firebase-tools.service';
 
-const INITIAL_SECTION = environment.production ? 'settings' : 'auth.export';
+const INITIAL_SECTION = environment.production ? 'settings' : 'auth.import';
 
 interface AppInfo {
   version: string;

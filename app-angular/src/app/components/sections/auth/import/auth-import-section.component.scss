@@ -1,0 +1,26 @@
+.file-control {
+  align-items: center;
+}
+
+.alert-control {
+  .alert-success {
+    max-width: 8.1rem;
+  }
+}
+
+.no-hashalgo-alert {
+  max-width: 16.3rem;
+}
+
+.loading-config-spinner {
+  display: flex;
+  align-items: center;
+
+  .p4 {
+    margin-top: 0;
+  }
+}
+
+.hash-key-textarea {
+  width: 20rem;
+}

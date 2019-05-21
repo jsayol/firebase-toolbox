@@ -11,6 +11,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { NgxLetModule } from '@ngx-utilities/ngx-let';
 import { ResizableModule } from 'angular-resizable-element';
+import { HttpClientModule } from '@angular/common/http';
 
 // Routing
 import { AppRoutingModule } from './app-routing.module';
@@ -73,6 +74,7 @@ import { AuthImportSectionComponent } from './components/sections/auth/import/au
     ClarityModule,
     NgxLetModule,
     ResizableModule,
+    HttpClientModule,
 
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot(effects)

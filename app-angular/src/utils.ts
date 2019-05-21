@@ -3,6 +3,11 @@ import * as AnsiUp from 'ansi_up';
 const ansiUp: AnsiUp.AnsiUp = new (AnsiUp as any).default();
 ansiUp.use_classes = true;
 
+export const CLI_CLIENT_ID =
+  '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com';
+
+export const CLI_CLIENT_SECRET = 'j9iVZfS8kkCEFUPaAeJV0sAi';
+
 export function ansiToHTML(text: string): string {
   return ansiUp.ansi_to_html(text);
 }
