@@ -42,6 +42,8 @@ import { ShellOutputComponent } from './components/shell-output/shell-output.com
 // Section components
 import { SettingsSectionComponent } from './components/sections/settings/settings-section.component';
 import { ServeSectionComponent } from './components/sections/serve/serve-section.component';
+import { AuthExportSectionComponent } from './components/sections/auth/export/auth-export-section.component';
+import { AuthImportSectionComponent } from './components/sections/auth/import/auth-import-section.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import { ServeSectionComponent } from './components/sections/serve/serve-section
     AutofocusDirective,
     ShellOutputComponent,
     AnsiPipe,
-    ServeSectionComponent
+    ServeSectionComponent,
+    AuthExportSectionComponent,
+    AuthImportSectionComponent
   ],
   imports: [
     BrowserModule,

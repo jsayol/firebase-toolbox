@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { SettingsSectionComponent } from './components/sections/settings/settings-section.component';
 import { ServeSectionComponent } from './components/sections/serve/serve-section.component';
+import { AuthExportSectionComponent } from './components/sections/auth/export/auth-export-section.component';
 
 const routes: Routes = [
   {
@@ -37,7 +38,7 @@ const routes: Routes = [
       },
       {
         path: 'auth.export',
-        component: InitializingComponent
+        component: AuthExportSectionComponent
       },
       {
         path: 'auth.import',

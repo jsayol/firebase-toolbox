@@ -37,10 +37,12 @@ export class ElectronService {
   readonly os: typeof os_Type;
 
   private readonly electron: typeof electron_Type;
+  private readonly electronMain: typeof electron_Type;
 
   constructor(private prompt: PromptService) {
     if (this.isElectron()) {
       this.electron = window.require('electron');
+      this.electronMain = this.electron.remote.require('electron');
 
       this.ipcRenderer = this.electron.ipcRenderer;
       this.webFrame = this.electron.webFrame;
@@ -68,6 +70,10 @@ export class ElectronService {
 
   get shell(): electron_Type.Shell {
     return this.electron.shell;
+  }
+
+  get dialog(): electron_Type.Dialog {
+    return this.electronMain.dialog;
   }
 
   send(channel: string, ...args: any[]): void {

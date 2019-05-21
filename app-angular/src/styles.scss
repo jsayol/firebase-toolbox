@@ -37,6 +37,21 @@ button:focus {
   outline: none !important;
 }
 
+// TODO: move all these colors to the theme
+
+.btn.btn-primary {
+  color: #eceff1;
+  border-color: #2c384a;
+  background-color: #2c384a;
+  transition: background-color 0.1s;
+
+  &:hover {
+    color: #ffffff;
+    border-color: #039be5;
+    background-color: #039be5;
+  }
+}
+
 .btn.btn-secondary {
   color: #fff;
   border-color: #ffa000;
@@ -54,16 +69,14 @@ button:focus {
   }
 }
 
-.btn.btn-primary {
-  color: #eceff1;
+.btn.btn-outline {
   border-color: #2c384a;
-  background-color: #2c384a;
-  transition: background-color 0.1s;
+  background-color: transparent;
+  color: #2c384a;
+  transition: background-color 0.1s, border-color 0.1s;
 
   &:hover {
-    color: #ffffff;
     border-color: #039be5;
-    background-color: #039be5;
   }
 }
 

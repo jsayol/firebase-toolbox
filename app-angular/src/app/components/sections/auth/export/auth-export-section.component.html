@@ -1,0 +1,59 @@
+<h3 class="module-title">Export Users</h3>
+
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <p>Export accounts from your Firebase project into a data file.</p>
+    </div>
+  </div>
+  <form clrForm class="clr-form-horizontal">
+    <div class="clr-form-control clr-row file-control">
+      <label class="clr-control-label label-top">File</label>
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <button type="button" class="btn btn-outline btn-icon" (click)="openFileDialog()">
+          <clr-icon shape="download"></clr-icon>
+          <ng-container *ngIf="!selectedFile"> Choose a file </ng-container>
+          <ng-container *ngIf="selectedFile"> {{ selectedFileBasename }} </ng-container>
+        </button>
+      </div>
+    </div>
+
+    <div class="clr-form-control clr-row alert-control">
+      <label class="clr-control-label">&nbsp;</label>
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <div [hidden]="!showExportSuccess" class="alert alert-success alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+              </div>
+              <div class="alert-text">
+                Users exported successfully.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div [hidden]="!showExportError" class="alert alert-danger alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+              </div>
+              <div class="alert-text" [innerHTML]="showExportError"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-row">
+      <div class="clr-col-12">
+        <button [clrLoading]="exportState" class="btn btn-primary" type="submit" (click)="startExport()"
+          [disabled]="!selectedFile">
+          Export
+        </button>
+      </div>
+    </div>
+  </form>
+  <app-shell-output></app-shell-output>
+</div>
