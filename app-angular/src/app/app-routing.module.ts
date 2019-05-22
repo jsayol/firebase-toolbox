@@ -9,6 +9,7 @@ import { AuthExportSectionComponent } from './components/sections/auth/export/au
 import { AuthImportSectionComponent } from './components/sections/auth/import/auth-import-section.component';
 import { DatabaseGetSectionComponent } from './components/sections/database/get/database-get-section.component';
 import { DatabaseSetSectionComponent } from './components/sections/database/set/database-set-section.component';
+import { DatabaseUpdateSectionComponent } from './components/sections/database/update/database-update-section.component';
 
 const routes: Routes = [
   {
@@ -57,7 +58,7 @@ const routes: Routes = [
       },
       {
         path: 'database.update',
-        component: InitializingComponent
+        component: DatabaseUpdateSectionComponent
       },
       {
         path: 'database.push',

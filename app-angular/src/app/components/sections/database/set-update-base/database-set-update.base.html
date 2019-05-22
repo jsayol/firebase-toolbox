@@ -1,9 +1,9 @@
-<h3 class="module-title">Set Database Data</h3>
+<h3 class="module-title">{{ operation | titlecase }} Database Data</h3>
 
 <div class="module-content">
   <div class="clr-row">
     <div class="clr-col-12">
-      <p>Store JSON data in the database.</p>
+      <p>{{ info }}</p>
     </div>
   </div>
   <form clrForm [formGroup]="form" class="clr-form-horizontal">
@@ -67,8 +67,8 @@
                 <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
               </div>
               <div class="alert-text">
-                Data stored successfully. You can <a href="javascript://" (click)="openConsoleData($event)">view it in
-                  the Firebase Console.</a>
+                Data {{ operation === 'set' ? 'stored' : 'updated' }} successfully. You can <a href="javascript://"
+                  (click)="openConsoleData($event)">view it in the Firebase Console.</a>
               </div>
             </div>
           </div>
@@ -90,7 +90,7 @@
       <div class="clr-col-12">
         <button [clrLoading]="running" class="btn btn-primary" type="submit" (click)="confirmModalVisible = true"
           [disabled]="!form.valid">
-          Set data
+          {{ operation | titlecase }} data
         </button>
       </div>
     </div>
@@ -99,7 +99,7 @@
 </div>
 
 <clr-modal [(clrModalOpen)]="confirmModalVisible" class="rconfirm-modal">
-  <h3 class="modal-title">Set database data</h3>
+  <h3 class="modal-title">{{ operation | titlecase }} database data</h3>
   <div class="modal-body">
     <div class="alert alert-warning" role="alert">
       <div class="alert-items">
@@ -107,19 +107,22 @@
           <div class="alert-icon-wrapper">
             <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
           </div>
-          <span class="alert-text">
+          <span class="alert-text" *ngIf="operation === 'set'">
             Caution: This will replace any data currently present at the database path!
+          </span>
+          <span class="alert-text" *ngIf="operation === 'update'">
+            Caution: This will update the specified fields if they're already present at the database path!
           </span>
         </div>
       </div>
     </div>
     <p>
-      Do you confirm you want to set the database data at this path?<br />
+      Do you confirm you want to {{ operation }} the database data at this path?<br />
       <code>{{ path }}</code>
     </p>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline" (click)="confirmModalVisible = false">Cancel</button>
-    <button type="button" class="btn btn-danger" (click)="start()">Set data</button>
+    <button type="button" class="btn btn-danger" (click)="start()">{{ operation | titlecase }} data</button>
   </div>
 </clr-modal>
