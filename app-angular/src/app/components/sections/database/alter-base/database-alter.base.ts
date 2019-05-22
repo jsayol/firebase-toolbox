@@ -17,7 +17,11 @@ import {
 } from '../../../../providers/firebase-tools.service';
 import { ElectronService } from '../../../../providers/electron.service';
 import { AppState } from '../../../../models';
-import { contains, ansiToHTML } from '../../../../../utils';
+import {
+  contains,
+  ansiToHTML,
+  databasePathValidator
+} from '../../../../../utils';
 
 function jsonDataValidator(
   control: AbstractControl
@@ -27,16 +31,6 @@ function jsonDataValidator(
     return null;
   } catch (err) {
     return { data: err };
-  }
-}
-
-function databasePathValidator(
-  control: AbstractControl
-): { [key: string]: any } | null {
-  if (typeof control.value === 'string' && control.value.startsWith('/')) {
-    return null;
-  } else {
-    return { path: 'Path must begin with /' };
   }
 }
 

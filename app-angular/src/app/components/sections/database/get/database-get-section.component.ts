@@ -17,7 +17,11 @@ import {
 } from '../../../../providers/firebase-tools.service';
 import { ElectronService } from '../../../../providers/electron.service';
 import { AppState } from '../../../../models';
-import { contains, ansiToHTML } from '../../../../../utils';
+import {
+  contains,
+  ansiToHTML,
+  databasePathValidator
+} from '../../../../../utils';
 import { DatabaseInstance, DatabaseGetOptions } from 'firebase-tools';
 
 @Component({
@@ -37,7 +41,10 @@ export class DatabaseGetSectionComponent implements OnInit, OnDestroy {
   instances: DatabaseInstance[] | null = null;
 
   form = this.formBuilder.group({
-    path: [null, Validators.required],
+    path: [
+      null,
+      Validators.compose([Validators.required, databasePathValidator])
+    ],
     output: [null, Validators.required],
     pretty: [false],
     shallow: [false],

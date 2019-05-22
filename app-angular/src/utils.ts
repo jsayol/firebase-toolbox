@@ -1,3 +1,4 @@
+import { AbstractControl } from '@angular/forms';
 import * as AnsiUp from 'ansi_up';
 
 const ansiUp: AnsiUp.AnsiUp = new (AnsiUp as any).default();
@@ -39,4 +40,14 @@ export function ifNotEmpty<T = any>(
   }
 
   return value as any;
+}
+
+export function databasePathValidator(
+  control: AbstractControl
+): { [key: string]: any } | null {
+  if (typeof control.value === 'string' && control.value.startsWith('/')) {
+    return null;
+  } else {
+    return { path: 'Path must begin with /' };
+  }
 }

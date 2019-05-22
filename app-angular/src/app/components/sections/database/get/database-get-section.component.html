@@ -12,7 +12,7 @@
       <label>Path</label>
       <input clrInput type="text" formControlName="path" />
       <clr-control-helper>The database path from which to retrieve data</clr-control-helper>
-      <clr-control-error>You need to specify the path from which to retrieve data</clr-control-error>
+      <clr-control-error>The database path must begin with /</clr-control-error>
     </clr-input-container>
 
     <div class="clr-form-control clr-row file-control">
@@ -124,7 +124,6 @@
     </clr-select-container>
 
     <div class="clr-form-control clr-row alert-control">
-      <label class="clr-control-label">&nbsp;</label>
       <div class="clr-control-container clr-col-12 clr-col-md-8">
         <div *ngIf="showSuccess" class="alert alert-success alert-sm" role="alert">
           <div class="alert-items">
