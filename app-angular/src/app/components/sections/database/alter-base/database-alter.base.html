@@ -67,7 +67,7 @@
                 <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
               </div>
               <div class="alert-text">
-                Data {{ operation === 'set' ? 'stored' : 'updated' }} successfully. You can <a href="javascript://"
+                Data {{ operationAction }} successfully. You can <a href="javascript://"
                   (click)="openConsoleData($event)">view it in the Firebase Console.</a>
               </div>
             </div>
@@ -98,10 +98,10 @@
   <app-shell-output></app-shell-output>
 </div>
 
-<clr-modal [(clrModalOpen)]="confirmModalVisible" class="rconfirm-modal">
+<clr-modal [(clrModalOpen)]="confirmModalVisible" class="confirm-modal">
   <h3 class="modal-title">{{ operation | titlecase }} database data</h3>
   <div class="modal-body">
-    <div class="alert alert-warning" role="alert">
+    <div class="alert alert-warning" role="alert" *ngIf="['set', 'update'].includes(operation)">
       <div class="alert-items">
         <div class="alert-item static">
           <div class="alert-icon-wrapper">
@@ -117,7 +117,8 @@
       </div>
     </div>
     <p>
-      Do you confirm you want to {{ operation }} the database data at this path?<br />
+      Do you confirm you want to {{ operation }}{{ operation !== 'push' ? ' the database' : ''}} data at this
+      path?<br />
       <code>{{ path }}</code>
     </p>
   </div>

@@ -10,6 +10,7 @@ import { AuthImportSectionComponent } from './components/sections/auth/import/au
 import { DatabaseGetSectionComponent } from './components/sections/database/get/database-get-section.component';
 import { DatabaseSetSectionComponent } from './components/sections/database/set/database-set-section.component';
 import { DatabaseUpdateSectionComponent } from './components/sections/database/update/database-update-section.component';
+import { DatabasePushSectionComponent } from './components/sections/database/push/database-push-section.component';
 
 const routes: Routes = [
   {
@@ -62,7 +63,7 @@ const routes: Routes = [
       },
       {
         path: 'database.push',
-        component: InitializingComponent
+        component: DatabasePushSectionComponent
       },
       {
         path: 'database.remove',

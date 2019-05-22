@@ -39,8 +39,8 @@ function databasePathValidator(
   }
 }
 
-export abstract class DatabaseSetUpdateBase implements OnInit, OnDestroy {
-  public abstract operation: 'set' | 'update';
+export abstract class DatabaseAlterBase implements OnInit, OnDestroy {
+  public abstract operation: 'set' | 'update' | 'push';
   public abstract info: string;
 
   public workspace: Workspace;
@@ -117,6 +117,17 @@ export abstract class DatabaseSetUpdateBase implements OnInit, OnDestroy {
     this.destroy = true;
   }
 
+  get operationAction(): string {
+    switch (this.operation) {
+      case 'set':
+        return 'stored';
+      case 'update':
+        return 'updated';
+      case 'push':
+        return 'pushed';
+    }
+  }
+
   get path(): string {
     return this.form.get('path').value;
   }
@@ -186,6 +197,8 @@ export abstract class DatabaseSetUpdateBase implements OnInit, OnDestroy {
         await this.fb.tools.database.set(path, infile, options);
       } else if (this.operation === 'update') {
         await this.fb.tools.database.update(path, infile, options);
+      } else if (this.operation === 'push') {
+        await this.fb.tools.database.push(path, infile, options);
       } else {
         throw new Error(`Unknown database operation "${this.operation}".`);
       }

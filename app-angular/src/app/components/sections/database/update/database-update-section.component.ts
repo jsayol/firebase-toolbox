@@ -7,21 +7,21 @@ import { FormBuilder } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { DatabaseSetUpdateBase } from '../set-update-base/database-set-update.base';
+import { DatabaseAlterBase } from '../alter-base/database-alter.base';
 import { FirebaseToolsService } from '../../../../providers/firebase-tools.service';
 import { ElectronService } from '../../../../providers/electron.service';
 import { AppState } from '../../../../models';
 
 @Component({
   selector: 'app-database-update-section',
-  templateUrl: '../set-update-base/database-set-update.base.html',
-  styleUrls: ['../set-update-base/database-set-update.base.scss'],
+  templateUrl: '../alter-base/database-alter.base.html',
+  styleUrls: ['../alter-base/database-alter.base.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.app-module]': 'true'
   }
 })
-export class DatabaseUpdateSectionComponent extends DatabaseSetUpdateBase {
+export class DatabaseUpdateSectionComponent extends DatabaseAlterBase {
   public operation: 'update' = 'update';
   public info = 'Update some of the keys in a database path.';
 

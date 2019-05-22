@@ -13,7 +13,7 @@ import { ElectronService } from '../../../../providers/electron.service';
 import { AppState } from '../../../../models';
 
 @Component({
-  selector: 'app-database-set-section',
+  selector: 'app-database-update-section',
   templateUrl: '../alter-base/database-alter.base.html',
   styleUrls: ['../alter-base/database-alter.base.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,9 +21,9 @@ import { AppState } from '../../../../models';
     '[class.app-module]': 'true'
   }
 })
-export class DatabaseSetSectionComponent extends DatabaseAlterBase {
-  public operation: 'set' = 'set';
-  public info = 'Store JSON data in the database.';
+export class DatabasePushSectionComponent extends DatabaseAlterBase {
+  public operation: 'push' = 'push';
+  public info = 'Add a new JSON object to a list of data in the database.';
 
   constructor(
     changeDetRef: ChangeDetectorRef,
