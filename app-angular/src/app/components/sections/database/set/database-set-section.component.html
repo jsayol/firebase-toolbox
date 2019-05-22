@@ -1,0 +1,125 @@
+<h3 class="module-title">Set Database Data</h3>
+
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <p>Store JSON data in the database.</p>
+    </div>
+  </div>
+  <form clrForm [formGroup]="form" class="clr-form-horizontal">
+
+    <clr-input-container>
+      <label>Path</label>
+      <input clrInput type="text" formControlName="path" />
+      <clr-control-helper>The database path in which to store data</clr-control-helper>
+      <clr-control-error>The database path in which to store data must begin with /</clr-control-error>
+    </clr-input-container>
+
+    <clr-radio-container>
+      <label>Data origin</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="dataOrigin" value="file" />
+        <label>From file</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="dataOrigin" value="manual" />
+        <label>Enter manually</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>Whether to load data from a JSON file or to enter the JSON data manually</clr-control-helper>
+    </clr-radio-container>
+
+    <div class="clr-form-control clr-row file-control" *ngIf="dataOrigin === 'file'">
+      <label class="clr-control-label">Data file</label>
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <button type="button" class="btn btn-outline btn-icon" (click)="openFileDialog()">
+          <clr-icon shape="upload"></clr-icon>
+          <ng-container *ngIf="!selectedFile"> Choose a file </ng-container>
+          <ng-container *ngIf="selectedFile"> {{ selectedFileBasename }} </ng-container>
+        </button>
+        <span class="clr-subtext">The JSON file from which to load the data to store</span>
+      </div>
+    </div>
+
+    <clr-textarea-container *ngIf="dataOrigin === 'manual'">
+      <label>JSON data</label>
+      <textarea clrTextarea formControlName="data" class="data-textarea"></textarea>
+      <clr-control-helper>The JSON data to store</clr-control-helper>
+      <clr-control-error>Invalid JSON data</clr-control-error>
+    </clr-textarea-container>
+
+    <clr-select-container *ngIf="instances">
+      <label>Instance</label>
+      <select clrSelect formControlName="instance">
+        <option *ngFor="let instance of instances" [value]="instance.instance">
+          {{ instance.instance }}{{ instance.type === 'DEFAULT_REALTIME_DATABASE' ? ' (default)' : ''}}
+        </option>
+      </select>
+      <clr-control-helper>The database instance to use</clr-control-helper>
+    </clr-select-container>
+
+    <div class="clr-form-control clr-row alert-control">
+      <label class="clr-control-label">&nbsp;</label>
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <div *ngIf="showSuccess" class="alert alert-success alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+              </div>
+              <div class="alert-text">
+                Data stored successfully. You can <a href="javascript://" (click)="openConsoleData($event)">view it in
+                  the Firebase Console.</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="showError" class="alert alert-danger alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+              </div>
+              <div class="alert-text" [innerHTML]="showError"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-row">
+      <div class="clr-col-12">
+        <button [clrLoading]="running" class="btn btn-primary" type="submit" (click)="confirmModalVisible = true"
+          [disabled]="!form.valid">
+          Set data
+        </button>
+      </div>
+    </div>
+  </form>
+  <app-shell-output></app-shell-output>
+</div>
+
+<clr-modal [(clrModalOpen)]="confirmModalVisible" class="rconfirm-modal">
+  <h3 class="modal-title">Set database data</h3>
+  <div class="modal-body">
+    <div class="alert alert-warning" role="alert">
+      <div class="alert-items">
+        <div class="alert-item static">
+          <div class="alert-icon-wrapper">
+            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+          </div>
+          <span class="alert-text">
+            Caution: This will replace any data currently present at the database path!
+          </span>
+        </div>
+      </div>
+    </div>
+    <p>
+      Do you confirm you want to set the database data at this path?<br />
+      <code>{{ path }}</code>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="confirmModalVisible = false">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="start()">Set data</button>
+  </div>
+</clr-modal>

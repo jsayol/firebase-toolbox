@@ -8,6 +8,7 @@ import { ServeSectionComponent } from './components/sections/serve/serve-section
 import { AuthExportSectionComponent } from './components/sections/auth/export/auth-export-section.component';
 import { AuthImportSectionComponent } from './components/sections/auth/import/auth-import-section.component';
 import { DatabaseGetSectionComponent } from './components/sections/database/get/database-get-section.component';
+import { DatabaseSetSectionComponent } from './components/sections/database/set/database-set-section.component';
 
 const routes: Routes = [
   {
@@ -52,7 +53,7 @@ const routes: Routes = [
       },
       {
         path: 'database.set',
-        component: InitializingComponent
+        component: DatabaseSetSectionComponent
       },
       {
         path: 'database.update',
