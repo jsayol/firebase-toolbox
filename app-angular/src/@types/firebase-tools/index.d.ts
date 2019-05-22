@@ -14,9 +14,9 @@ interface Options extends OptionsWithoutParent {
   parent?: OptionsWithoutParent;
 }
 
-declare module "firebase-tools" {
-  import * as commander from "commander";
-  import * as winston from "winston";
+declare module 'firebase-tools' {
+  import * as commander from 'commander';
+  import * as winston from 'winston';
 
   export const cli: commander.CommanderStatic;
   export const logger: winston.Logger;
@@ -51,16 +51,16 @@ declare module "firebase-tools" {
   export const use: (newActive: string, options?: UseOptions) => Promise<void>;
 
   export type InitFeatureName =
-    | "database"
-    | "firestore"
-    | "functions"
-    | "hosting"
-    | "storage";
+    | 'database'
+    | 'firestore'
+    | 'functions'
+    | 'hosting'
+    | 'storage';
 
   export interface FirebaseProject {
     name: string;
     id: string;
-    permission: "own" | "edit" | "view";
+    permission: 'own' | 'edit' | 'view';
     instance: string;
   }
 
@@ -126,24 +126,24 @@ declare module "firebase-tools" {
   }
 
   export interface AuthExportOptions extends Options {
-    format?: "json" | "csv";
+    format?: 'json' | 'csv';
   }
 
   export interface AuthImportOptions extends Options {
     hashAlgo?:
-      | "HMAC_SHA512"
-      | "HMAC_SHA256"
-      | "HMAC_SHA1"
-      | "HMAC_MD5"
-      | "MD5"
-      | "SHA1"
-      | "SHA256"
-      | "SHA512"
-      | "PBKDF_SHA1"
-      | "PBKDF2_SHA256"
-      | "SCRYPT"
-      | "BCRYPT"
-      | "STANDARD_SCRYPT";
+      | 'HMAC_SHA512'
+      | 'HMAC_SHA256'
+      | 'HMAC_SHA1'
+      | 'HMAC_MD5'
+      | 'MD5'
+      | 'SHA1'
+      | 'SHA256'
+      | 'SHA512'
+      | 'PBKDF_SHA1'
+      | 'PBKDF2_SHA256'
+      | 'SCRYPT'
+      | 'BCRYPT'
+      | 'STANDARD_SCRYPT';
     rounds?: number;
     memCost?: number;
     saltSeparator?: string;
@@ -151,7 +151,7 @@ declare module "firebase-tools" {
     blockSize?: number;
     dkLen?: number;
     hashKey?: string;
-    hashInputOrder?: "SALT_FIRST" | "PASSWORD_FIRST";
+    hashInputOrder?: 'SALT_FIRST' | 'PASSWORD_FIRST';
   }
 
   // TODO: this could probably use some work
@@ -191,7 +191,7 @@ declare module "firebase-tools" {
       ) => Promise<void>;
       set: (
         path: string,
-        value: "small" | "medium" | "large" | "unlimited",
+        value: 'small' | 'medium' | 'large' | 'unlimited',
         options?: DatabaseSettingsSetOptions
       ) => Promise<void>;
     };
@@ -200,11 +200,13 @@ declare module "firebase-tools" {
       infile?: string,
       options?: DatabaseUpdateOptions
     ) => Promise<void>;
-    // TODO: add these new methods from 6.10.0
-    // instances: {
-    //   create: () => TODO,
-    //   list: () => TODO,
-    // }
+    instances: {
+      create: (
+        instanceName: string,
+        options?: Options
+      ) => Promise<DatabaseInstance>;
+      list: (options?: Options) => Promise<DatabaseInstance[]>;
+    };
   }
 
   export interface DatabaseGetOptions extends Options {
@@ -259,6 +261,12 @@ declare module "firebase-tools" {
 
   export interface DatabaseSettingsSetOptions extends Options {
     instance?: string;
+  }
+
+  export interface DatabaseInstance {
+    instance: string;
+    projectNumber: string;
+    type: 'DEFAULT_REALTIME_DATABASE' | 'USER_REALTIME_DATABASE';
   }
 
   export interface EmulatorsCommands {

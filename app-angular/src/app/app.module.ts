@@ -45,6 +45,7 @@ import { SettingsSectionComponent } from './components/sections/settings/setting
 import { ServeSectionComponent } from './components/sections/serve/serve-section.component';
 import { AuthExportSectionComponent } from './components/sections/auth/export/auth-export-section.component';
 import { AuthImportSectionComponent } from './components/sections/auth/import/auth-import-section.component';
+import { DatabaseGetSectionComponent } from './components/sections/database/get/database-get-section.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { AuthImportSectionComponent } from './components/sections/auth/import/au
     AnsiPipe,
     ServeSectionComponent,
     AuthExportSectionComponent,
-    AuthImportSectionComponent
+    AuthImportSectionComponent,
+    DatabaseGetSectionComponent
   ],
   imports: [
     BrowserModule,

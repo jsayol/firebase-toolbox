@@ -7,6 +7,7 @@ import { SettingsSectionComponent } from './components/sections/settings/setting
 import { ServeSectionComponent } from './components/sections/serve/serve-section.component';
 import { AuthExportSectionComponent } from './components/sections/auth/export/auth-export-section.component';
 import { AuthImportSectionComponent } from './components/sections/auth/import/auth-import-section.component';
+import { DatabaseGetSectionComponent } from './components/sections/database/get/database-get-section.component';
 
 const routes: Routes = [
   {
@@ -47,7 +48,7 @@ const routes: Routes = [
       },
       {
         path: 'database.get',
-        component: InitializingComponent
+        component: DatabaseGetSectionComponent
       },
       {
         path: 'database.set',
@@ -63,6 +64,10 @@ const routes: Routes = [
       },
       {
         path: 'database.remove',
+        component: InitializingComponent
+      },
+      {
+        path: 'database.instances',
         component: InitializingComponent
       },
       {

@@ -1,0 +1,163 @@
+<h3 class="module-title">Get Database Data</h3>
+
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <p>Fetch and save JSON data from the database.</p>
+    </div>
+  </div>
+  <form clrForm [formGroup]="form" class="clr-form-horizontal">
+
+    <clr-input-container>
+      <label>Path</label>
+      <input clrInput type="text" formControlName="path" />
+      <clr-control-helper>The database path from which to retrieve data</clr-control-helper>
+      <clr-control-error>You need to specify the path from which to retrieve data</clr-control-error>
+    </clr-input-container>
+
+    <div class="clr-form-control clr-row file-control">
+      <label class="clr-control-label label-top">Output file</label>
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <button type="button" class="btn btn-outline btn-icon" (click)="openFileDialog()">
+          <clr-icon shape="download"></clr-icon>
+          <ng-container *ngIf="!selectedFile"> Choose a file </ng-container>
+          <ng-container *ngIf="selectedFile"> {{ selectedFileBasename }} </ng-container>
+        </button>
+        <span class="clr-subtext">The JSON file in which to save the results</span>
+      </div>
+    </div>
+
+    <clr-checkbox-container>
+      <label>Options</label>
+      <clr-checkbox-wrapper>
+        <input type="checkbox" clrCheckbox formControlName="pretty" />
+        <label>Pretty print</label>
+      </clr-checkbox-wrapper>
+      <clr-checkbox-wrapper>
+        <input type="checkbox" clrCheckbox formControlName="shallow" />
+        <label>Shallow response</label>
+      </clr-checkbox-wrapper>
+      <clr-checkbox-wrapper>
+        <input type="checkbox" clrCheckbox formControlName="export" />
+        <label>Include priorities (export)</label>
+      </clr-checkbox-wrapper>
+    </clr-checkbox-container>
+
+    <clr-radio-container>
+      <label>Order</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="orderType" value="default" />
+        <label>Default</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="orderType" value="key" />
+        <label>By key</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="orderType" value="value" />
+        <label>By value</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="orderType" value="child" />
+        <label>By child key</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>The order to apply to the results</clr-control-helper>
+    </clr-radio-container>
+
+    <clr-input-container *ngIf="orderType === 'child'">
+      <label>Order child key</label>
+      <input clrInput type="text" formControlName="orderChildKey" />
+      <clr-control-helper>The child key by which to order results</clr-control-helper>
+      <clr-control-error>This field is required when ordering by child key</clr-control-error>
+    </clr-input-container>
+
+    <clr-radio-container>
+      <label>Limit</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="limitType" value="none" />
+        <label>None</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="limitType" value="first" />
+        <label>To first results</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="limitType" value="last" />
+        <label>To last results</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>Whether to limit the number of results to get</clr-control-helper>
+    </clr-radio-container>
+
+    <clr-input-container *ngIf="limitType !== 'none'">
+      <label>Limit to {{ limitType }}</label>
+      <input clrInput type="number" min="1" formControlName="limitTo" />
+      <clr-control-helper>The maximum number of results to get</clr-control-helper>
+      <clr-control-error>This field is required when applying a limit and needs to be greater than 0</clr-control-error>
+    </clr-input-container>
+
+    <clr-input-container>
+      <label>Start at</label>
+      <input clrInput type="text" formControlName="startAt" />
+      <clr-control-helper>Optional value at which to start results (based on specified order)</clr-control-helper>
+    </clr-input-container>
+
+    <clr-input-container>
+      <label>End at</label>
+      <input clrInput type="text" formControlName="endAt" />
+      <clr-control-helper>Optional value at which to end results (based on specified order)</clr-control-helper>
+    </clr-input-container>
+
+    <clr-input-container>
+      <label>Equal to</label>
+      <input clrInput type="text" formControlName="equalTo" />
+      <clr-control-helper>Optional value to which to restrict results (based on specified order)</clr-control-helper>
+    </clr-input-container>
+
+    <clr-select-container *ngIf="instances">
+      <label>Instance</label>
+      <select clrSelect formControlName="instance">
+        <option *ngFor="let instance of instances" [value]="instance.instance">
+          {{ instance.instance }}{{ instance.type === 'DEFAULT_REALTIME_DATABASE' ? ' (default)' : ''}}
+        </option>
+      </select>
+      <clr-control-helper>The database instance to use</clr-control-helper>
+    </clr-select-container>
+
+    <div class="clr-form-control clr-row alert-control">
+      <label class="clr-control-label">&nbsp;</label>
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <div *ngIf="showSuccess" class="alert alert-success alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+              </div>
+              <div class="alert-text">
+                Data retrieved successfully.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="showError" class="alert alert-danger alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+              </div>
+              <div class="alert-text" [innerHTML]="showError"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-row">
+      <div class="clr-col-12">
+        <button [clrLoading]="running" class="btn btn-primary" type="submit" (click)="start()" [disabled]="!form.valid">
+          Get data
+        </button>
+      </div>
+    </div>
+  </form>
+  <app-shell-output></app-shell-output>
+</div>

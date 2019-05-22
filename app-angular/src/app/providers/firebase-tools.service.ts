@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Observable, from } from 'rxjs';
+import { startWith, tap } from 'rxjs/operators';
 
 import {
   ElectronService,
@@ -21,6 +23,9 @@ export class FirebaseToolsService {
   private configstore: Configstore_Type;
   private google: GoogleApis;
   private oauth2Client: OAuth2Client;
+  private databaseInstances: {
+    [path: string]: firebaseTools_Type.DatabaseInstance[];
+  } = {};
 
   constructor(private electron: ElectronService) {
     const Configstore = this.electron.remote.require('configstore');
@@ -222,6 +227,19 @@ export class FirebaseToolsService {
   async getAccessToken(): Promise<string> {
     const response = await this.oauth2Client.getAccessToken();
     return response.token;
+  }
+
+  getDatabaseInstances(
+    workspace: Workspace
+  ): Observable<firebaseTools_Type.DatabaseInstance[]> {
+    return from(
+      this.tools.database.instances.list({ cwd: workspace.path })
+    ).pipe(
+      tap(instances => {
+        this.databaseInstances[workspace.path] = instances;
+      }),
+      startWith(this.databaseInstances[workspace.path] || [])
+    );
   }
 
   init(

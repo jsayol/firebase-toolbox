@@ -30,3 +30,13 @@ export function getRandomId(): string {
 export function contains(obj: { [k: string]: any }, prop: string): boolean {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
+
+export function ifNotEmpty<T = any>(
+  value: T
+): Exclude<Exclude<T, ''>, null> | undefined {
+  if ((value as any) === '' || value === null) {
+    return;
+  }
+
+  return value as any;
+}

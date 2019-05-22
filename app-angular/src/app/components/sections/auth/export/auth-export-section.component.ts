@@ -61,10 +61,6 @@ export class AuthExportSectionComponent implements OnInit, OnDestroy {
     this.destroy = true;
   }
 
-  onDataFile(event: any) {
-    console.log(event);
-  }
-
   openFileDialog() {
     this.electron.dialog.showSaveDialog(
       {

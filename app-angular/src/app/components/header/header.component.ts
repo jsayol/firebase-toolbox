@@ -15,7 +15,9 @@ import * as userActions from '../../actions/user.actions';
 import { ElectronService } from '../../providers/electron.service';
 import { FirebaseToolsService } from '../../providers/firebase-tools.service';
 
-const INITIAL_SECTION = environment.production ? 'settings' : 'auth.import';
+// The initial section that will be loaded when a workspace is selected.
+// During development we can set this to whatever section we're working on.
+const INITIAL_SECTION = environment.production ? 'settings' : 'database.get';
 
 interface AppInfo {
   version: string;

@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { ClrLoadingState } from '@clr/angular';
 import { Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { AuthImportOptions } from 'firebase-tools';
@@ -19,18 +18,8 @@ import {
 } from '../../../../providers/firebase-tools.service';
 import { ElectronService } from '../../../../providers/electron.service';
 import { AppState } from '../../../../models';
-import { contains, ansiToHTML } from '../../../../../utils';
+import { contains, ansiToHTML, ifNotEmpty } from '../../../../../utils';
 import { RequestService } from '../../../../providers/request.service';
-
-function ifNotEmpty<T = any>(
-  value: T
-): Exclude<Exclude<T, ''>, null> | undefined {
-  if ((value as any) === '' || value === null) {
-    return;
-  }
-
-  return value as any;
-}
 
 @Component({
   selector: 'app-auth-import-section',
@@ -169,12 +158,11 @@ export class AuthImportSectionComponent implements OnInit, OnDestroy {
         hashInputOrder: ifNotEmpty(this.hashInputOrder)
       });
       this.showSuccess = true;
-      console.log('Export done!');
     } catch (err) {
       this.showError = this.sanitizer.bypassSecurityTrustHtml(
         ansiToHTML(contains(err, 'message') ? err.message : err)
       );
-      console.log('Export error', err);
+      console.log('Import error', err);
     }
 
     this.running = false;
