@@ -35,6 +35,8 @@ import * as workspacesActions from '../../../actions/workspaces.actions';
 })
 export class SettingsSectionComponent implements OnInit, OnDestroy {
   workspace: Workspace;
+  workspaceProjects: Array<{ id: string; alias: string }>;
+  workspaceFeatures: string[];
   useRunning = false;
   useAddRunning = false;
   initRunning = false;
@@ -58,21 +60,11 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
 
   private reloadWorkspaceProjects$ = new Subject<void>();
 
-  workspaceProjects$ = merge(
-    this.workspace$,
-    this.reloadWorkspaceProjects$.pipe(mapTo(this.workspace))
-  ).pipe(
-    filter(workspace => !!workspace),
-    switchMap(workspace => from(this.fb.getWorkspaceProjects(workspace)))
-  );
-
-  workspaceFeatures$: Observable<string[]>;
-
   @ViewChild(ShellOutputComponent)
   shellOutput!: ShellOutputComponent;
 
   private destroy = false;
-  private _activeProject: string;
+  private _activeProject: { id: string; alias: string };
   private _isInitialized: boolean;
   private getFeatures$ = new BehaviorSubject<Workspace | null>(null);
 
@@ -82,46 +74,79 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
     private changeDetRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     private ngZone: NgZone
-  ) {
-    this.workspaceFeatures$ = this.getFeatures$.pipe(
+  ) {}
+
+  ngOnInit() {
+    this.workspace$.subscribe((workspace: Workspace) => {
+      this.workspace = workspace;
+      this.getFeatures$.next(workspace);
+
+      if (workspace) {
+        this._activeProject = {
+          id: workspace.projectId,
+          alias: workspace.projectAlias
+        };
+        this.handleWorkspace();
+      } else {
+        this._activeProject = null;
+      }
+
+      this.changeDetRef.markForCheck();
+    });
+
+    const workspaceProjects$ = merge(
+      this.workspace$,
+      this.reloadWorkspaceProjects$.pipe(mapTo(this.workspace))
+    ).pipe(
+      takeWhile(() => !this.destroy),
+      filter(workspace => !!workspace),
+      switchMap(workspace => from(this.fb.getWorkspaceProjects(workspace))),
+      tap(projects => {
+        // Some times the workspace configuration stored by firebase-tools
+        // inludes the project id rather than the alias. We detect this case
+        // so that the UI correctly shows the active project.
+
+        const hasSameAlias = projects.some(project => {
+          return (
+            project.id === this._activeProject.id &&
+            project.alias === this._activeProject.alias
+          );
+        });
+
+        if (
+          !hasSameAlias &&
+          this._activeProject.id === this._activeProject.alias
+        ) {
+          const sameProjectById = projects.find(
+            project => project.id === this._activeProject.id
+          );
+          if (sameProjectById) {
+            this._activeProject.alias = sameProjectById.alias;
+          }
+        }
+      })
+    );
+
+    workspaceProjects$.subscribe(projects => {
+      this.workspaceProjects = projects;
+      this.ngZone.run(() => this.changeDetRef.markForCheck());
+    });
+
+    const workspaceFeatures$ = this.getFeatures$.pipe(
       takeWhile(() => !this.destroy),
       filter(workspace => !!workspace),
       switchMap(workspace => from(this.fb.getWorkspaceFeatures(workspace))),
-      map(features =>
-        features.map(f => f.charAt(0).toUpperCase() + f.slice(1))
-      ),
-      tap(() => {
-        setImmediate(() => {
-          this.ngZone.run(() => this.changeDetRef.markForCheck());
-        });
-      })
+      map(features => features.map(f => f.charAt(0).toUpperCase() + f.slice(1)))
     );
-  }
 
-  ngOnInit() {
-    this.workspace$
-      .pipe(takeWhile(() => !this.destroy))
-      .subscribe((workspace: Workspace) => {
-        this.workspace = workspace;
-        this.getFeatures$.next(workspace);
-
-        if (workspace) {
-          this._activeProject = workspace.projectId;
-          this.handleWorkspace();
-        } else {
-          this._activeProject = null;
-        }
-
-        this.changeDetRef.markForCheck();
-      });
+    workspaceFeatures$.subscribe(features => {
+      this.workspaceFeatures = features;
+      this.ngZone.run(() => this.changeDetRef.markForCheck());
+    });
   }
 
   ngOnDestroy() {
     this.destroy = true;
-  }
-
-  get activeProject(): string {
-    return this._activeProject;
   }
 
   get isInitialized(): boolean {
@@ -131,13 +156,17 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
     return this.fb.isWorkspaceInitialized(this.workspace);
   }
 
-  set activeProject(projectId: string) {
+  get activeProject(): string {
+    return this.toProjectValue(this._activeProject);
+  }
+
+  set activeProject(projectValue: string) {
     const oldActive = this._activeProject;
-    this._activeProject = projectId;
+    this._activeProject = this.fromProjectValue(projectValue);
     this.useRunning = true;
 
     this.fb.tools
-      .use(projectId, {
+      .use(this._activeProject.alias, {
         cwd: this.workspace.path,
         interactive: true
       })
@@ -150,9 +179,25 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
       })
       .then(() => {
         this.store.dispatch(new workspacesActions.GetList());
+        this.store.dispatch(
+          new workspacesActions.SetSelected({
+            ...this.workspace,
+            projectId: this._activeProject.id,
+            projectAlias: this._activeProject.alias
+          })
+        );
         this.useRunning = false;
         this.changeDetRef.markForCheck();
       });
+  }
+
+  toProjectValue(project: { id: string; alias: string }): string {
+    return `${project.id}<#>${project.alias}`;
+  }
+
+  fromProjectValue(projectValue: string): { id: string; alias: string } {
+    const [id, alias] = projectValue.split('<#>');
+    return { id, alias };
   }
 
   dismissProjectsAlert() {
@@ -172,7 +217,7 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
   }
 
   dismissUseAddModal() {
-    this.useAddModalVisible = true;
+    this.useAddModalVisible = false;
     if (this.workspace.isBeingAdded) {
       this.store.dispatch(new workspacesActions.SetSelected(null));
     }
@@ -240,7 +285,6 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
     try {
       const runningCommand = this.fb.init(output, this.workspace.path, feature);
       const resp = await runningCommand.done;
-      console.log('Init done:', resp);
     } catch (err) {
       console.log('Init error:', err);
     }

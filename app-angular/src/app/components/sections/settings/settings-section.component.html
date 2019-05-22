@@ -35,9 +35,9 @@
           </div>
           <div class="card-text">
             <clr-radio-container [class.clr-form-control-disabled]="projectsRunning">
-              <clr-radio-wrapper *ngFor="let project of workspaceProjects$ | async">
-                <input type="radio" clrRadio [value]="project.id" name="activeProject" [(ngModel)]="activeProject"
-                  [disabled]="useAddRunning" />
+              <clr-radio-wrapper *ngFor="let project of workspaceProjects">
+                <input type="radio" clrRadio [value]="toProjectValue(project)" name="activeProject"
+                  [(ngModel)]="activeProject" [disabled]="useAddRunning" />
                 <label>
                   {{ project.alias }}
                   <ng-container *ngIf="project.id !== project.alias">({{ project.id }})</ng-container>
@@ -87,7 +87,8 @@
                 <div class="alert-icon-wrapper">
                   <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
                 </div>
-                <span class="alert-text">This workspace hasn't been initialized yet.<br />Add features before proceeding.</span>
+                <span class="alert-text">This workspace hasn't been initialized yet.<br />Add features before
+                  proceeding.</span>
               </div>
             </div>
             <button type="button" class="close" aria-label="Close" (click)="dismissFeaturesAlert()">
@@ -98,8 +99,8 @@
             <progress></progress>
           </div>
           <div class="card-text">
-            <ul class="list" *ngIf="workspaceFeatures$ | async; let features">
-              <li *ngFor="let feature of features">{{ feature }}</li>
+            <ul class="list" *ngIf="workspaceFeatures">
+              <li *ngFor="let feature of workspaceFeatures">{{ feature }}</li>
             </ul>
           </div>
         </div>
@@ -144,7 +145,7 @@
     </div>
   </div>
 
-  <clr-modal [(clrModalOpen)]="useAddModalVisible" class="use-add-modal">
+  <clr-modal [(clrModalOpen)]="useAddModalVisible" [clrModalClosable]="false" class="use-add-modal">
     <h3 class="modal-title">Add a project to use with this workspace</h3>
     <div class="modal-body">
       <form clrForm>
