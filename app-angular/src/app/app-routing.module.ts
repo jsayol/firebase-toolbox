@@ -11,6 +11,7 @@ import { DatabaseGetSectionComponent } from './components/sections/database/get/
 import { DatabaseSetSectionComponent } from './components/sections/database/set/database-set-section.component';
 import { DatabaseUpdateSectionComponent } from './components/sections/database/update/database-update-section.component';
 import { DatabasePushSectionComponent } from './components/sections/database/push/database-push-section.component';
+import { DatabaseRemoveSectionComponent } from './components/sections/database/remove/database-remove-section.component';
 
 const routes: Routes = [
   {
@@ -67,7 +68,7 @@ const routes: Routes = [
       },
       {
         path: 'database.remove',
-        component: InitializingComponent
+        component: DatabaseRemoveSectionComponent
       },
       {
         path: 'database.instances',

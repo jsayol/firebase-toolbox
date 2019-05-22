@@ -1,14 +1,15 @@
 import { OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import {
+  FormBuilder,
+  Validators,
+  AbstractControl,
+  FormGroup
+} from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { takeWhile, switchMap, catchError } from 'rxjs/operators';
-import {
-  DatabaseInstance,
-  DatabaseSetOptions,
-  DatabaseUpdateOptions
-} from 'firebase-tools';
+import { DatabaseInstance, DatabaseSetOptions } from 'firebase-tools';
 
 import {
   FirebaseToolsService,
@@ -40,7 +41,7 @@ function databasePathValidator(
 }
 
 export abstract class DatabaseAlterBase implements OnInit, OnDestroy {
-  public abstract operation: 'set' | 'update' | 'push';
+  public abstract operation: 'set' | 'update' | 'push' | 'remove';
   public abstract info: string;
 
   public workspace: Workspace;
@@ -49,17 +50,7 @@ export abstract class DatabaseAlterBase implements OnInit, OnDestroy {
   public showError: SafeHtml | null = null;
   public instances: DatabaseInstance[] | null = null;
   public confirmModalVisible = false;
-
-  public form = this.formBuilder.group({
-    path: [
-      null,
-      Validators.compose([Validators.required, databasePathValidator])
-    ],
-    dataOrigin: ['file', Validators.required],
-    infile: [null, Validators.required],
-    data: [null],
-    instance: [null]
-  });
+  public form: FormGroup;
 
   public workspace$: Observable<Workspace | null> = this.store
     .select('workspaces', 'selected')
@@ -77,7 +68,29 @@ export abstract class DatabaseAlterBase implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.setValidators();
+    let formControls: { [key: string]: any } = {
+      path: [
+        null,
+        Validators.compose([Validators.required, databasePathValidator])
+      ],
+      instance: [null]
+    };
+
+    if (this.operation !== 'remove') {
+      formControls = {
+        ...formControls,
+        dataOrigin: ['file', Validators.required],
+        infile: [null, Validators.required],
+        data: [null]
+      };
+    }
+
+    this.form = this.formBuilder.group(formControls);
+
+    if (this.operation !== 'remove') {
+      this.setValidators();
+    }
+
     this.workspace$.subscribe(async (workspace: Workspace) => {
       this.workspace = workspace;
       this.changeDetRef.markForCheck();
@@ -125,6 +138,8 @@ export abstract class DatabaseAlterBase implements OnInit, OnDestroy {
         return 'updated';
       case 'push':
         return 'pushed';
+      case 'remove':
+        return 'removed';
     }
   }
 
@@ -184,7 +199,8 @@ export abstract class DatabaseAlterBase implements OnInit, OnDestroy {
       infile = undefined;
     }
 
-    const options: DatabaseSetOptions | DatabaseUpdateOptions = {
+    // We type is as if it were for "set" since it covers all cases
+    const options: DatabaseSetOptions = {
       cwd: this.workspace.path,
       interactive: true,
       instance,
@@ -199,6 +215,8 @@ export abstract class DatabaseAlterBase implements OnInit, OnDestroy {
         await this.fb.tools.database.update(path, infile, options);
       } else if (this.operation === 'push') {
         await this.fb.tools.database.push(path, infile, options);
+      } else if (this.operation === 'remove') {
+        await this.fb.tools.database.remove(path, options);
       } else {
         throw new Error(`Unknown database operation "${this.operation}".`);
       }

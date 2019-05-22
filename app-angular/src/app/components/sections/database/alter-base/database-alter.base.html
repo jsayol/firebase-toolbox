@@ -15,7 +15,7 @@
       <clr-control-error>The database path must begin with /</clr-control-error>
     </clr-input-container>
 
-    <clr-radio-container>
+    <clr-radio-container *ngIf="operation !== 'remove'">
       <label>Data origin</label>
       <clr-radio-wrapper>
         <input type="radio" clrRadio formControlName="dataOrigin" value="file" />
@@ -28,7 +28,7 @@
       <clr-control-helper>Whether to load data from a JSON file or to enter the JSON data manually</clr-control-helper>
     </clr-radio-container>
 
-    <div class="clr-form-control clr-row file-control" *ngIf="dataOrigin === 'file'">
+    <div class="clr-form-control clr-row file-control" *ngIf="operation !== 'remove' && dataOrigin === 'file'">
       <label class="clr-control-label">Data file</label>
       <div class="clr-control-container clr-col-12 clr-col-md-8">
         <button type="button" class="btn btn-outline btn-icon" (click)="openFileDialog()">
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <clr-textarea-container *ngIf="dataOrigin === 'manual'">
+    <clr-textarea-container *ngIf="operation !== 'remove' && dataOrigin === 'manual'">
       <label>JSON data</label>
       <textarea clrTextarea formControlName="data" class="data-textarea"></textarea>
       <clr-control-helper>The JSON data to store</clr-control-helper>
@@ -58,7 +58,6 @@
     </clr-select-container>
 
     <div class="clr-form-control clr-row alert-control">
-      <label class="clr-control-label">&nbsp;</label>
       <div class="clr-control-container clr-col-12 clr-col-md-8">
         <div *ngIf="showSuccess" class="alert alert-success alert-sm" role="alert">
           <div class="alert-items">
@@ -67,8 +66,11 @@
                 <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
               </div>
               <div class="alert-text">
-                Data {{ operationAction }} successfully. You can <a href="javascript://"
-                  (click)="openConsoleData($event)">view it in the Firebase Console.</a>
+                Data {{ operationAction }} successfully.
+                <ng-container *ngIf="operation !== 'remove'">
+                  <br />
+                  You can <a href="javascript://" (click)="openConsoleData($event)">view it in the Firebase Console.</a>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -101,7 +103,7 @@
 <clr-modal [(clrModalOpen)]="confirmModalVisible" class="confirm-modal">
   <h3 class="modal-title">{{ operation | titlecase }} database data</h3>
   <div class="modal-body">
-    <div class="alert alert-warning" role="alert" *ngIf="['set', 'update'].includes(operation)">
+    <div class="alert alert-warning" role="alert" *ngIf="operation !== 'push'">
       <div class="alert-items">
         <div class="alert-item static">
           <div class="alert-icon-wrapper">
@@ -112,6 +114,9 @@
           </span>
           <span class="alert-text" *ngIf="operation === 'update'">
             Caution: This will update the specified fields if they're already present at the database path!
+          </span>
+          <span class="alert-text" *ngIf="operation === 'remove'">
+            Caution: This operation cannot be undone!
           </span>
         </div>
       </div>
