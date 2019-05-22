@@ -30,10 +30,10 @@ import { contains, ansiToHTML } from '../../../../../utils';
 })
 export class AuthExportSectionComponent implements OnInit, OnDestroy {
   workspace: Workspace;
-  exportRunning = false;
+  running = false;
+  showSuccess = false;
+  showError: SafeHtml | null = null;
   selectedFile: string | null = null;
-  showExportSuccess = false;
-  showExportError: SafeHtml | null = null;
 
   workspace$: Observable<Workspace | null> = this.store
     .select('workspaces', 'selected')
@@ -59,12 +59,6 @@ export class AuthExportSectionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroy = true;
-  }
-
-  get exportState(): ClrLoadingState {
-    return this.exportRunning
-      ? ClrLoadingState.LOADING
-      : ClrLoadingState.DEFAULT;
   }
 
   onDataFile(event: any) {
@@ -97,25 +91,25 @@ export class AuthExportSectionComponent implements OnInit, OnDestroy {
   }
 
   async startExport(): Promise<void> {
-    this.exportRunning = true;
-    this.showExportSuccess = false;
-    this.showExportError = null;
+    this.running = true;
+    this.showSuccess = false;
+    this.showError = null;
 
     try {
       await this.fb.tools.auth.export(this.selectedFile, {
         cwd: this.workspace.path,
         interactive: true
       });
-      this.showExportSuccess = true;
+      this.showSuccess = true;
       console.log('Export done!');
     } catch (err) {
-      this.showExportError = this.sanitizer.bypassSecurityTrustHtml(
+      this.showError = this.sanitizer.bypassSecurityTrustHtml(
         ansiToHTML(contains(err, 'message') ? err.message : err)
       );
       console.log('Export error', err);
     }
 
-    this.exportRunning = false;
+    this.running = false;
     this.changeDetRef.markForCheck();
   }
 }

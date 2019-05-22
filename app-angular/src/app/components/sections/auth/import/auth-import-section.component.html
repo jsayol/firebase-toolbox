@@ -153,7 +153,7 @@
     <div class="clr-form-control clr-row alert-control">
       <label class="clr-control-label">&nbsp;</label>
       <div class="clr-control-container clr-col-12 clr-col-md-8">
-        <div [hidden]="!showImportSuccess" class="alert alert-success alert-sm" role="alert">
+        <div [hidden]="!showSuccess" class="alert alert-success alert-sm" role="alert">
           <div class="alert-items">
             <div class="alert-item static">
               <div class="alert-icon-wrapper">
@@ -165,13 +165,13 @@
             </div>
           </div>
         </div>
-        <div [hidden]="!showImportError" class="alert alert-danger alert-sm" role="alert">
+        <div [hidden]="!showError" class="alert alert-danger alert-sm" role="alert">
           <div class="alert-items">
             <div class="alert-item static">
               <div class="alert-icon-wrapper">
                 <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
               </div>
-              <div class="alert-text" [innerHTML]="showImportError"></div>
+              <div class="alert-text" [innerHTML]="showError"></div>
             </div>
           </div>
         </div>
@@ -180,7 +180,7 @@
 
     <div class="clr-row">
       <div class="clr-col-12">
-        <button [clrLoading]="exportState" class="btn btn-primary" type="submit" (click)="startImport()"
+        <button [clrLoading]="running" class="btn btn-primary" type="submit" (click)="start()"
           [disabled]="!selectedFile || (fileOrigin === 'firebase' && !originConfigLoaded)">
           Import
         </button>

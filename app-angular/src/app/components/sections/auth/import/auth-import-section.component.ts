@@ -43,10 +43,10 @@ function ifNotEmpty<T = any>(
 })
 export class AuthImportSectionComponent implements OnInit, OnDestroy {
   workspace: Workspace;
-  importRunning = false;
+  running = false;
+  showSuccess = false;
+  showError: SafeHtml | null = null;
   selectedFile: string | null = null;
-  showImportSuccess = false;
-  showImportError: SafeHtml | null = null;
   fileOrigin = 'firebase';
   originProject = '';
   originConfigLoaded = false;
@@ -91,12 +91,6 @@ export class AuthImportSectionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroy = true;
-  }
-
-  get exportState(): ClrLoadingState {
-    return this.importRunning
-      ? ClrLoadingState.LOADING
-      : ClrLoadingState.DEFAULT;
   }
 
   onDataFile(event: any) {
@@ -155,10 +149,10 @@ export class AuthImportSectionComponent implements OnInit, OnDestroy {
     this.changeDetRef.markForCheck();
   }
 
-  async startImport(): Promise<void> {
-    this.importRunning = true;
-    this.showImportSuccess = false;
-    this.showImportError = null;
+  async start(): Promise<void> {
+    this.running = true;
+    this.showSuccess = false;
+    this.showError = null;
 
     try {
       await this.fb.tools.auth.upload(this.selectedFile, {
@@ -174,16 +168,16 @@ export class AuthImportSectionComponent implements OnInit, OnDestroy {
         hashKey: ifNotEmpty(this.hashKey),
         hashInputOrder: ifNotEmpty(this.hashInputOrder)
       });
-      this.showImportSuccess = true;
+      this.showSuccess = true;
       console.log('Export done!');
     } catch (err) {
-      this.showImportError = this.sanitizer.bypassSecurityTrustHtml(
+      this.showError = this.sanitizer.bypassSecurityTrustHtml(
         ansiToHTML(contains(err, 'message') ? err.message : err)
       );
       console.log('Export error', err);
     }
 
-    this.importRunning = false;
+    this.running = false;
     this.changeDetRef.markForCheck();
   }
 }
