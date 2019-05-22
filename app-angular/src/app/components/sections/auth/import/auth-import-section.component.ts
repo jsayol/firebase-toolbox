@@ -43,7 +43,7 @@ function ifNotEmpty<T = any>(
 })
 export class AuthImportSectionComponent implements OnInit, OnDestroy {
   workspace: Workspace;
-  exportRunning = false;
+  importRunning = false;
   selectedFile: string | null = null;
   showImportSuccess = false;
   showImportError: SafeHtml | null = null;
@@ -94,7 +94,7 @@ export class AuthImportSectionComponent implements OnInit, OnDestroy {
   }
 
   get exportState(): ClrLoadingState {
-    return this.exportRunning
+    return this.importRunning
       ? ClrLoadingState.LOADING
       : ClrLoadingState.DEFAULT;
   }
@@ -156,7 +156,7 @@ export class AuthImportSectionComponent implements OnInit, OnDestroy {
   }
 
   async startImport(): Promise<void> {
-    this.exportRunning = true;
+    this.importRunning = true;
     this.showImportSuccess = false;
     this.showImportError = null;
 
@@ -183,7 +183,7 @@ export class AuthImportSectionComponent implements OnInit, OnDestroy {
       console.log('Export error', err);
     }
 
-    this.exportRunning = false;
+    this.importRunning = false;
     this.changeDetRef.markForCheck();
   }
 }
