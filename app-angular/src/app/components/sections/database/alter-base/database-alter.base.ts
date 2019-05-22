@@ -34,8 +34,15 @@ function jsonDataValidator(
   }
 }
 
+export enum OperationType {
+  Set = 'set',
+  Update = 'update',
+  Push = 'push',
+  Remove = 'remove'
+}
+
 export abstract class DatabaseAlterBase implements OnInit, OnDestroy {
-  public abstract operation: 'set' | 'update' | 'push' | 'remove';
+  public abstract operation: OperationType;
   public abstract info: string;
 
   public workspace: Workspace;

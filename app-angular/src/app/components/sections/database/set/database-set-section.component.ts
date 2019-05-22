@@ -7,7 +7,10 @@ import { FormBuilder } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { DatabaseAlterBase } from '../alter-base/database-alter.base';
+import {
+  DatabaseAlterBase,
+  OperationType
+} from '../alter-base/database-alter.base';
 import { FirebaseToolsService } from '../../../../providers/firebase-tools.service';
 import { ElectronService } from '../../../../providers/electron.service';
 import { AppState } from '../../../../models';
@@ -22,7 +25,7 @@ import { AppState } from '../../../../models';
   }
 })
 export class DatabaseSetSectionComponent extends DatabaseAlterBase {
-  public operation: 'set' = 'set';
+  public operation = OperationType.Set;
   public info = 'Store JSON data in the database.';
 
   constructor(
