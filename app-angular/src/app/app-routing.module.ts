@@ -79,14 +79,14 @@ const routes: Routes = [
         path: 'database.profile',
         component: InitializingComponent
       },
-      {
-        path: 'database.settings.get',
-        component: InitializingComponent
-      },
-      {
-        path: 'database.settings.set',
-        component: InitializingComponent
-      },
+      // {
+      //   path: 'database.settings.get',
+      //   component: InitializingComponent
+      // },
+      // {
+      //   path: 'database.settings.set',
+      //   component: InitializingComponent
+      // },
       {
         path: 'emulators.start',
         component: InitializingComponent
