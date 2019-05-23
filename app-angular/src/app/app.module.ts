@@ -50,6 +50,7 @@ import { DatabaseSetSectionComponent } from './components/sections/database/set/
 import { DatabaseUpdateSectionComponent } from './components/sections/database/update/database-update-section.component';
 import { DatabasePushSectionComponent } from './components/sections/database/push/database-push-section.component';
 import { DatabaseRemoveSectionComponent } from './components/sections/database/remove/database-remove-section.component';
+import { DatabaseInstancesSectionComponent } from './components/sections/database/instances/database-instances-section.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { DatabaseRemoveSectionComponent } from './components/sections/database/r
     DatabaseSetSectionComponent,
     DatabaseUpdateSectionComponent,
     DatabasePushSectionComponent,
-    DatabaseRemoveSectionComponent
+    DatabaseRemoveSectionComponent,
+    DatabaseInstancesSectionComponent
   ],
   imports: [
     BrowserModule,

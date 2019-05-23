@@ -1,0 +1,96 @@
+<ng-container *ngxLet="workspace$ | async; let workspace">
+  <h3 class="module-title">Database Instances</h3>
+
+  <div class="module-content">
+    <div class="clr-row">
+      <div class="clr-col-12">
+        <div class="card">
+          <div class="card-block">
+            <div class="card-text">
+              <div class="p3">
+                Each of your Firebase projects can have more than one database instance.
+                Here you can manage the database instances for the active project in the current workspace.
+              </div>
+              <div class="alert alert-info alert-sm" role="alert">
+                <div class="alert-items">
+                  <div class="alert-item static">
+                    <div class="alert-icon-wrapper">
+                      <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
+                    </div>
+                    <span class="alert-text">Database instances can be created but cannot be removed</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-block">
+            <div class="card-title">Instances</div>
+            <div class="card-text">
+              <ng-container *ngxLet="instances$ | async; let instances">
+                <ng-container *ngIf="instances">
+                  <div *ngFor="let instance of instances" class="instance-item">
+                    <div class="instance-icon">
+                      <clr-icon shape="rack-server" size="22"></clr-icon>
+                    </div>
+                    <span class="instance-info">
+                      <span class="instance-type">
+                        {{ instance.type === 'DEFAULT_REALTIME_DATABASE' ? 'Default' : 'Secondary'}}
+                      </span>
+                      <span class="instance-url">
+                        https://<span class="instance-name">{{ instance.instance }}</span>.firebaseio.com
+                      </span>
+                    </span>
+                  </div>
+                </ng-container>
+                <div *ngIf="!instances" class="loading-spinner">
+                  <span class="spinner spinner-inline"></span>
+                  <span class="p4">&nbsp;Loading... </span>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary" (click)="createModalVisible = true">
+              Add instance
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <clr-modal [(clrModalOpen)]="createModalVisible" [clrModalClosable]="!running" class="create-modal">
+    <h3 class="modal-title">
+      <div class="progress loop" [hidden]="!running">
+        <progress></progress>
+      </div>
+      Create a new database instance
+    </h3>
+    <div class="modal-body">
+      <div class="btn-group {{ errorText ? 'invalid' : '' }}">
+        <div class="btn disabled ref-protocol">https://</div>
+        <div class="btn disabled ref-name" style="padding: 0;">
+          <input type="text" name="instance" placeholder="" autofocus [formControl]="formControl">
+        </div>
+        <div class="btn disabled ref-domain">.firebaseio.com</div>
+      </div>
+      <div class="alert alert-danger alert-sm" role="alert" [style.visibility]="errorText ? 'visible' : 'hidden'">
+        <div class="alert-items">
+          <div class="alert-item static">
+            <div class="alert-icon-wrapper">
+              <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="alert-text" [innerHTML]="errorText"></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button [disabled]="running" type="button" class="btn btn-outline"
+        (click)="createModalVisible = false">Cancel</button>
+      <button [clrLoading]="running" [disabled]="!formControl.valid" type="button" class="btn btn-primary"
+        (click)="createInstance()">Create</button>
+    </div>
+  </clr-modal>
+</ng-container>

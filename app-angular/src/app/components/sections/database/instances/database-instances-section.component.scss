@@ -1,0 +1,128 @@
+@import "../../../../../theme";
+
+.card {
+  max-width: 25rem;
+}
+
+.card-text {
+  .p3 {
+    margin-top: 0;
+  }
+}
+
+.alert-info {
+  max-width: 15rem;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+
+  .p4 {
+    margin-top: 0;
+  }
+}
+
+.instance-item {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+
+  & + .instance-item {
+    margin-top: 0.6rem;
+  }
+
+  .instance-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    border: 1px solid $app-database-instances-icon-border-color;
+    border-radius: 50%;
+
+    clr-icon {
+      color: $app-database-instances-icon-color;
+    }
+  }
+
+  .instance-info {
+    display: flex;
+    flex-flow: column;
+    padding-left: 0.35rem;
+
+    .instance-type {
+      line-height: 0.8rem;
+      font-weight: 500;
+      font-size: 0.55rem;
+    }
+
+    .instance-url {
+      line-height: 0.8rem;
+      font-size: 0.55rem;
+      user-select: text;
+      color: $app-database-instances-url-color;
+
+      .instance-name {
+        font-size: 0.6rem;
+        font-weight: 500;
+        user-select: text;
+        color: $app-database-instances-url-name-color;
+      }
+    }
+  }
+}
+
+.create-modal {
+  .progress {
+    top: 0;
+    left: 0;
+    margin-top: 0;
+    position: absolute;
+    height: 0.15625rem;
+    border-top-left-radius: 0.125rem;
+    border-top-right-radius: 0.125rem;
+  }
+
+  .btn-group {
+    .btn.disabled {
+      opacity: 1;
+      cursor: default;
+      text-transform: none;
+      font-family: initial;
+      color: $app-database-instances-create-ref-color;
+      border-color: $app-database-instances-create-ref-border-color;
+      background-color: $app-database-instances-create-ref-bg-color;
+    }
+
+    .ref-protocol,
+    .ref-domain {
+      padding-left: 0.3rem;
+      padding-right: 0.3rem;
+      font-size: 0.53rem;
+    }
+
+    input[name="instance"] {
+      border: 0;
+      width: 10rem;
+      padding: 0.2rem;
+      font-size: 0.53rem;
+      height: calc(100% - 1px);
+      color: $app-database-instances-create-input-color;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &.invalid {
+      .ref-protocol {
+        border-right-color: red;
+      }
+
+      .ref-name {
+        border-color: red;
+      }
+    }
+  }
+}

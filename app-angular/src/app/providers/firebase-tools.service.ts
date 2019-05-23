@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, from } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
+import { startWith, tap, map } from 'rxjs/operators';
 
 import {
   ElectronService,
@@ -230,15 +230,27 @@ export class FirebaseToolsService {
   }
 
   getDatabaseInstances(
-    workspace: Workspace
+    workspace: Workspace,
+    skipCache = false
   ): Observable<firebaseTools_Type.DatabaseInstance[]> {
     return from(
       this.tools.database.instances.list({ cwd: workspace.path })
     ).pipe(
-      tap(instances => {
-        this.databaseInstances[workspace.path] = instances;
+      map(instances => {
+        // Sort default instance at the top, and then by name
+        return instances.sort((a, b) => {
+          if (a.type === b.type) {
+            return a.instance < b.instance ? -1 : 1;
+          }
+          return a.type === 'DEFAULT_REALTIME_DATABASE' ? -1 : 1;
+        });
       }),
-      startWith(this.databaseInstances[workspace.path] || [])
+      tap(instances => {
+        this.databaseInstances[workspace.projectId] = instances;
+      }),
+      startWith(
+        skipCache ? null : this.databaseInstances[workspace.projectId] || null
+      )
     );
   }
 

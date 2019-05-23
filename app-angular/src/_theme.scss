@@ -85,3 +85,13 @@ $app-shell-output-ansiBrightBlue: #3b8eea;
 $app-shell-output-ansiBrightMagenta: #d670d6;
 $app-shell-output-ansiBrightCyan: #29b8db;
 $app-shell-output-ansiBrightWhite: #e5e5e5;
+
+/* DATABASE INSTANCES SECTION */
+$app-database-instances-icon-color: rgba(0, 0, 0, 0.54);
+$app-database-instances-icon-border-color: rgba(0, 0, 0, 0.12);
+$app-database-instances-url-color: #8c8c8c;
+$app-database-instances-url-name-color: $FIREBASE_NAVY;
+$app-database-instances-create-ref-border-color: rgba(0, 0, 0, 0.15);
+$app-database-instances-create-ref-color: rgba(0, 0, 0, 0.65);
+$app-database-instances-create-ref-bg-color: #f5f5f5;
+$app-database-instances-create-input-color: $FIREBASE_NAVY;
