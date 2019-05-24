@@ -249,3 +249,8 @@ try {
   // Catch Error
   // throw e;
 }
+
+/*
+  TODO: The distributed app won't work on most Linux systems because of sandboxing.
+  See this issue: https://github.com/electron/electron/issues/17972
+*/
