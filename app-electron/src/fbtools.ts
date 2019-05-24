@@ -114,7 +114,7 @@ export function interceptCliPrompt() {
             };
 
             process.on('message', onResponse);
-            process.send({ type: 'prompt', id, options, question });
+            process.send({ type: 'prompt', id, question });
           });
 
           prompts.push(ipcPrompt);

@@ -22,7 +22,6 @@ interface FbToolsRunCommandErrorMessage {
 interface FbToolsPromptMessage {
   type: 'prompt';
   id: string;
-  options: any;
   question: any;
 }
 
@@ -169,14 +168,14 @@ function ipcFirebaseTools(win: BrowserWindow): void {
         }
 
         if (msg.type === 'prompt') {
-          const { id, options, question } = msg;
+          const { id, question } = msg;
           ipcMain.once(
             'prompt-response--' + id,
             (event: any, answer: any, error: any) => {
               child.send({ type: 'prompt-response', id, answer, error });
             }
           );
-          win.webContents.send('prompt', { id, options, question });
+          win.webContents.send('prompt', { id, question });
           return;
         }
       });

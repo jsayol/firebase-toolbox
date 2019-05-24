@@ -12,7 +12,11 @@ import * as inquirer_Type from 'inquirer';
 import { PromptService, PromptQuestion } from '../../providers/prompt.service';
 
 const REPLACE_IN_MESSAGE = [
-  [' Press Space to select features, then Enter to confirm your choices.', '']
+  [' Press Space to select features, then Enter to confirm your choices.', ''],
+  [
+    '\u001b[1m\u001b[33m\u001b[4mTHE ENTIRE DATABASE', // ansi bright yellow
+    '\u001b[1m\u001b[31m\u001b[4mTHE ENTIRE DATABASE' // ansi bright red
+  ]
 ];
 
 function checkboxToAnswer(question: PromptQuestion['question']): boolean[] {

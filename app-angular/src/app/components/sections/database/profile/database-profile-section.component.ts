@@ -68,8 +68,6 @@ function formatWhenInputFileValidator(
 export class DatabaseProfileSectionComponent implements OnInit, OnDestroy {
   public workspace: Workspace;
   public running = false;
-  public showSuccess = false;
-  public showError: SafeHtml | null = null;
   public inputFile: string | null = null;
   public outputFile: string | null = null;
   public instances: DatabaseInstance[] | null = null;
@@ -112,7 +110,6 @@ export class DatabaseProfileSectionComponent implements OnInit, OnDestroy {
   constructor(
     private changeDetRef: ChangeDetectorRef,
     private formBuilder: FormBuilder,
-    private sanitizer: DomSanitizer,
     private ngZone: NgZone,
     private store: Store<AppState>,
     private fb: FirebaseToolsService,
@@ -134,11 +131,9 @@ export class DatabaseProfileSectionComponent implements OnInit, OnDestroy {
 
     this.setValidators();
 
-    this.workspace$
-      .pipe(takeWhile(() => !this.destroy))
-      .subscribe((workspace: Workspace) => {
-        this.workspace = workspace;
-      });
+    this.workspace$.subscribe((workspace: Workspace) => {
+      this.workspace = workspace;
+    });
 
     this.workspace$
       .pipe(

@@ -299,6 +299,24 @@ export class FirebaseToolsService {
       ...options
     });
   }
+
+  firestoreDelete(
+    output: OutputCapture,
+    path: string,
+    firestorePath: string,
+    options: firebaseTools_Type.FirestoreDeleteOptions = {}
+  ): RunningCommand<void> {
+    return this.electron.runToolsCommand(
+      output,
+      'firestore.delete',
+      [firestorePath],
+      {
+        cwd: path,
+        interactive: true,
+        ...options
+      }
+    );
+  }
 }
 
 export interface UserInfo {
