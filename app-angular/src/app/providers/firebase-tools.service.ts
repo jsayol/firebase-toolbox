@@ -317,6 +317,18 @@ export class FirebaseToolsService {
       }
     );
   }
+
+  firestoreIndexes(
+    output: OutputCapture,
+    path: string,
+    options: firebaseTools_Type.FirestoreIndexesOptions = {}
+  ): RunningCommand<void> {
+    return this.electron.runToolsCommand(output, 'firestore.indexes', [], {
+      cwd: path,
+      interactive: true,
+      ...options
+    });
+  }
 }
 
 export interface UserInfo {

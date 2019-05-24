@@ -1,0 +1,10 @@
+.modal-body {
+  &,
+  * {
+    user-select: text;
+  }
+}
+
+.pretty-indexes {
+  padding: 0.5rem;
+}

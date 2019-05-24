@@ -1,0 +1,62 @@
+<h3 class="module-title">Firestore Indexes</h3>
+
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <p>List indexes in your project's Cloud Firestore database.</p>
+    </div>
+  </div>
+  <form clrForm [formGroup]="form" clrLayout="horizontal">
+
+    <clr-radio-container>
+      <label>Format</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="format" value="json" />
+        <label>JSON</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="format" value="pretty" />
+        <label>Pretty text</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>Whether to output the indexes as JSON or as pretty formatted text</clr-control-helper>
+    </clr-radio-container>
+
+    <div class="clr-form-control clr-row alert-control">
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <div *ngIf="showError" class="alert alert-danger alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+              </div>
+              <div class="alert-text" [innerHTML]="showError"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-row buttons-row">
+      <div class="clr-col-12">
+        <button [clrLoading]="running" class="btn btn-primary" type="submit" (click)="start()" [disabled]="!form.valid">
+          Get indexes
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <clr-modal [(clrModalOpen)]="modalVisible" [clrModalSize]="'lg'" class="indexes-modal">
+    <h3 class="modal-title">Firestore indexes</h3>
+    <div class="modal-body">
+      <ng-container *ngIf="format === 'json'">
+        <pre><code class="json-indexes">{{ indexes }}</code></pre>
+      </ng-container>
+      <ng-container *ngIf="format === 'pretty'">
+        <div class="pretty-indexes shell-output" [innerHTML]="indexes | ansi" #prettyText></div>
+      </ng-container>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="copy()">Copy</button>
+      <button type="button" class="btn btn-primary" (click)="modalVisible = false">Close</button>
+    </div>
+  </clr-modal>

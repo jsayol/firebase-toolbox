@@ -8,7 +8,7 @@ import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 export class AnsiPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
-  transform(value: any, safeHtml?: boolean): SafeHtml {
+  transform(value: any, safeHtml = true): SafeHtml {
     const html = ansiToHTML(value);
 
     if (safeHtml) {

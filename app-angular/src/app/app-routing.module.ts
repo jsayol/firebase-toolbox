@@ -15,6 +15,7 @@ import { DatabaseRemoveSectionComponent } from './components/sections/database/r
 import { DatabaseInstancesSectionComponent } from './components/sections/database/instances/database-instances-section.component';
 import { DatabaseProfileSectionComponent } from './components/sections/database/profile/database-profile-section.component';
 import { FirestoreDeleteSectionComponent } from './components/sections/firestore/delete/firestore-delete-section.component';
+import { FirestoreIndexesSectionComponent } from './components/sections/firestore/indexes/firestore-indexes-section.component';
 
 const routes: Routes = [
   {
@@ -107,7 +108,7 @@ const routes: Routes = [
       },
       {
         path: 'firestore.indexes',
-        component: InitializingComponent
+        component: FirestoreIndexesSectionComponent
       },
       {
         path: 'functions.log',
