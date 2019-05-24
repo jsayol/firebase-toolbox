@@ -48,10 +48,10 @@ export class ElectronService {
       this.ipcRenderer = this.electron.ipcRenderer;
       this.webFrame = this.electron.webFrame;
       this.remote = this.electron.remote;
-      this.childProcess = window.require('child_process');
-      this.path = window.require('path');
-      this.fs = window.require('fs');
-      this.os = window.require('os');
+      this.childProcess = this.remote.require('child_process');
+      this.path = this.remote.require('path');
+      this.fs = this.remote.require('fs');
+      this.os = this.remote.require('os');
 
       this.ipcEvents();
     }
