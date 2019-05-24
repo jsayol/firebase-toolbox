@@ -1,0 +1,181 @@
+<h3 class="module-title">Database Profile</h3>
+
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <p>Profile the Realtime Database and generate a usage report.</p>
+    </div>
+  </div>
+  <form clrForm [formGroup]="form" clrLayout="horizontal">
+
+    <clr-radio-container>
+      <label>Origin</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="origin" value="database" />
+        <label>Live from the database</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="origin" value="file" />
+        <label>Saved file</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>Whether to generate a report based on streaming logs from the database or use an existing file
+        of events</clr-control-helper>
+    </clr-radio-container>
+
+    <div class="clr-form-control clr-row file-control" *ngIf="origin === 'file'">
+      <label class="clr-control-label label-top">Input file</label>
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <button type="button" class="btn btn-outline btn-icon" (click)="openInputFileDialog()">
+          <clr-icon shape="upload"></clr-icon>
+          <ng-container *ngIf="!inputFile"> Choose a file </ng-container>
+          <ng-container *ngIf="inputFile"> {{ inputFileBasename }} </ng-container>
+        </button>
+      </div>
+    </div>
+
+    <clr-radio-container *ngIf="origin === 'database'">
+      <label>Stop</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="stopCondition" value="manual" />
+        <label>Manually</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="stopCondition" value="duration" />
+        <label>After a set duration</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>Collect data for a set duration or until manually stopped</clr-control-helper>
+    </clr-radio-container>
+
+    <clr-input-container *ngIf="origin === 'database' && stopCondition === 'duration'">
+      <label>Duration</label>
+      <input clrInput type="text" formControlName="duration" />
+      <span class="duration-seconds-text">seconds</span>
+      <clr-control-helper>
+        In seconds, how long to spend collecting database usage information in order to generate the report
+      </clr-control-helper>
+    </clr-input-container>
+
+    <clr-radio-container>
+      <label>Collapse</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="collapse" [value]="true" />
+        <label>Collapse</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="collapse" [value]="false" />
+        <label>Don't collapse</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>Whether to collapse similar paths into $wildcard locations</clr-control-helper>
+    </clr-radio-container>
+
+    <clr-radio-container>
+      <label>Output</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="output" value="screen" />
+        <label>Show report on screen</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="output" value="file" />
+        <label>Save to file</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>Save the report to a file or show it on screen</clr-control-helper>
+    </clr-radio-container>
+
+    <div class="clr-form-control clr-row file-control" *ngIf="output === 'file'">
+      <label class="clr-control-label label-top">Output file</label>
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <button type="button" class="btn btn-outline btn-icon" (click)="openOutputFileDialog()">
+          <clr-icon shape="download"></clr-icon>
+          <ng-container *ngIf="!outputFile"> Choose a file </ng-container>
+          <ng-container *ngIf="outputFile"> {{ outputFileBasename }} </ng-container>
+        </button>
+      </div>
+    </div>
+
+    <clr-radio-container *ngIf="output === 'file'">
+      <label>Report format</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="format" value="text" />
+        <label>Text</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="format" value="json" />
+        <label>JSON</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="format" value="raw" />
+        <label>Raw events</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>If "raw events" is selected, the generated file can later be used to generate a report.
+        Otherwise, a report is generated with the specified format.</clr-control-helper>
+      <clr-control-error>Cannot specify both an input file and raw format</clr-control-error>
+    </clr-radio-container>
+
+    <clr-select-container *ngIf="origin === 'database' && instances">
+      <label>Instance</label>
+      <select clrSelect formControlName="instance">
+        <option *ngFor="let instance of instances" [value]="instance.instance">
+          {{ instance.instance }}{{ instance.type === 'DEFAULT_REALTIME_DATABASE' ? ' (default)' : ''}}
+        </option>
+      </select>
+      <clr-control-helper>The database instance to use</clr-control-helper>
+    </clr-select-container>
+
+    <div class="clr-row buttons-row">
+      <div class="clr-col-12">
+        <button [clrLoading]="running" class="btn btn-primary" type="submit" (click)="start()" [disabled]="!form.valid">
+          Start profiling
+        </button>
+        <button *ngIf="running && origin === 'database' && stopCondition === 'manual'" class="btn btn-primary" type="submit" (click)="stop()">
+          Stop
+        </button>
+        <button *ngIf="running && (origin === 'file' || stopCondition === 'duration')" class="btn btn-outline" type="submit"
+          (click)="cancel()">
+          Cancel
+        </button>
+        <button *ngIf="!running && report" class="btn btn-primary" type="submit" (click)="reportModalVisible = true">
+          See last report
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="operations-container" *ngIf="origin === 'database' && recordedOperations !== null">
+    <span class="operations-text">Recorded operations:</span>
+    <span class="operations-num"> {{ recordedOperations }}</span>
+  </div>
+</div>
+
+<clr-modal [(clrModalOpen)]="reportModalVisible" [clrModalSize]="'xl'" class="report-modal">
+  <h3 class="modal-title">Database Profiler Report (ran for {{ report?.totalTime }} ms)</h3>
+  <div class="modal-body" *ngIf="report">
+    <div *ngFor="let group of reportGroups" class="report-group">
+      <h2>{{ group.title }}</h2>
+      <h6>{{ report[group.noteField].note }}</h6>
+      <div *ngFor="let groupTable of group.tables" class="report-table-container">
+        <ng-container *ngxLet="report[groupTable.field]; let table">
+          <h3>{{ groupTable.title }}</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th *ngFor="let legend of table.legend; let i = index" [class.left]="i === 0">
+                  {{ legend }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of table.data">
+                <td *ngFor="let value of data; let i = index" [class.left]="i === 0">
+                  {{ value }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="reportModalVisible = false">Close</button>
+  </div>
+</clr-modal>

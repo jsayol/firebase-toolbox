@@ -1,0 +1,51 @@
+input[formControlName="duration"] {
+  width: 2.75rem;
+}
+
+.duration-seconds-text {
+  font-size: 0.5rem;
+}
+
+.buttons-row {
+  margin-top: 1rem;
+}
+
+.operations-container {
+  padding-left: 0.3rem;
+  padding-top: 0.5rem;
+
+  .operations-num {
+    font-weight: 500;
+  }
+}
+
+.report-modal {
+  .modal-body {
+    padding-bottom: 2rem;
+
+    &,
+    * {
+      user-select: text;
+    }
+  }
+
+  .report-group {
+    & + .report-group {
+      margin-top: 2rem;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    h6 {
+      margin-top: 0;
+    }
+
+    .report-table-container {
+      table {
+        margin-top: 0.4rem;
+      }
+    }
+  }
+}

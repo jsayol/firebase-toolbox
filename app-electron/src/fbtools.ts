@@ -4,7 +4,8 @@ import * as inquirer from 'inquirer';
 
 import { addWinstonConsoleTransport, getRandomId } from './utils';
 
-// These 3 calls need to happen in this specific order.
+// These 4 calls need to happen in this specific order.
+interceptSpinner();
 interceptCliPrompt();
 const tools = require('firebase-tools') as typeof firebaseTools_Type;
 addWinstonConsoleTransport();
@@ -30,8 +31,10 @@ process.on('disconnect', () => {
 });
 
 process.on('message', (message: Message) => {
-  if (message.type === 'run-command') {
-    runCommand(message);
+  switch (message.type) {
+    case 'run-command':
+      runCommand(message);
+      break;
   }
 });
 
@@ -43,7 +46,7 @@ async function runCommand(message: RunCommandMessage): Promise<void> {
     try {
       commandFn = commandParts.reduce((obj, part) => obj[part], tools);
     } catch (error) {
-      process.send({ type: 'error', error });
+      process.send({ type: 'error', error: error.message || error });
       process.exit();
     }
 
@@ -61,7 +64,10 @@ async function runCommand(message: RunCommandMessage): Promise<void> {
       const result = await commandFn(...message.args, message.options);
       process.send({ type: 'run-command-result', result });
     } catch (error) {
-      process.send({ type: 'run-command-error', error });
+      process.send({
+        type: 'run-command-error',
+        error: error.message || error
+      });
     }
   } catch (err) {
     // Something went wrong
@@ -75,8 +81,8 @@ async function runCommand(message: RunCommandMessage): Promise<void> {
 }
 
 export function interceptCliPrompt() {
-  // Path to the prompt module we need to intercept
-  const PROMPT_PATH = '../../node_modules/firebase-tools/lib/prompt';
+  // Path to the module we need to intercept
+  const MODULE_PATH = '../../node_modules/firebase-tools/lib/prompt';
 
   interface PromptOptions {
     [k: string]: any;
@@ -134,10 +140,35 @@ export function interceptCliPrompt() {
     });
   };
 
-  const originalPrompt = require(PROMPT_PATH);
+  const originalPrompt = require(MODULE_PATH);
   prompt.convertLabeledListChoices = originalPrompt.convertLabeledListChoices;
   prompt.listLabelToValue = originalPrompt.listLabelToValue;
 
-  mockRequire(PROMPT_PATH, prompt);
-  mockRequire.reRequire(PROMPT_PATH);
+  mockRequire(MODULE_PATH, prompt);
+}
+
+export function interceptSpinner() {
+  // Path to the module we need to intercept
+  const MODULE_PATH = 'ora';
+
+  interface OraOptions {
+    text: string;
+    color: string;
+  }
+
+  const ora = (options: OraOptions) => {
+    let text = options.text;
+    return {
+      set text(value: string) {
+        text = value;
+        process.stdout.write(value);
+      },
+      start() {
+        process.stdout.write(text);
+      },
+      stop() {}
+    };
+  };
+
+  mockRequire(MODULE_PATH, ora);
 }

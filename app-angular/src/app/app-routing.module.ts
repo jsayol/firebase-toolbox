@@ -13,6 +13,7 @@ import { DatabaseUpdateSectionComponent } from './components/sections/database/u
 import { DatabasePushSectionComponent } from './components/sections/database/push/database-push-section.component';
 import { DatabaseRemoveSectionComponent } from './components/sections/database/remove/database-remove-section.component';
 import { DatabaseInstancesSectionComponent } from './components/sections/database/instances/database-instances-section.component';
+import { DatabaseProfileSectionComponent } from './components/sections/database/profile/database-profile-section.component';
 
 const routes: Routes = [
   {
@@ -77,7 +78,7 @@ const routes: Routes = [
       },
       {
         path: 'database.profile',
-        component: InitializingComponent
+        component: DatabaseProfileSectionComponent
       },
       // {
       //   path: 'database.settings.get',

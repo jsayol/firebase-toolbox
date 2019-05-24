@@ -259,7 +259,7 @@ export class FirebaseToolsService {
     path: string,
     feature: firebaseTools_Type.InitFeatureName
   ): RunningCommand<void> {
-    return this.electron.runToolsCommand(output, 'fbtools', 'init', [feature], {
+    return this.electron.runToolsCommand(output, 'init', [feature], {
       cwd: path,
       interactive: true
     });
@@ -275,7 +275,6 @@ export class FirebaseToolsService {
   ): RunningCommand<void> {
     return this.electron.runToolsCommand(
       output,
-      'fbtools',
       'serve',
       [],
       {
@@ -285,8 +284,20 @@ export class FirebaseToolsService {
         host,
         port
       },
-      nodeVersion
+      { nodeVersion }
     );
+  }
+
+  databaseProfile(
+    output: OutputCapture,
+    path: string,
+    options: firebaseTools_Type.DatabaseProfileOptions = {}
+  ): RunningCommand<any> {
+    return this.electron.runToolsCommand(output, 'database.profile', [], {
+      cwd: path,
+      interactive: true,
+      ...options
+    });
   }
 }
 

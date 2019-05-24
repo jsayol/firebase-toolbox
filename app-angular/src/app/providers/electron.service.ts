@@ -19,6 +19,7 @@ export interface OutputCapture {
 export interface RunningCommand<T = any> {
   done: Promise<T>;
   kill: () => void;
+  stdin: (data: string) => void;
 }
 
 interface PromptRequest {
@@ -86,10 +87,14 @@ export class ElectronService {
 
   runToolsCommand<T = any>(
     output: OutputCapture,
-    channel: string,
-    ...args: any[]
+    command: string,
+    args: any[] = [],
+    options: { [k: string]: any } = {},
+    ownOptions: { nodeVersion?: 'self' | 'system' } = {}
   ): RunningCommand<T> {
     const id = getRandomId();
+    const channel = 'fbtools';
+
     const promise = new Promise<T>((resolve, reject) => {
       const onStdout = (event: any, data: string) => {
         output.stdout(data);
@@ -116,13 +121,16 @@ export class ElectronService {
 
       this.ipcRenderer.on(`stdout-${id}`, onStdout);
       this.ipcRenderer.on(`stderr-${id}`, onStderr);
-      this.ipcRenderer.send(channel, id, ...args);
+      this.ipcRenderer.send(channel, id, command, args, options, ownOptions);
     });
 
     return {
       done: promise,
       kill: () => {
         this.send(`kill-${id}`);
+      },
+      stdin: (data: string) => {
+        this.send(`stdin-${id}`, data);
       }
     };
   }

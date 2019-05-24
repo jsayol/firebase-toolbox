@@ -124,12 +124,17 @@ function ipcFirebaseTools(win: BrowserWindow): void {
       event: any,
       id: string,
       command: string,
-      args: any[],
-      options: any,
+      args: any[] = [],
+      options: any = {},
       ownOptions: IpcFirebaseToolsOptions = {}
     ) => {
       let child: childProcess.ChildProcess;
       const fbtoolsPath = path.resolve(__dirname, './fbtools.js');
+
+      ownOptions = {
+        nodeVersion: 'self',
+        ...ownOptions
+      };
 
       if (ownOptions.nodeVersion === 'self') {
         // TODO: this doesn't work in prod mode either, don't know why
@@ -139,7 +144,7 @@ function ipcFirebaseTools(win: BrowserWindow): void {
           stdio: ['pipe', 'pipe', 'pipe', 'ipc']
         });
       } else {
-        // TODO: this doesn't work when runnin in prod mode, since the
+        // TODO: this doesn't work when running in prod mode, since the
         // fbtools.js file is inside the app.asar package, plus none of the
         // node modules used in there are available in the user's node.
         child = childProcess.spawn('node', [fbtoolsPath], {
@@ -188,7 +193,12 @@ function ipcFirebaseTools(win: BrowserWindow): void {
         child.kill();
       };
 
+      const onStdinRequest = (event: any, data: string) => {
+        child.stdin.write(data);
+      };
+
       ipcMain.on(`kill-${id}`, onKillRequest);
+      ipcMain.on(`stdin-${id}`, onStdinRequest);
 
       child.once('exit', () => {
         ipcMain.removeListener(`kill-${id}`, onKillRequest);
