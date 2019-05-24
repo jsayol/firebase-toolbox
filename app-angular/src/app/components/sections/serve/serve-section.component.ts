@@ -74,7 +74,7 @@ export class ServeSectionComponent implements OnInit {
 
   runningCommand: RunningCommand<void> | null = null;
 
-  @ViewChild(ShellOutputComponent)
+  @ViewChild(ShellOutputComponent, { static: true })
   shellOutput!: ShellOutputComponent;
 
   constructor(

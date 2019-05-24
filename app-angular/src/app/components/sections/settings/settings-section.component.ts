@@ -60,7 +60,7 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
 
   private reloadWorkspaceProjects$ = new Subject<void>();
 
-  @ViewChild(ShellOutputComponent)
+  @ViewChild(ShellOutputComponent, { static: true })
   shellOutput!: ShellOutputComponent;
 
   private destroy = false;

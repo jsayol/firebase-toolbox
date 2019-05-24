@@ -31,7 +31,7 @@ export class ShellOutputComponent implements OnInit {
   hostTop = '40vh';
   isResizing = false;
 
-  @ViewChild('outputRef')
+  @ViewChild('outputRef', { static: true })
   outputRef: ElementRef;
 
   private unsafedOutput = '';
