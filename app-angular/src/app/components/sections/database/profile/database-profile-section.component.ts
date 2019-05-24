@@ -329,37 +329,32 @@ export class DatabaseProfileSectionComponent implements OnInit, OnDestroy {
     const stopConditionControl = this.form.get('stopCondition');
     const durationControl = this.form.get('duration');
 
-    originControl.valueChanges
+    combineLatest(originControl.valueChanges, outputControl.valueChanges)
       .pipe(takeWhile(() => !this.destroy))
-      .subscribe(origin => {
-        this.ngZone.run(() => {
-          if (origin === 'file') {
-            inputFileControl.setValidators([Validators.required]);
-            formatControl.setValidators([
-              Validators.required,
-              formatWhenInputFileValidator
-            ]);
-          } else {
-            inputFileControl.setValidators(null);
-            formatControl.setValidators([Validators.required]);
-          }
-          inputFileControl.updateValueAndValidity();
-          formatControl.updateValueAndValidity();
-          this.changeDetRef.markForCheck();
-        });
-      });
-
-    outputControl.valueChanges
-      .pipe(takeWhile(() => !this.destroy))
-      .subscribe(output => {
+      .subscribe(([origin, output]) => {
         this.ngZone.run(() => {
           if (output === 'file') {
+            const formatValidators = [Validators.required];
+            if (origin === 'file') {
+              formatValidators.push(formatWhenInputFileValidator);
+            }
+            formatControl.setValidators(formatValidators);
             outputFileControl.setValidators([Validators.required]);
           } else {
+            formatControl.setValidators(null);
             outputFileControl.setValidators(null);
           }
+
+          if (origin === 'file') {
+            inputFileControl.setValidators([Validators.required]);
+          } else {
+            inputFileControl.setValidators(null);
+          }
+
           outputFileControl.updateValueAndValidity();
-          this.changeDetRef.markForCheck();
+          inputFileControl.updateValueAndValidity();
+          formatControl.updateValueAndValidity();
+          this.changeDetRef.detectChanges();
         });
       });
 
@@ -376,25 +371,8 @@ export class DatabaseProfileSectionComponent implements OnInit, OnDestroy {
             ]);
           }
           durationControl.updateValueAndValidity();
-          this.changeDetRef.markForCheck();
+          this.changeDetRef.detectChanges();
         });
       });
-
-    // stopConditionControl.valueChanges
-    //   .pipe(takeWhile(() => !this.destroy))
-    //   .subscribe(stopCondition => {
-    //     this.ngZone.run(() => {
-    //       if (stopCondition === 'duration') {
-    //         durationControl.setValidators([
-    //           Validators.required,
-    //           Validators.min(0.000000001)
-    //         ]);
-    //       } else {
-    //         durationControl.setValidators(null);
-    //       }
-    //       durationControl.updateValueAndValidity();
-    //       this.changeDetRef.markForCheck();
-    //     });
-    //   });
   }
 }
