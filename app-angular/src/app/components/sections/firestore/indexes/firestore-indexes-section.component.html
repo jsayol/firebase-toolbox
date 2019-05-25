@@ -44,19 +44,20 @@
       </div>
     </div>
   </form>
+</div>
 
-  <clr-modal [(clrModalOpen)]="modalVisible" [clrModalSize]="'lg'" class="indexes-modal">
-    <h3 class="modal-title">Firestore indexes</h3>
-    <div class="modal-body">
-      <ng-container *ngIf="format === 'json'">
-        <pre><code class="json-indexes">{{ indexes }}</code></pre>
-      </ng-container>
-      <ng-container *ngIf="format === 'pretty'">
-        <div class="pretty-indexes shell-output" [innerHTML]="indexes | ansi" #prettyText></div>
-      </ng-container>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="copy()">Copy</button>
-      <button type="button" class="btn btn-primary" (click)="modalVisible = false">Close</button>
-    </div>
-  </clr-modal>
+<clr-modal [(clrModalOpen)]="modalVisible" [clrModalSize]="'lg'" class="indexes-modal">
+  <h3 class="modal-title">Firestore indexes</h3>
+  <div class="modal-body">
+    <ng-container *ngIf="format === 'json'">
+      <pre><code class="json-indexes">{{ indexes }}</code></pre>
+    </ng-container>
+    <ng-container *ngIf="format === 'pretty'">
+      <div class="pretty-indexes shell-output" [innerHTML]="indexes | ansi" #prettyText></div>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="copy()">Copy</button>
+    <button type="button" class="btn btn-primary" (click)="modalVisible = false">Close</button>
+  </div>
+</clr-modal>

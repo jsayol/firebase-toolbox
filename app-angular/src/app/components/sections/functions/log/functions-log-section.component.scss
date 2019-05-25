@@ -1,0 +1,35 @@
+@import "../../../../../theme";
+
+.only-example {
+  border: 1px solid #eee;
+  padding: 0.1rem;
+}
+
+input[formControlName="only"] {
+  width: 95%;
+}
+
+input[formControlName="lines"] {
+  width: 3rem;
+}
+
+.logs-modal {
+  .modal-body {
+    &,
+    * {
+      user-select: text;
+    }
+
+    table thead tr th {
+      background-color: $clr-thead-bgcolor;
+      position: sticky;
+      top: 0;
+    }
+
+    td.json-payload {
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 0.5rem;
+    }
+  }
+}

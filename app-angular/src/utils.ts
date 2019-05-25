@@ -51,3 +51,82 @@ export function databasePathValidator(
     return { path: 'Path must begin with /' };
   }
 }
+
+export interface CloudFunctionLogEntry {
+  logName: string;
+  resource: {
+    type: string;
+    labels: {
+      [k: string]: string;
+    };
+  };
+  timestamp: string;
+  receiveTimestamp: string;
+  severity: CloudFunctionLogSeverity;
+  insertId: string;
+  httpRequest: {
+    requestMethod: string;
+    requestUrl: string;
+    requestSize: string;
+    status: number;
+    responseSize: string;
+    userAgent: string;
+    remoteIp: string;
+    serverIp: string;
+    referer: string;
+    latency: string;
+    cacheLookup: boolean;
+    cacheHit: boolean;
+    cacheValidatedWithOriginServer: boolean;
+    cacheFillBytes: string;
+    protocol: string;
+  };
+  labels: {
+    [k: string]: string;
+  };
+  metadata: {
+    systemLabels: {
+      [k: string]: any;
+    };
+    userLabels: {
+      [k: string]: string;
+    };
+  };
+  operation: {
+    id: string;
+    producer: string;
+    first: boolean;
+    last: boolean;
+  };
+  trace: string;
+  spanId: string;
+  traceSampled: boolean;
+  sourceLocation: {
+    file: string;
+    line: string;
+    function: string;
+  };
+
+  // Union field payload can be only one of the following:
+  protoPayload?: {
+    '@type': string;
+    [k: string]: any;
+  };
+  textPayload?: string;
+  jsonPayload?: {
+    [k: string]: any;
+  };
+  // End of list of possible types for union field payload.
+}
+
+export enum CloudFunctionLogSeverity {
+  DEFAULT = 'DEFAULT',
+  DEBUG = 'DEBUG',
+  INFO = 'INFO',
+  NOTICE = 'NOTICE',
+  WARNING = 'WARNING',
+  ERROR = 'ERROR',
+  CRITICAL = 'CRITICAL',
+  ALERT = 'ALERT',
+  EMERGENCY = 'EMERGENCY'
+}

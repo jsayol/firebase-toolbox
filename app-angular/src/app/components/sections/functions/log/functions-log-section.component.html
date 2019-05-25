@@ -1,0 +1,101 @@
+<h3 class="module-title">Functions Logs</h3>
+
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <p>List indexes in your project's Cloud Firestore database.</p>
+    </div>
+  </div>
+  <form clrForm [formGroup]="form" clrLayout="horizontal">
+
+    <clr-radio-container>
+      <label>Display</label>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="display" value="show" />
+        <label>Show on screen</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+        <input type="radio" clrRadio formControlName="display" value="open" />
+        <label>Open log viewer in browser</label>
+      </clr-radio-wrapper>
+      <clr-control-helper>Whether to show the logs on screen or to open the GCP log viewer in the browser
+      </clr-control-helper>
+    </clr-radio-container>
+
+    <clr-input-container>
+      <label>Functions</label>
+      <input clrInput type="text" formControlName="only" />
+      <clr-control-helper>
+        Only show logs of specified, comma-seperated functions
+        (e.g. <code class="only-example">funcA,funcB</code>).<br />
+        Leave blank to show logs for all functions.
+      </clr-control-helper>
+    </clr-input-container>
+
+    <clr-input-container *ngIf="display === 'show'">
+      <label>Num. lines</label>
+      <input clrInput type="number" formControlName="lines" placeholder="35" />
+      <clr-control-helper>Specify the number of log lines to fetch</clr-control-helper>
+    </clr-input-container>
+
+    <div class="clr-form-control clr-row alert-control">
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <div *ngIf="showError" class="alert alert-danger alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+              </div>
+              <div class="alert-text" [innerHTML]="showError"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-row buttons-row">
+      <div class="clr-col-12">
+        <button [clrLoading]="running" class="btn btn-primary" type="submit" (click)="start()" [disabled]="!form.valid">
+          {{ display | titlecase }} logs
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<clr-modal [(clrModalOpen)]="modalVisible" [clrModalSize]="'xl'" class="logs-modal">
+  <h3 class="modal-title">Logs</h3>
+  <div class="modal-body">
+    <table *ngIf="entries" class="table">
+      <thead>
+        <tr>
+          <th class="left">Timestamp</th>
+          <th class="left">Level</th>
+          <th class="left">Function</th>
+          <th class="left">Event message</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of entries">
+          <td class="left" [title]="entry.timestamp">{{ entry.timestamp | date:'medium' }}</td>
+          <td class="left">{{ entry.severity }}</td>
+          <td class="left" title="Region: {{ entry.resource.labels['region'] }}">
+            {{ entry.resource.labels['function_name'] }}
+          </td>
+          <td class="left" *ngIf="entry.textPayload" [class.json-payload]="isJson(entry.textPayload)">
+            {{ entry.textPayload }}
+          </td>
+          <td class="left json-payload" *ngIf="!entry.textPayload && entry.protoPayload">
+            {{ entry.protoPayload | json }}
+          </td>
+          <td class="left" *ngIf="!entry.textPayload && !entry.protoPayload">
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modalVisible = false">Close</button>
+  </div>
+</clr-modal>

@@ -1,12 +1,21 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
 import { InitializingComponent } from './components/initializing/initializing.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
+
+// Settings
 import { SettingsSectionComponent } from './components/sections/settings/settings-section.component';
+
+// Serve
 import { ServeSectionComponent } from './components/sections/serve/serve-section.component';
+
+// Auth
 import { AuthExportSectionComponent } from './components/sections/auth/export/auth-export-section.component';
 import { AuthImportSectionComponent } from './components/sections/auth/import/auth-import-section.component';
+
+// Database
 import { DatabaseGetSectionComponent } from './components/sections/database/get/database-get-section.component';
 import { DatabaseSetSectionComponent } from './components/sections/database/set/database-set-section.component';
 import { DatabaseUpdateSectionComponent } from './components/sections/database/update/database-update-section.component';
@@ -14,9 +23,16 @@ import { DatabasePushSectionComponent } from './components/sections/database/pus
 import { DatabaseRemoveSectionComponent } from './components/sections/database/remove/database-remove-section.component';
 import { DatabaseInstancesSectionComponent } from './components/sections/database/instances/database-instances-section.component';
 import { DatabaseProfileSectionComponent } from './components/sections/database/profile/database-profile-section.component';
+
+// Firestore
 import { FirestoreDeleteSectionComponent } from './components/sections/firestore/delete/firestore-delete-section.component';
 import { FirestoreIndexesSectionComponent } from './components/sections/firestore/indexes/firestore-indexes-section.component';
+
+// Hosting
 import { HostingDisableSectionComponent } from './components/sections/hosting/disable/hosting-disable-section.component';
+
+// Functions
+import { FunctionsLogSectionComponent } from './components/sections/functions/log/functions-log-section.component';
 
 const routes: Routes = [
   {
@@ -113,7 +129,7 @@ const routes: Routes = [
       },
       {
         path: 'functions.log',
-        component: InitializingComponent
+        component: FunctionsLogSectionComponent
       },
       {
         path: 'functions.delete',

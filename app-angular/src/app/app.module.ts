@@ -55,6 +55,7 @@ import { DatabaseProfileSectionComponent } from './components/sections/database/
 import { FirestoreDeleteSectionComponent } from './components/sections/firestore/delete/firestore-delete-section.component';
 import { FirestoreIndexesSectionComponent } from './components/sections/firestore/indexes/firestore-indexes-section.component';
 import { HostingDisableSectionComponent } from './components/sections/hosting/disable/hosting-disable-section.component';
+import { FunctionsLogSectionComponent } from './components/sections/functions/log/functions-log-section.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { HostingDisableSectionComponent } from './components/sections/hosting/di
     DatabaseProfileSectionComponent,
     FirestoreDeleteSectionComponent,
     FirestoreIndexesSectionComponent,
-    HostingDisableSectionComponent
+    HostingDisableSectionComponent,
+    FunctionsLogSectionComponent
   ],
   imports: [
     BrowserModule,
