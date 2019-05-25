@@ -1,4 +1,8 @@
 clr-modal {
+  .modal-title {
+    white-space: pre-wrap;
+  }
+
   .clr-form {
     padding-left: 0;
 
@@ -6,7 +10,7 @@ clr-modal {
       margin-top: 0;
     }
   }
-  
+
   &.type--input {
     label {
       display: none;

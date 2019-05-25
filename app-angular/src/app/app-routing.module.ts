@@ -33,6 +33,7 @@ import { HostingDisableSectionComponent } from './components/sections/hosting/di
 
 // Functions
 import { FunctionsLogSectionComponent } from './components/sections/functions/log/functions-log-section.component';
+import { FunctionsDeleteSectionComponent } from './components/sections/functions/delete/functions-delete-section.component';
 
 const routes: Routes = [
   {
@@ -133,7 +134,7 @@ const routes: Routes = [
       },
       {
         path: 'functions.delete',
-        component: InitializingComponent
+        component: FunctionsDeleteSectionComponent
       },
       {
         path: 'functions.config.get',

@@ -334,6 +334,20 @@ export class FirebaseToolsService {
       ...options
     });
   }
+
+  functionsDelete(
+    output: OutputCapture,
+    workspace: Workspace,
+    filters: string[],
+    options: firebaseTools_Type.FunctionsDeleteOptions = {}
+  ): RunningCommand<void> {
+    return this.electron.runToolsCommand(output, 'functions.delete', [filters], {
+      cwd: workspace.path,
+      project: workspace.projectId,
+      interactive: true,
+      ...options
+    });
+  }
 }
 
 export interface UserInfo {

@@ -1,0 +1,58 @@
+<h3 class="module-title">Functions Delete</h3>
+
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <p>Delete one or more Cloud Functions by name or group name.</p>
+    </div>
+  </div>
+  <form clrForm [formGroup]="form" clrLayout="horizontal">
+
+    <clr-input-container>
+      <label>Filters</label>
+      <input clrInput type="text" formControlName="filters" />
+      <clr-control-helper>The function names or group names you want to delete</clr-control-helper>
+      <clr-control-error>You need to specify at least one function or group name</clr-control-error>
+    </clr-input-container>
+
+    <clr-input-container>
+      <label>Region</label>
+      <input clrInput type="text" formControlName="region" />
+      <clr-control-helper>The region of the function to be deleted. If omitted, functions from all regions whose
+        names match the filters will be deleted.</clr-control-helper>
+    </clr-input-container>
+
+    <div class="clr-form-control clr-row alert-control">
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <div *ngIf="showSuccess" class="alert alert-success alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+              </div>
+              <div class="alert-text">Delete operation successful.</div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="showError" class="alert alert-danger alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+              </div>
+              <div class="alert-text" [innerHTML]="showError"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-row buttons-row">
+      <div class="clr-col-12">
+        <button [clrLoading]="running" class="btn btn-primary" type="submit" (click)="start()" [disabled]="!form.valid">
+          Delete functions
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
