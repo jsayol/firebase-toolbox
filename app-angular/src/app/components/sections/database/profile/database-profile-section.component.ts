@@ -273,7 +273,7 @@ export class DatabaseProfileSectionComponent implements OnInit, OnDestroy {
     try {
       this.runningCommand = this.fb.databaseProfile(
         outputCapture,
-        this.workspace.path,
+        this.workspace,
         {
           parent: {
             json: output === 'screen' || format === 'json'

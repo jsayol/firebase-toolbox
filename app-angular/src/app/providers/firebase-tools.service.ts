@@ -256,18 +256,19 @@ export class FirebaseToolsService {
 
   init(
     output: OutputCapture,
-    path: string,
+    workspace: Workspace,
     feature: firebaseTools_Type.InitFeatureName
   ): RunningCommand<void> {
     return this.electron.runToolsCommand(output, 'init', [feature], {
-      cwd: path,
+      cwd: workspace.path,
+      project: workspace.projectId,
       interactive: true
     });
   }
 
   serve(
     output: OutputCapture,
-    path: string,
+    workspace: Workspace,
     targets: firebaseTools_Type.InitFeatureName[],
     host = 'localhost',
     port = 5000,
@@ -278,7 +279,8 @@ export class FirebaseToolsService {
       'serve',
       [],
       {
-        cwd: path,
+        cwd: workspace.path,
+        project: workspace.projectId,
         interactive: true,
         only: targets.join(','),
         host,
@@ -290,11 +292,12 @@ export class FirebaseToolsService {
 
   databaseProfile(
     output: OutputCapture,
-    path: string,
+    workspace: Workspace,
     options: firebaseTools_Type.DatabaseProfileOptions = {}
   ): RunningCommand<any> {
     return this.electron.runToolsCommand(output, 'database.profile', [], {
-      cwd: path,
+      cwd: workspace.path,
+      project: workspace.projectId,
       interactive: true,
       ...options
     });
@@ -302,7 +305,7 @@ export class FirebaseToolsService {
 
   firestoreDelete(
     output: OutputCapture,
-    path: string,
+    workspace: Workspace,
     firestorePath: string,
     options: firebaseTools_Type.FirestoreDeleteOptions = {}
   ): RunningCommand<void> {
@@ -311,7 +314,8 @@ export class FirebaseToolsService {
       'firestore.delete',
       [firestorePath],
       {
-        cwd: path,
+        cwd: workspace.path,
+        project: workspace.projectId,
         interactive: true,
         ...options
       }
@@ -320,11 +324,12 @@ export class FirebaseToolsService {
 
   firestoreIndexes(
     output: OutputCapture,
-    path: string,
+    workspace: Workspace,
     options: firebaseTools_Type.FirestoreIndexesOptions = {}
   ): RunningCommand<void> {
     return this.electron.runToolsCommand(output, 'firestore.indexes', [], {
-      cwd: path,
+      cwd: workspace.path,
+      project: workspace.projectId,
       interactive: true,
       ...options
     });

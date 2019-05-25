@@ -94,7 +94,7 @@ export class FirestoreDeleteSectionComponent implements OnInit, OnDestroy {
     try {
       this.runningCommand = this.fb.firestoreDelete(
         outputCapture,
-        this.workspace.path,
+        this.workspace,
         target === 'path' ? path : '',
         {
           allCollections: target === 'all',

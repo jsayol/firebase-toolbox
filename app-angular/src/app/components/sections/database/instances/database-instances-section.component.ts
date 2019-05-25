@@ -89,6 +89,7 @@ export class DatabaseInstancesSectionComponent implements OnInit {
     try {
       await this.fb.tools.database.instances.create(name, {
         cwd: this.workspace.path,
+        project: this.workspace.projectId,
         interactive: true
       });
       this.reloadInstances$.next(true);

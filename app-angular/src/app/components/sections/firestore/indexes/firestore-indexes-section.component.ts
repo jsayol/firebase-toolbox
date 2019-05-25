@@ -100,7 +100,7 @@ export class FirestoreIndexesSectionComponent implements OnInit, OnDestroy {
     try {
       this.runningCommand = this.fb.firestoreIndexes(
         outputCapture,
-        this.workspace.path,
+        this.workspace,
         { pretty: format === 'pretty' }
       );
 

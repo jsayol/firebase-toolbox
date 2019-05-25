@@ -203,6 +203,7 @@ export abstract class DatabaseAlterBase implements OnInit, OnDestroy {
     // We type is as if it were for "set" since it covers all cases
     const options: DatabaseSetOptions = {
       cwd: this.workspace.path,
+      project: this.workspace.projectId,
       interactive: true,
       instance,
       data,

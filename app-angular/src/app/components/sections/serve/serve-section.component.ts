@@ -119,7 +119,7 @@ export class ServeSectionComponent implements OnInit {
     try {
       this.runningCommand = this.fb.serve(
         output,
-        workspace.path,
+        workspace,
         targets,
         host === '' ? undefined : host,
         port === '' ? undefined : port,

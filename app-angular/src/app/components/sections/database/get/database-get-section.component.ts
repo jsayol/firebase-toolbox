@@ -186,6 +186,7 @@ export class DatabaseGetSectionComponent implements OnInit, OnDestroy {
     try {
       await this.fb.tools.database.get(path, {
         cwd: this.workspace.path,
+        project: this.workspace.projectId,
         interactive: true,
         ...options
       });

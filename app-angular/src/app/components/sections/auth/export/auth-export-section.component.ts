@@ -94,6 +94,7 @@ export class AuthExportSectionComponent implements OnInit, OnDestroy {
     try {
       await this.fb.tools.auth.export(this.selectedFile, {
         cwd: this.workspace.path,
+        project: this.workspace.projectId,
         interactive: true
       });
       this.showSuccess = true;

@@ -146,6 +146,7 @@ export class AuthImportSectionComponent implements OnInit, OnDestroy {
     try {
       await this.fb.tools.auth.upload(this.selectedFile, {
         cwd: this.workspace.path,
+        project: this.workspace.projectId,
         interactive: true,
         hashAlgo: ifNotEmpty(this.hashAlgo),
         rounds: ifNotEmpty(this.rounds),

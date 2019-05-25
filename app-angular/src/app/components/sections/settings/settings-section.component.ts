@@ -283,7 +283,7 @@ export class SettingsSectionComponent implements OnInit, OnDestroy {
     this.changeDetRef.markForCheck();
 
     try {
-      const runningCommand = this.fb.init(output, this.workspace.path, feature);
+      const runningCommand = this.fb.init(output, this.workspace, feature);
       const resp = await runningCommand.done;
     } catch (err) {
       console.log('Init error:', err);
