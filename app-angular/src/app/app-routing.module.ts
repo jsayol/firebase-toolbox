@@ -43,10 +43,10 @@ const routes: Routes = [
         path: 'deploy',
         component: InitializingComponent
       },
-      {
-        path: 'targets',
-        component: InitializingComponent
-      },
+      // {
+      //   path: 'targets',
+      //   component: InitializingComponent
+      // },
       {
         path: 'auth.export',
         component: AuthExportSectionComponent
