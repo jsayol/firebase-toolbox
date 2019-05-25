@@ -96,6 +96,9 @@ button:focus {
 
 app-home .app-module {
   .module-title {
+    top: 0;
+    z-index: 1;
+    position: sticky;
     margin: $app-module-title-margin;
     padding: $app-module-title-padding;
     border-bottom: 1px solid $app-module-title-border-color;
