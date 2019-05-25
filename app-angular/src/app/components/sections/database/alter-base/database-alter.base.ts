@@ -92,7 +92,7 @@ export abstract class DatabaseAlterBase implements OnInit, OnDestroy {
       this.setValidators();
     }
 
-    this.workspace$.subscribe(async (workspace: Workspace) => {
+    this.workspace$.subscribe((workspace: Workspace) => {
       this.workspace = workspace;
       this.changeDetRef.markForCheck();
     });

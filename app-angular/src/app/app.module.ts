@@ -54,7 +54,7 @@ import { DatabaseInstancesSectionComponent } from './components/sections/databas
 import { DatabaseProfileSectionComponent } from './components/sections/database/profile/database-profile-section.component';
 import { FirestoreDeleteSectionComponent } from './components/sections/firestore/delete/firestore-delete-section.component';
 import { FirestoreIndexesSectionComponent } from './components/sections/firestore/indexes/firestore-indexes-section.component';
-import { HostingDisableSectionComponent } from './components/sections/hosting/hosting-disable-section/hosting-disable-section.component';
+import { HostingDisableSectionComponent } from './components/sections/hosting/disable/hosting-disable-section.component';
 
 @NgModule({
   declarations: [
