@@ -26,6 +26,7 @@ import { ElectronService } from './providers/electron.service';
 // Directives
 import { WebviewDirective } from './directives/webview.directive';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { DisabledControlDirective } from './directives/disabled-control.directive';
 
 // Pipes
 import { AnsiPipe } from './pipes/ansi.pipe';
@@ -57,11 +58,14 @@ import { FirestoreIndexesSectionComponent } from './components/sections/firestor
 import { HostingDisableSectionComponent } from './components/sections/hosting/disable/hosting-disable-section.component';
 import { FunctionsLogSectionComponent } from './components/sections/functions/log/functions-log-section.component';
 import { FunctionsDeleteSectionComponent } from './components/sections/functions/delete/functions-delete-section.component';
+import { FunctionsConfigSectionComponent } from './components/sections/functions/config/functions-config-section.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WebviewDirective,
+    AutofocusDirective,
+    DisabledControlDirective,
     InitializingComponent,
     LoginComponent,
     HomeComponent,
@@ -69,7 +73,6 @@ import { FunctionsDeleteSectionComponent } from './components/sections/functions
     HeaderComponent,
     SettingsSectionComponent,
     PromptModalComponent,
-    AutofocusDirective,
     ShellOutputComponent,
     AnsiPipe,
     ServeSectionComponent,
@@ -86,7 +89,8 @@ import { FunctionsDeleteSectionComponent } from './components/sections/functions
     FirestoreIndexesSectionComponent,
     HostingDisableSectionComponent,
     FunctionsLogSectionComponent,
-    FunctionsDeleteSectionComponent
+    FunctionsDeleteSectionComponent,
+    FunctionsConfigSectionComponent
   ],
   imports: [
     BrowserModule,

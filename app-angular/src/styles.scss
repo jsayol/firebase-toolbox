@@ -45,7 +45,7 @@ button:focus {
   background-color: #2c384a;
   transition: background-color 0.1s;
 
-  &:hover {
+  &:not(:disabled):hover {
     color: #ffffff;
     border-color: #039be5;
     background-color: #039be5;

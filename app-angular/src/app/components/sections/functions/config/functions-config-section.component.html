@@ -1,0 +1,141 @@
+<h3 class="module-title">Functions Config</h3>
+
+<div class="module-content">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <p>Manage the key-value environment configuration for Cloud Functions.</p>
+    </div>
+  </div>
+  <form clrForm [formGroup]="form" clrLayout="horizontal">
+
+    <div *ngIf="configLoaded" class="config-container" [class.actioning]="actioning">
+      <div formArrayName="entries" *ngFor="let entry of entries.controls; let i = index" class="config-entry"
+        [class.actioning]="entry.value.editing || entry.value.removing">
+        <ng-container [formGroupName]="i">
+          <div class="config-key">
+            <code>{{ entry.value.key }}</code>
+          </div>
+          <div class="config-equals">=</div>
+          <div class="config-value">
+            <input type="text" formControlName="value" class="clr-input" #entryInput
+              (keydown.enter)="entryEditSubmit($event, entry)" [id]="'entryInput-' + entry.value.key"
+              [disabledControl]="!entry.value.editing || entry.value.applying" />
+          </div>
+          <div class="entry-actions">
+            <ng-container *ngIf="!entry.value.editing && !entry.value.removing">
+              <button title="Edit" class="btn btn-icon btn-sm btn-primary entry-edit"
+                (click)="editEntry(entry, entryInput)">
+                <clr-icon shape="pencil" size="16"></clr-icon>
+              </button>
+              <button title="Remove" class="btn btn-icon btn-sm btn-danger entry-remove"
+                (click)="showConfirmRemove(entry, i)">
+                <clr-icon shape="trash" size="16"></clr-icon>
+              </button>
+            </ng-container>
+            <ng-container *ngIf="entry.value.editing">
+              <button title="Cancel edit" class="btn btn-icon btn-sm btn-outline entry-cancel-edit"
+                *ngIf="!entry.value.applying" (click)="cancelEdit(entry, i)">
+                <clr-icon shape="undo" size="16"></clr-icon>
+              </button>
+              <button title="Apply edit" class="btn btn-icon btn-sm btn-success entry-confirm-edit"
+                [clrLoading]="entry.value.applying" (click)="applyEdit(entry, i)">
+                <clr-icon shape="check" size="16"></clr-icon>
+              </button>
+            </ng-container>
+            <button title="Removing" class="btn btn-icon btn-sm btn-primary entry-remove" *ngIf="entry.value.removing"
+              [clrLoading]="true" [disabled]="true">
+              <clr-icon shape="trash" size="16"></clr-icon>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+      <div class="add-entry">
+        <button class="btn btn-icon btn-sm btn-outline" (click)="showAddEntryModal()" [disabled]="actioning">
+          <clr-icon shape="plus-circle"></clr-icon>
+          Add config
+        </button>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!configLoaded">
+      <span class="spinner spinner-inline">
+        Loading...
+      </span>
+      <span>
+        Loading...
+      </span>
+    </ng-container>
+
+    <div class="clr-form-control clr-row alert-control">
+      <div class="clr-control-container clr-col-12 clr-col-md-8">
+        <div *ngIf="showSuccess" class="alert alert-success alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+              </div>
+              <div class="alert-text">
+                <div>Configuration updated successfully.</div>
+                <div>Please deploy your functions for the change to take effect.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="showError" class="alert alert-danger alert-sm" role="alert">
+          <div class="alert-items">
+            <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+              </div>
+              <div class="alert-text" [innerHTML]="showError"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<form clrForm [formGroup]="newKeyForm" clrLayout="horizontal" class="add-entry-form">
+  <clr-modal [(clrModalOpen)]="addModalVisible" class="add-entry-modal">
+    <h3 class="modal-title">Add config entry</h3>
+    <div class="modal-body">
+      <clr-input-container>
+        <label>New key</label>
+        <input clrInput #newKey placeholder="foo.bar" formControlName="newKey" />
+        <clr-control-error>{{ addEntryValidationError }}</clr-control-error>
+      </clr-input-container>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline" (click)="addModalVisible = false">Cancel</button>
+      <button type="submit" class="btn btn-primary" (click)="addEntry(newKey.value)"
+        [disabled]="!newKeyForm.valid">Continue</button>
+    </div>
+  </clr-modal>
+</form>
+
+<clr-modal [(clrModalOpen)]="pendingRemove" class="confirm-modal">
+  <h3 class="modal-title">Remove functions config entry</h3>
+  <div class="modal-body" *ngIf="pendingRemove">
+    <div class="alert alert-warning" role="alert">
+      <div class="alert-items">
+        <div class="alert-item static">
+          <div class="alert-icon-wrapper">
+            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+          </div>
+          <span class="alert-text">
+            Caution: This operation cannot be undone!
+          </span>
+        </div>
+      </div>
+    </div>
+    <p>
+      Do you confirm you want to remove this functions config entry?<br />
+      Key: <code>{{ pendingRemove.entry.value.key }}</code>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="pendingRemove = null">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="confirmRemove()">Remove</button>
+  </div>
+</clr-modal>

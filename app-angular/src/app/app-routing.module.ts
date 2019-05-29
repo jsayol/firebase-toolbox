@@ -34,6 +34,7 @@ import { HostingDisableSectionComponent } from './components/sections/hosting/di
 // Functions
 import { FunctionsLogSectionComponent } from './components/sections/functions/log/functions-log-section.component';
 import { FunctionsDeleteSectionComponent } from './components/sections/functions/delete/functions-delete-section.component';
+import { FunctionsConfigSectionComponent } from './components/sections/functions/config/functions-config-section.component';
 
 const routes: Routes = [
   {
@@ -137,21 +138,25 @@ const routes: Routes = [
         component: FunctionsDeleteSectionComponent
       },
       {
-        path: 'functions.config.get',
-        component: InitializingComponent
+        path: 'functions.config',
+        component: FunctionsConfigSectionComponent
       },
-      {
-        path: 'functions.config.set',
-        component: InitializingComponent
-      },
-      {
-        path: 'functions.config.unset',
-        component: InitializingComponent
-      },
-      {
-        path: 'functions.config.clone',
-        component: InitializingComponent
-      },
+      // {
+      //   path: 'functions.config.get',
+      //   component: InitializingComponent
+      // },
+      // {
+      //   path: 'functions.config.set',
+      //   component: InitializingComponent
+      // },
+      // {
+      //   path: 'functions.config.unset',
+      //   component: InitializingComponent
+      // },
+      // {
+      //   path: 'functions.config.clone',
+      //   component: InitializingComponent
+      // },
       {
         path: 'hosting.disable',
         component: HostingDisableSectionComponent

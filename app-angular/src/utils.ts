@@ -130,3 +130,24 @@ export enum CloudFunctionLogSeverity {
   ALERT = 'ALERT',
   EMERGENCY = 'EMERGENCY'
 }
+
+export function flattenObject(obj: { [k: string]: any }): { [k: string]: any } {
+  const result = {};
+
+  for (const prop in obj) {
+    if (contains(obj, prop)) {
+      if (typeof obj[prop] === 'object') {
+        const innerFlatObj = flattenObject(obj[prop]);
+        for (const innerProp in innerFlatObj) {
+          if (contains(innerFlatObj, innerProp)) {
+            result[prop + '.' + innerProp] = innerFlatObj[innerProp];
+          }
+        }
+      } else {
+        result[prop] = obj[prop];
+      }
+    }
+  }
+
+  return result;
+}

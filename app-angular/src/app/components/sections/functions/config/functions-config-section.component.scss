@@ -1,0 +1,107 @@
+@import "../../../../../theme";
+
+form.clr-form {
+  padding: 0.25rem 0;
+}
+
+.config-container {
+  padding-top: 0.2rem;
+
+  .config-entry {
+    display: flex;
+    position: relative;
+    max-width: 25rem;
+    padding: 0.2rem 0.25rem;
+    flex-direction: row;
+    border-radius: 5px;
+
+    .config-key {
+      code {
+        user-select: text;
+        padding: 0.1rem 0.25rem;
+        background-color: $app-functions-config-key-bg-color;
+        border-radius: 5px;
+      }
+    }
+
+    .config-equals {
+      padding: 0 0.15rem;
+    }
+
+    .config-value {
+      flex-grow: 1;
+
+      .clr-input {
+        width: calc(100% - 4rem);
+
+        &:disabled {
+          opacity: 1 !important;
+          border-bottom: 1px solid rgba(0, 0, 0, 0);
+          cursor: default;
+        }
+      }
+    }
+
+    .entry-actions {
+      display: none;
+      position: absolute;
+      margin: 0;
+      right: 0.25rem;
+
+      button {
+        margin: 0;
+
+        & + button {
+          margin-left: 0.15rem;
+        }
+
+        &.entry-remove {
+          width: initial !important;
+        }
+      }
+    }
+  }
+
+  &.actioning {
+    .config-entry.actioning {
+      .entry-actions {
+        display: block;
+      }
+    }
+  }
+
+  &:not(.actioning) {
+    .config-entry:hover {
+      background-color: $app-functions-config-hover-bg-color;
+
+      .config-key code {
+        background-color: $app-functions-config-hover-key-bg-color;
+      }
+
+      .entry-actions {
+        display: block;
+      }
+    }
+  }
+
+  .add-entry {
+    margin-top: 0.3rem;
+
+    button {
+      clr-icon {
+        width: 0.7rem;
+        height: 0.7rem;
+      }
+    }
+  }
+}
+
+.add-entry-form {
+  padding: 0;
+}
+
+.add-entry-modal {
+  .modal-body {
+    overflow-y: hidden;
+  }
+}
