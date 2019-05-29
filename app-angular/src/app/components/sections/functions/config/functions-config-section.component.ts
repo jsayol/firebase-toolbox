@@ -142,8 +142,12 @@ export class FunctionsConfigSectionComponent implements OnInit, OnDestroy {
   addEntry(key: string): void {
     this.addModalVisible = false;
     const entry = this.createEntry(key, '', true);
-    // this.form.markAsDirty();
+
     this.entries.push(entry);
+    this.entries.controls = (this.entries.controls as FormGroup[]).sort(
+      (a, b) => (a.value.key < b.value.key ? -1 : 1)
+    );
+
     setImmediate(() => {
       const input = document.querySelector<HTMLInputElement>(
         `input[id="entryInput-${key}"]`
