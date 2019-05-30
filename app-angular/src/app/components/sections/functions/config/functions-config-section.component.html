@@ -6,7 +6,7 @@
       <p>Manage the key-value environment configuration for Cloud Functions.</p>
     </div>
   </div>
-  <form clrForm [formGroup]="form" clrLayout="horizontal">
+  <form clrForm [formGroup]="form" clrLayout="horizontal" class="main-form">
 
     <div *ngIf="configLoaded" class="config-container" [class.actioning]="actioning">
       <div formArrayName="entries" *ngFor="let entry of entries.controls; let i = index" class="config-entry"

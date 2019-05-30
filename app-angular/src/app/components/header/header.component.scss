@@ -88,7 +88,7 @@ clr-header {
         button.remove-workspace {
           opacity: 0;
           position: absolute;
-          
+
           // right: 0.2rem;
           // top: 0.35rem;
           // width: auto;
@@ -146,10 +146,11 @@ clr-header {
 
         box-shadow: none;
         transition: box-shadow 100ms;
+      }
 
-        &:hover {
-          box-shadow: 0 0 3pt 2pt #666;
-        }
+      &.active .clr-icon,
+      .clr-icon:hover {
+        box-shadow: 0 0 3pt 2pt #666;
       }
     }
   }

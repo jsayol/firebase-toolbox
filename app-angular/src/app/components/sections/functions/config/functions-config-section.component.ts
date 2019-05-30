@@ -53,10 +53,8 @@ function newKeyValidator(control: FormControl): ValidationErrors | null {
 })
 export class FunctionsConfigSectionComponent implements OnInit, OnDestroy {
   public workspace: Workspace;
-  public running = false;
   public form: FormGroup;
   public newKeyForm: FormGroup;
-  public config: { [k: string]: any };
   public configLoaded = false;
   public showSuccess = false;
   public showError: SafeHtml | null = null;
@@ -111,7 +109,7 @@ export class FunctionsConfigSectionComponent implements OnInit, OnDestroy {
   showAddEntryModal(): void {
     this.showSuccess = null;
     this.showError = null;
-    this.newKey.nativeElement.value = '';
+    this.newKeyForm.reset();
     this.addModalVisible = true;
     setImmediate(() => {
       this.newKey.nativeElement.focus();
@@ -277,7 +275,6 @@ export class FunctionsConfigSectionComponent implements OnInit, OnDestroy {
   }
 
   private async loadConfig(): Promise<void> {
-    this.config = null;
     this.configLoaded = false;
     this.showSuccess = false;
     this.showSuccess = null;
@@ -285,12 +282,12 @@ export class FunctionsConfigSectionComponent implements OnInit, OnDestroy {
     this.changeDetRef.markForCheck();
 
     try {
-      this.config = await this.fb.tools.functions.config.get(undefined, {
+      const config = await this.fb.tools.functions.config.get(undefined, {
         cwd: this.workspace.path,
         project: this.workspace.projectId,
         interactive: true
       });
-      this.buildForm();
+      this.buildForm(config);
     } catch (err) {
       console.log('Load config error:', err);
       this.showError = this.sanitizer.bypassSecurityTrustHtml(
@@ -302,8 +299,8 @@ export class FunctionsConfigSectionComponent implements OnInit, OnDestroy {
     this.changeDetRef.markForCheck();
   }
 
-  private buildForm(): void {
-    const flatConfig = flattenObject(this.config);
+  private buildForm(config: { [k: string]: any }): void {
+    const flatConfig = flattenObject(config);
     const formArray = this.formBuilder.array(
       Object.keys(flatConfig)
         .sort()

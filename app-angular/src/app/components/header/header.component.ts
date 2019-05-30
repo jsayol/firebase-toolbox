@@ -17,7 +17,7 @@ import { FirebaseToolsService } from '../../providers/firebase-tools.service';
 
 // The initial section that will be loaded when a workspace is selected.
 // During development we can set this to whatever section we're working on.
-const INITIAL_SECTION = environment.production ? 'settings' : 'database.get';
+const INITIAL_SECTION = environment.production ? 'settings' : 'settings';
 
 interface AppInfo {
   version: string;
